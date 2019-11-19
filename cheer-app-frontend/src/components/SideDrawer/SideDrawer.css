@@ -1,0 +1,156 @@
+.side-drawer{
+    height: 100%;
+    background: #2d152c;
+    box-shadow: 2px 0px 3px rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left:0;
+    width: 70%;
+    max-width: 400px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+}
+
+.side-drawer.open{
+    transform: translateX(0);
+}
+
+.side-drawer-logo{
+    height: 70px;
+    width: 100%;
+    /*background: #475c7a;*/
+}
+
+.side-drawer-logo img{
+    padding-top: 9px;
+    padding-left: 30px;
+    height: 55px;
+    width: 200px;   
+}
+
+.side-drawer-guest{
+    width:100% ;
+    height:15%;
+    display:block;
+    overflow: auto;
+    text-align: center;
+    color: #ffeaa7; 
+    
+ }
+
+
+ .side-drawer-guest p {
+     margin: 0 0 0 0;
+ }
+
+ .side-drawer-guest h3{
+    margin: 0 0 0 0;
+}
+
+.side-drawer-guest-login-button{
+    width: 40%;
+    height: 20%;
+    border: none;
+    color: black;  
+    padding-right:2px;
+    background: #801336;
+}
+.side-drawer-guest-register-button{
+    width: 40%;
+    height: 20%;
+    border: none;
+    color: black;  
+    padding-left:2px;
+    background: #ee4540;
+}
+
+.side-drawer-profile{
+   width:100% ;
+   height:30%;
+   min-height: 100px;
+   max-height: 150px;
+   text-align: center;
+   color: #ffeaa7; 
+}
+
+.side-drawer-profile-image{
+    width: 50%;
+    height: 100%;
+    float: left;
+    text-align: center;
+}
+
+.side-drawer-profile-image img{
+    height: 95%;
+    width: 90%;
+    margin: 0 0 0 0;
+    border-radius: 50%;
+
+}
+
+.side-drawer-profile-info{
+    width: 50%;
+    height: 100%;
+    float: right; 
+   
+}
+
+.side-drawer-profile-view-button{
+    width: 70%;
+    height: 15%;
+    color: black;  
+    background: #801336;
+    border: none;
+}
+.side-drawer-profile-logout-button{
+    width: 70%;
+    height: 15%;
+    color: black;  
+    background: #ee4540;
+    border: none;
+    margin-top: 5px ;
+}
+
+.side-drawer ul{
+    height: 100%;
+    margin:0.0 0;
+    padding: 0 0 0 0;
+    list-style:none;
+    flex-direction: column;
+    justify-content: center;
+    background: #510a32;
+    
+}
+
+.side-drawer li{
+    height: 8%;
+    margin:0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.side-drawer li:hover,
+.side-drawer li:active{
+    background: #801336;
+}
+
+.side-drawer a{
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size:1.2rem;
+    font-weight: bold;
+    color: #ffeaa7; 
+}
+
+.side-drawer a:hover,
+.side-drawer:active{
+    color: #ffeaa7; 
+}
+
+@media (min-width: 769px){
+    .side-drawer{
+        display:none;
+    }
+}
