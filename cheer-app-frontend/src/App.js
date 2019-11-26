@@ -17,20 +17,23 @@ class App extends Component {
 	};
 
 	loginUser=() => {
-		this.setState({userLoggedIn:true});
-		
-	}
+		this.setState({userLoggedIn:true});	
+	};
 
 	loginOrganizer=() => {
 		this.setState({organizerLoggedIn:true});
-	}
+	};
+
+	logOut=()=>{
+		this.setState({userLoggedIn:false});
+		this.setState({organizerLoggedIn:false});		
+	};
+
 	drawerToggleClickHandler = () => {
 		this.setState((prevState) => {
 			return{sideDrawerOpen: !prevState.sideDrawerOpen};
 		});
 	};
-
-	
 
 	backdropClickHandler = () => {
 		this.setState({sideDrawerOpen:false});
@@ -51,6 +54,7 @@ class App extends Component {
 					<Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>
 					<SideDrawer show={this.state.sideDrawerOpen} user={this.state.userLoggedIn} 
 						organizer={this.state.organizerLoggedIn} username={this.state.username}
+						logOut ={this.logOut}
 					/>
 					{backdrop}
 

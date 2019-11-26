@@ -1,7 +1,11 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {withRouter,Link} from 'react-router-dom';
 
-const SideDrawerLinks = props => {
+const SideDrawerProfile = props => {
+    const logOut=()=>{
+        props.logOut();
+        props.history.push('/');
+    }
     if(props.userLoggedIn||props.organizerLoggedIn){
         return(
             <div className='side-drawer-profile'>
@@ -11,7 +15,7 @@ const SideDrawerLinks = props => {
                 <div className='side-drawer-profile-info'>
                     <h3>Hello, {props.username}</h3>
                     <button className='side-drawer-profile-view-button' > View Profile</button> 
-                    <button className='side-drawer-profile-logout-button'> Log Out</button>
+                    <button className='side-drawer-profile-logout-button'onClick={logOut}> Log Out</button>
                 </div>   
             </div>
         );
@@ -34,4 +38,4 @@ const SideDrawerLinks = props => {
     }
 }
 
-export default SideDrawerLinks;
+export default withRouter(SideDrawerProfile);

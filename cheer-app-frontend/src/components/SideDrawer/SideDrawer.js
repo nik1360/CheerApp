@@ -17,7 +17,7 @@ const SideDrawer = props =>{
                 <img src={require('../../images/cheerApp_logo.png')} alt='cheerApp_logo' />
             </div>
             <SideDrawerProfile userLoggedIn={props.user} organizerLoggedIn={props.organizer}
-                username={props.username}/>
+                username={props.username} logOut={props.logOut}/>
             <SideDrawerLinks userLoggedIn={props.user} organizerLoggedIn={props.organizer}/>
         </nav>
     )  
