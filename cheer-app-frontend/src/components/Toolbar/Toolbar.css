@@ -61,7 +61,7 @@
     text-decoration: none;
 }
 
-@media (max-width: 768px){
+@media (min-width: 0px /*768px*/){
     .toolbar_navigation-items {
         display: none;
     }
@@ -70,6 +70,7 @@
     }
 }
 
+/*
 @media (min-width: 769px){
     .toolbar_drawer-toggle-button {
         display: none;
@@ -78,3 +79,4 @@
         margin-left: 0;
     }
 }
+*/

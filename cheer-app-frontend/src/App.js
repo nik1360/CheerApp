@@ -12,7 +12,8 @@ class App extends Component {
 		sideDrawerOpen:false,
 		userLoggedIn:false,
 		organizerLoggedIn:false,
-		username:'nikolas1360'
+		username:'nikolas1360',
+		password:'nikolas1360'
 
 	};
 
