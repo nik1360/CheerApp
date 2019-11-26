@@ -16,11 +16,22 @@ class App extends Component {
 
 	};
 
+	loginUser=() => {
+		this.setState({userLoggedIn:true});
+		
+	}
+
+	loginOrganizer=() => {
+		this.setState({organizerLoggedIn:true});
+	}
 	drawerToggleClickHandler = () => {
 		this.setState((prevState) => {
 			return{sideDrawerOpen: !prevState.sideDrawerOpen};
 		});
 	};
+
+	
+
 	backdropClickHandler = () => {
 		this.setState({sideDrawerOpen:false});
 	};
@@ -39,13 +50,21 @@ class App extends Component {
 			
 					<Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>
 					<SideDrawer show={this.state.sideDrawerOpen} user={this.state.userLoggedIn} 
-						organizer={this.state.organizerLoggedIn} username={this.state.username}/>
+						organizer={this.state.organizerLoggedIn} username={this.state.username}
+					/>
 					{backdrop}
 
 					
 					<Switch>
 						<Route path="/" exact component={Home }/>
-						<Route path="/login" component={Login}/>
+						<Route path="/login" 
+							render={() => 
+								<Login username={this.state.username} password={this.state.password} 
+									userLoggedIn={this.state.userLoggedIn} organizerLoggedIn={this.state.organizerLoggedIn}
+									loginUser={this.loginUser} loginOrganizer={this.loginOrganzier}
+								/> 
+							} 
+						/>
 						
         			</Switch>
 					
