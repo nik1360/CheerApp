@@ -38,7 +38,7 @@ const Login = props => {
     return(
         <div className="login-page">
             <div className="form">
-                <form className="login-form" onSubmit={loginUser} action="/">
+                <form className="login-form" onSubmit={loginUser} method="post">
                     <input type="text" placeholder="username" value={username} onChange={updateUsername}/>
                     <input type="password" placeholder="password" value={password} onChange={updatePassword}/>
                     <button type="submit" >login as user</button>
