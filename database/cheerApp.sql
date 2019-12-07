@@ -22,15 +22,19 @@ create table user (
         flag_techno boolean default false,
         flag_electroinc boolean default false
 );
+create table venue (
+	code varchar(20) primary key,
+    name varchar(40) not null,
+    city varchar(15) not null,
+    address varchar(30) not null
+);
 
 create table event (
 	code varchar(20) primary key,
     name varchar(40) not null,
     description varchar (200) not null,
     entrance_price float not null,
-    city varchar(15) not null,
-    address varchar(30) not null,
-    place_name varchar(20) not null,
+    venue_code varchar(20) not null,
     date date not null, -- format: 'yyyy-mm-dd'
     start_time time, -- format: 'hh:mm:ss'
     end_time time,
@@ -42,6 +46,8 @@ create table event (
 	flag_reggae boolean default false,
 	flag_techno boolean default false,
 	flag_electroinc boolean default false
+    
+    
     
 );
 
