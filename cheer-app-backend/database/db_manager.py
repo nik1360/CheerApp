@@ -1,8 +1,8 @@
 import mysql.connector
-from .db_inserts import DatabaseInserts
 
 
-class DatabaseManager(DatabaseInserts):
+# Base class that allow the interaction with the mySQL database
+class DatabaseManager:
     def __init__(self):
         self.db = mysql.connector.connect(
             host='localhost',

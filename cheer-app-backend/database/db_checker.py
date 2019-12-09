@@ -1,4 +1,8 @@
-class DatabaseChecks:
+from .db_manager import DatabaseManager
+
+
+# Class that checks if the record can be created into the mySQL database
+class DatabaseChecker(DatabaseManager):
 
     def __init__(self):
         pass

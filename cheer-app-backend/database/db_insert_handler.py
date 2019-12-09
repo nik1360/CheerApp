@@ -1,13 +1,17 @@
-from .db_checks import DatabaseChecks
+from .db_checker import DatabaseChecker
+from .db_manager import DatabaseManager
 
 
-class DatabaseInserts(DatabaseChecks):
+# Class that handles the insertions in the database
+class DatabaseInsertHandler(DatabaseManager):
     def __init__(self):
-        pass
+        DatabaseManager.__init__(self)
+        self.checker = DatabaseChecker
+
 
     # Register a new user in the database
     def insert_user(self, user):
-        if self.check_username_email(user.username, user.email, 'USER'):
+        if self.checker.check_username_email(user.username, user.email, 'USER'):
             query = 'insert into user values(%s,%s,%s,%s,%s,%s, %s, %s, %s, %s ,%s ,%s, %s, %s) '
             self.cursor.execute(query, (user.username, user.password, user.email, user.name, user.surname,
                                         user.date_of_birth, user.city, user.nationality, user.music_tastes["rock"],
@@ -22,7 +26,7 @@ class DatabaseInserts(DatabaseChecks):
 
     # Register a new organizer in the database
     def insert_organizer(self, organizer):
-        if self.check_username_email(organizer.username, organizer.email, 'ORGANIZER'):
+        if self.checker.check_username_email(organizer.username, organizer.email, 'ORGANIZER'):
             query = 'insert into organizer values(%s,%s,%s,%s,%s,%s,%s,%s) '
             self.cursor.execute(query, (organizer.username, organizer.password, organizer.email, organizer.phone,
                                         organizer.name, organizer.surname, organizer.date_of_birth,

@@ -23,14 +23,14 @@ create table user (
         flag_electroinc boolean default false
 );
 create table venue (
-	code varchar(20) primary key,
+	code varchar(6) primary key,
     name varchar(40) not null,
     city varchar(15) not null,
     address varchar(30) not null
 );
 
 create table event (
-	code varchar(20) primary key,
+	code varchar(6) primary key,
     name varchar(40) not null,
     description varchar (200) not null,
     entrance_price float not null,
@@ -45,9 +45,8 @@ create table event (
 	flag_reggaeton boolean default false,
 	flag_reggae boolean default false,
 	flag_techno boolean default false,
-	flag_electroinc boolean default false
-    
-    
+	flag_electronic boolean default false,
+    foreign key (venue_code) references venue(code)
     
 );
 
@@ -92,3 +91,8 @@ insert into user values('evi','password','mail2@mail.com','evi','sw_eng','1996-1
 insert into user values('julie','password','mail3@mail.com','julie','sw_eng','1996-11-19', 'pavia', 'belgium', false, true ,false ,false, true, false);
 insert into user values('jesus','password','mail4@mail.com','jesus','sw_eng','1996-11-19', 'pavia', 'spanish', false, false ,true ,false, false, false);
 insert into user values('pierre','password','mail5@mail.com','pierre','sw_eng','1996-11-19', 'pavia', 'french', false, true ,false ,false, true, false);
+
+insert into venue values('T5J78L', 'Alcatraz', 'Milan', 'Via Piave 68');
+insert into venue values('H8J78L', 'Hiroshima Monamour', 'Turin', 'Vial Mille 99');
+
+insert into event values ('AFGTV6', 'Serate ignoranti', 'description', 10, 'T5J78L', '2019-12-23','00:00:00','00:00:00', true, true ,false ,false, false, true);
