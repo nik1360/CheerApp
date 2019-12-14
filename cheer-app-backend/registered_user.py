@@ -1,6 +1,10 @@
+from database.db_friends_handler import DatabaseFriendsHandler
+from database.db_insert_handler import DatabaseInsertHandler
+
+
 class RegisteredUser:
-    def __init__(self, username, email, password, name, surname,
-                 date_of_birth, nationality, city, flag_rock, flag_hiphop,
+    def __init__(self, username, password, email,  name, surname,
+                 date_of_birth,  city, nationality, flag_rock, flag_hiphop,
                  flag_reggaeton, flag_reggae, flag_techno, flag_electronic):
         self.username = username
         self.email = email
@@ -18,5 +22,12 @@ class RegisteredUser:
             "techno": flag_techno,
             "electronic": flag_electronic
         }
-        self.friend_list = []
+        self.friends_list = []  # contains the username of each friend
         self.joined_events = []
+
+    def add_friend(self, username2):
+        result, msg = DatabaseInsertHandler().insert_friends(self.username, username2)
+        return result, msg
+
+    def retrieve_friends_list(self):
+        DatabaseFriendsHandler().retrieve_friends_list(self)

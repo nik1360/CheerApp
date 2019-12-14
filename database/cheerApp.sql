@@ -4,9 +4,9 @@ use cheerApp;
 
 -- TABLES CREATION
 
-create table user (
+create table users (
 		username varchar(20) primary key,
-        password varchar(30) not null,
+        password varchar(100) not null,
         email varchar(40) not null unique, 
         name varchar (20),
         surname varchar(20),
@@ -22,14 +22,18 @@ create table user (
         flag_techno boolean default false,
         flag_electroinc boolean default false
 );
-create table venue (
-	code varchar(6) primary key,
+
+
+
+create table venues (
     name varchar(40) not null,
     city varchar(15) not null,
-    address varchar(30) not null
+    address varchar(30) not null,
+    
+    primary key(name,city,address)
 );
 
-create table event (
+create table events (
 	code varchar(6) primary key,
     name varchar(40) not null,
     description varchar (200) not null,
@@ -46,53 +50,50 @@ create table event (
 	flag_reggae boolean default false,
 	flag_techno boolean default false,
 	flag_electronic boolean default false,
-    foreign key (venue_code) references venue(code)
+    foreign key (venue_code) references venues(code)
     
 );
 
-create table organizer (
+create table organizers (
 	username varchar(20) primary key,
-	password varchar(30) not null,
+	password varchar(100) not null,
 	email varchar(40) not null unique, 
     phone varchar(10) not null,
 	name varchar (20),
 	surname varchar(20),
-	date_of_birth date not null, -- format: 'yyyy-mm-dd'
-	nationality varchar (15)
+	date_of_birth date not null-- format: 'yyyy-mm-dd'
 );
 
 -- RELATIONS BETWEEN TABLES
 
-create table user_event(		-- users join events
+create table users_events(		-- users join events
 	username varchar(20),
     event_code varchar(20),
     payment_status bool default false,
-    paymnent_import float,
+    payment_import float,
     
     primary key(username, event_code),
-    foreign key (username) references user(username),
-    foreign key (event_code) references event(code)
+    foreign key (username) references users(username),
+    foreign key (event_code) references events(code)
 );
 
-create table organizer_event(		-- organizerss create events
+create table organizers_events(		-- organizerss create events
 	username varchar(20),
     event_code varchar(20),
     advertised boolean default false,
     
     primary key(username, event_code),
-    foreign key (username) references organizer(username),
-    foreign key (event_code) references event(code)
+    foreign key (username) references organizers(username),
+    foreign key (event_code) references events(code)
 );
 
--- POPULATION
+create table friends(
+	username1 varchar(20),
+    username2 varchar(20),
+    
+    foreign key (username1) references users(username),
+	foreign key (username2) references users(username),
+    primary key(username1, username2)
+    
+);
 
-insert into user values('nik','password','mail1@mail.com','nikolas','sw_eng','1996-11-19', 'pavia', 'italian', true, true ,false ,false, false, false);
-insert into user values('evi','password','mail2@mail.com','evi','sw_eng','1996-11-19', 'pavia', 'greek', false, false ,false ,false, false, true);
-insert into user values('julie','password','mail3@mail.com','julie','sw_eng','1996-11-19', 'pavia', 'belgium', false, true ,false ,false, true, false);
-insert into user values('jesus','password','mail4@mail.com','jesus','sw_eng','1996-11-19', 'pavia', 'spanish', false, false ,true ,false, false, false);
-insert into user values('pierre','password','mail5@mail.com','pierre','sw_eng','1996-11-19', 'pavia', 'french', false, true ,false ,false, true, false);
-
-insert into venue values('T5J78L', 'Alcatraz', 'Milan', 'Via Piave 68');
-insert into venue values('H8J78L', 'Hiroshima Monamour', 'Turin', 'Vial Mille 99');
-
-insert into event values ('AFGTV6', 'Serate ignoranti', 'description', 10, 'T5J78L', '2019-12-23','00:00:00','00:00:00', true, true ,false ,false, false, true);
