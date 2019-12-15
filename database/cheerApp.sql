@@ -20,17 +20,16 @@ create table users (
         flag_reggaeton boolean default false,
         flag_reggae boolean default false,
         flag_techno boolean default false,
-        flag_electroinc boolean default false
+        flag_electronic boolean default false
 );
 
 
 
 create table venues (
+	code varchar(6) primary key,
     name varchar(40) not null,
     city varchar(15) not null,
-    address varchar(30) not null,
-    
-    primary key(name,city,address)
+    address varchar(30) not null
 );
 
 create table events (
@@ -94,6 +93,5 @@ create table friends(
     foreign key (username1) references users(username),
 	foreign key (username2) references users(username),
     primary key(username1, username2)
-    
 );
 
