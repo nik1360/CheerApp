@@ -1,4 +1,5 @@
 from .db_manager import DatabaseManager
+from venue import Venue
 
 
 # Class that checks if the record can be created into the mySQL database
@@ -34,6 +35,18 @@ class DatabaseChecker(DatabaseManager):
             return True
         else:
             return False
+
+    def retrieve_venue(self, name, city, address):
+        query = 'SELECT * FROM ' + self.table_venues + ' WHERE  name= %s AND city = %s AND address=%s'
+        self.cursor.execute(query, (name, city, address,))
+        query_result = self.cursor.fetchall()
+        if not query_result:
+            return None
+        else:
+            venue=Venue(name,city,address)
+            venue.code=query_result[0][0]
+            return venue
+
 
     def check_venue_existence(self, venue_code):
         query = 'SELECT * FROM ' + self.table_venues + ' WHERE code=%s'

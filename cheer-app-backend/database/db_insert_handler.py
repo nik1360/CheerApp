@@ -48,22 +48,27 @@ class DatabaseInsertHandler(DatabaseManager):
 
     # Registration of an event
     def insert_event(self, event):
-        if self.checker.check_event_existence(event.code):
-            self.insert_venue(event.venue)
-            if self.checker.check_venue_availability(event.venue.code, event.date):
-                query = 'INSERT INTO ' + self.table_events + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-                self.cursor.execute(query,
-                                    (event.code, event.name, event.description, event.price, event.venue.code,
-                                     event.date, event.start_time, event.end_time, event.music_genres["rock"],
-                                     event.music_genres["hiphop"], event.music_genres["reggaeton"],
-                                     event.music_genres["reggae"], event.music_genres["techno"],
-                                     event.music_genres["electronic"],))
-                self.db.commit()
-                return True, 'Event registered correctly!'
-            else:
-                return False, 'The location is not available for that date!'
+        if event.venue is None: # the venue is not registered yet
+            return False, 'Venue is not registered yet!'
         else:
-            return False, 'Event already registered!'
+            if self.checker.check_event_existence(event.code):
+
+                if self.checker.check_venue_availability(event.venue.code, event.date):
+                    query = 'INSERT INTO ' + self.table_events + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+                    self.cursor.execute(query,
+                                        (event.code, event.name, event.description, event.price, event.venue.code,
+                                         event.date, event.start_time, event.end_time, event.music_genres["rock"],
+                                         event.music_genres["hiphop"], event.music_genres["reggaeton"],
+                                         event.music_genres["reggae"], event.music_genres["techno"],
+                                         event.music_genres["electronic"],))
+                    self.db.commit()
+                    return True, 'Event registered correctly!'
+                else:
+                    return False, 'The location is not available for that date!'
+            else:
+                return False, 'Event already registered!'
+
+
 
     def insert_friends(self, username1, username2):
         if self.checker.check_friends_existence(username1, username2):
