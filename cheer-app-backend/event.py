@@ -1,4 +1,3 @@
-# coding=utf-8
 import string
 import random
 
@@ -22,6 +21,7 @@ class Event:
             "techno": flag_techno,
             "electronic": flag_electronic
         }
+
     def print_details(self):
         print('Name: ' + self.name)
         print('Description: ' + self.description)

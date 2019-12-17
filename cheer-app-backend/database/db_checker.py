@@ -32,7 +32,6 @@ class DatabaseChecker(DatabaseManager):
 
     # check if the event is already created by checking the combination NAME + VENUE + DATE
     def check_event_existence(self,event):
-
         query = 'SELECT * FROM ' + self.table_events + ' WHERE name = %s AND venue_code=%s AND date=%s'
         self.cursor.execute(query, (event.name, event.venue.code, event.date))
         query_result = self.cursor.fetchall()

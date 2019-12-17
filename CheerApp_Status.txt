@@ -12,11 +12,13 @@ Event search with filters
 Join event
 Add friend
 See Friends list
+See Joined Events
 
 TO IMPLEMENT:
 
-See joined events
+Connect Event and Organizer
 Write review
+
 Edit-Delete event
 Delete friend
 Unjoin from an event

@@ -1,4 +1,5 @@
 from database.db_friends_handler import DatabaseFriendsHandler
+from database.db_event_handler import DatabaseEventHandler
 from database.db_insert_handler import DatabaseInsertHandler
 
 
@@ -35,3 +36,9 @@ class RegisteredUser:
 
     def retrieve_friends_list(self):
         DatabaseFriendsHandler().retrieve_friends_list(self)
+
+    def retrieve_joined_events_list(self):
+        result, msg = DatabaseEventHandler().retrieve_joined_events(self)
+        return result,msg
+
+

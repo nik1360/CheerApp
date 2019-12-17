@@ -1,5 +1,6 @@
 from .db_manager import DatabaseManager
 from .db_checker import DatabaseChecker
+
 from event import Event
 
 # create a list of events with the information retrieved from the query
@@ -13,9 +14,11 @@ def return_events(query_result):
     return events
 
 
-# class that manages the search of events
-class DatabaseEventFinder(DatabaseManager):
-    def __init__(self, city, date, flag_rock, flag_hiphop, flag_reggaeton, flag_reggae, flag_techno, flag_electronic):
+# class that manages everything related to events
+class DatabaseEventHandler(DatabaseManager):
+    def __init__(self, city ='', date='',
+                 flag_rock = False, flag_hiphop = False, flag_reggaeton = False, flag_reggae = False,
+                 flag_techno = False, flag_electronic = False):
         DatabaseManager.__init__(self)
         self.city = city
         self.date = date
@@ -58,6 +61,25 @@ class DatabaseEventFinder(DatabaseManager):
         result = self.cursor.fetchall()
         events = return_events(result)
         return events
+
+    def retrieve_joined_events(self, user):
+        query = 'SELECT event_code FROM ' + self.table_users_events + ' WHERE username=%s'
+        self.cursor.execute(query, (user.username,))
+        result1 = self.cursor.fetchall()
+        if not result1:
+            return False, user.username+' haven\'t joined any event yet!'
+        else:
+            condition = ' WHERE (' + self.table_events + '.venue_code=' + self.table_venues + '.code AND ' \
+                        + self.table_events + '.code=%s)'
+            query = 'SELECT * FROM ' + self.table_events + ',' + self.table_venues + condition
+            for row in result1:
+                self.cursor.execute(query, (row[0],))
+                result2 = self.cursor.fetchall()
+                user.joined_events.append(return_events(result2))
+            return True, 'Joined events list retrieved successfully!'
+
+
+
 
 
 

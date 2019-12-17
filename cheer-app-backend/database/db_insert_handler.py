@@ -75,13 +75,16 @@ class DatabaseInsertHandler(DatabaseManager):
 
     # register a new couple of friends in the database
     def insert_friends(self, username1, username2):
-        if self.checker.check_friends(username1, username2):
-            query = 'INSERT INTO ' + self.table_friends + ' VALUES (%s, %s)'
-            self.cursor.execute(query, (username1, username2,))
-            self.db.commit()
-            return True, username1 + ' and ' + username2 + ' are now friends!'
+        if username1 == username2:
+            return False, 'A user cannot add itself as friend!'
         else:
-            return False, username1 + ' and ' + username2 + ' were already friends!'
+            if self.checker.check_friends(username1, username2):
+                query = 'INSERT INTO ' + self.table_friends + ' VALUES (%s, %s)'
+                self.cursor.execute(query, (username1, username2,))
+                self.db.commit()
+                return True, username1 + ' and ' + username2 + ' are now friends!'
+            else:
+                return False, username1 + ' and ' + username2 + ' were already friends!'
 
     # insert a new row in the table that correlates users and events
     def insert_users_events(self, user, event,):
