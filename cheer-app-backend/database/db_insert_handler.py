@@ -2,6 +2,12 @@ from .db_checker import DatabaseChecker
 from .db_manager import DatabaseManager
 import bcrypt
 
+# function that encrypt the password before storing it in the database
+def encode_password(password):
+    password = bytes(password, 'UTF-8')
+    salt = bcrypt.gensalt()
+    hashed = (bcrypt.hashpw(password, salt)).decode('UTF-8')
+    return hashed
 
 # Class that handles the insertions in the database
 class DatabaseInsertHandler(DatabaseManager):
@@ -35,10 +41,10 @@ class DatabaseInsertHandler(DatabaseManager):
         else:
             return False, 'Username or email already taken!'
 
-    # Registration of a venue
+    # Register a new venue in the database
     def insert_venue(self, venue):
 
-        if self.checker.check_venue_existence(venue.code):  # the venue is not registered
+        if self.checker.check_venue_existence(venue):  # the venue is not registered
             query = 'INSERT INTO ' + self.table_venues + ' VALUES(%s,%s,%s,%s)'
             self.cursor.execute(query, (venue.code, venue.name, venue.city, venue.address,))
             self.db.commit()
@@ -46,13 +52,12 @@ class DatabaseInsertHandler(DatabaseManager):
         else:
             return False
 
-    # Registration of an event
+    # Register a new event in the database
     def insert_event(self, event):
         if event.venue is None: # the venue is not registered yet
             return False, 'Venue is not registered yet!'
         else:
-            if self.checker.check_event_existence(event.code):
-
+            if self.checker.check_event_code(event.code):
                 if self.checker.check_venue_availability(event.venue.code, event.date):
                     query = 'INSERT INTO ' + self.table_events + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
                     self.cursor.execute(query,
@@ -68,10 +73,9 @@ class DatabaseInsertHandler(DatabaseManager):
             else:
                 return False, 'Event already registered!'
 
-
-
+    # register a new couple of friends in the database
     def insert_friends(self, username1, username2):
-        if self.checker.check_friends_existence(username1, username2):
+        if self.checker.check_friends(username1, username2):
             query = 'INSERT INTO ' + self.table_friends + ' VALUES (%s, %s)'
             self.cursor.execute(query, (username1, username2,))
             self.db.commit()
@@ -79,9 +83,17 @@ class DatabaseInsertHandler(DatabaseManager):
         else:
             return False, username1 + ' and ' + username2 + ' were already friends!'
 
+    # insert a new row in the table that correlates users and events
+    def insert_users_events(self, user, event,):
+        if not self.checker.check_event_existence(event):
+            return False, 'The event does not exist in the database'
+        else:
+            if self.checker.check_joined_events(user, event):
+                query = 'INSERT INTO ' + self.table_users_events + ' VALUES (%s, %s)'
+                self.cursor.execute(query, (user.username, event.code))
+                self.db.commit()
+                return True, user.username + ' joined ' + event.name
+            else:
+                return False, user.username + ' already joined ' + event.name
 
-def encode_password(password):
-    password = bytes(password, 'UTF-8')
-    salt = bcrypt.gensalt()
-    hashed = (bcrypt.hashpw(password, salt)).decode('UTF-8')
-    return hashed
+

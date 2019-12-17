@@ -1,3 +1,4 @@
+# coding=utf-8
 import string
 import random
 
@@ -21,4 +22,19 @@ class Event:
             "techno": flag_techno,
             "electronic": flag_electronic
         }
+    def print_details(self):
+        print('Name: ' + self.name)
+        print('Description: ' + self.description)
+        print('Price: ' + str(self.price) + '€')
+        print('Date: ' + str(self.date))
+        print('Venue: ' + self.venue.name)
+        print('Address: ' + self.venue.city + ', ' + self.venue.address)
+        print('Start time: ' + str(self.start_time))
+        print('End time: ' + str(self.end_time))
+        genres_string = 'Music Genres: '
+        for genre, value in self.music_genres.items():
+            if value:
+                genres_string = genres_string + genre + ' '
+        print(genres_string)
+        print ('----------------------------------')
 

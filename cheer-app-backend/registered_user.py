@@ -25,6 +25,10 @@ class RegisteredUser:
         self.friends_list = []  # contains the username of each friend
         self.joined_events = []
 
+    def join_event(self,event):
+        result, msg = DatabaseInsertHandler().insert_users_events(self,event)
+        return result, msg
+
     def add_friend(self, username2):
         result, msg = DatabaseInsertHandler().insert_friends(self.username, username2)
         return result, msg

@@ -2,8 +2,6 @@ drop database if exists cheerApp;
 create database cheerApp;
 use cheerApp;
 
--- TABLES CREATION
-
 create table users (
 		username varchar(20) primary key,
         password varchar(100) not null,
@@ -23,7 +21,15 @@ create table users (
         flag_electronic boolean default false
 );
 
-
+create table organizers (
+	username varchar(20) primary key,
+	password varchar(100) not null,
+	email varchar(40) not null unique, 
+    phone varchar(10) not null,
+	name varchar (20),
+	surname varchar(20),
+	date_of_birth date not null-- format: 'yyyy-mm-dd'
+);
 
 create table venues (
 	code varchar(6) primary key,
@@ -53,30 +59,16 @@ create table events (
     
 );
 
-create table organizers (
-	username varchar(20) primary key,
-	password varchar(100) not null,
-	email varchar(40) not null unique, 
-    phone varchar(10) not null,
-	name varchar (20),
-	surname varchar(20),
-	date_of_birth date not null-- format: 'yyyy-mm-dd'
-);
-
--- RELATIONS BETWEEN TABLES
-
 create table users_events(		-- users join events
 	username varchar(20),
     event_code varchar(20),
-    payment_status bool default false,
-    payment_import float,
     
     primary key(username, event_code),
     foreign key (username) references users(username),
     foreign key (event_code) references events(code)
 );
 
-create table organizers_events(		-- organizerss create events
+create table organizers_events(		-- organizers create events
 	username varchar(20),
     event_code varchar(20),
     advertised boolean default false,

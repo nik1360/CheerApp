@@ -1,15 +1,18 @@
 from database.db_event_handler import DatabaseEventFinder
 from database.db_manager import DatabaseManager
-from database.db_insert_handler import DatabaseInsertHandler
-from registered_user import RegisteredUser
+from database.db_checker import DatabaseChecker
 
-usr = RegisteredUser('nikolas1360', 'password', 'mail@mail.com', 'nikolas',
-                   'Sacchi', '0000-00-00', 'Zeme', 'italian', True, True, True, False, False, False)
+from registered_user import RegisteredUser
+from event import Event
+
+
 db = DatabaseManager()
+db_checker=DatabaseChecker()
 db_search = DatabaseEventFinder("Turin", "2019-12-23", False, True, False, False, False, True)
-# db_search.search(False, False, False)
-db_insert = DatabaseInsertHandler()
-# db_insert.insert_user(usr)
+event_list = db_search.search(False, False, False)
+
+for e in event_list:
+    e.print_details()
 
 login_status, logged_user, msg = db.login('evi', 'password', False)
 if not login_status:
@@ -23,4 +26,5 @@ else:
     for x in logged_user.friends_list:
         print(x)
 
-
+status, msg = logged_user.join_event(event_list[0])
+print(msg)

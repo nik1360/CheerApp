@@ -1,0 +1,23 @@
+IMPLEMENTED FUNCTIONS:
+
+User registration
+Organizer registration
+User Login
+Organizer Login
+
+Event creation
+Venue creation
+Event search with filters
+
+Join event
+Add friend
+See Friends list
+
+TO IMPLEMENT:
+
+See joined events
+Write review
+Edit-Delete event
+Delete friend
+Unjoin from an event
+Suggestion with Machine Learning
