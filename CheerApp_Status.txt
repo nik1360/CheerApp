@@ -13,12 +13,11 @@ Join event
 Add friend
 See Friends list
 See Joined Events
+See Organized events
 
 TO IMPLEMENT:
 
-Connect Event and Organizer
 Write review
-
 Edit-Delete event
 Delete friend
 Unjoin from an event

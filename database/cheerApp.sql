@@ -44,6 +44,7 @@ create table events (
     description varchar (200) not null,
     entrance_price float not null,
     venue_code varchar(20) not null,
+    organizer_username varchar(20) not null,
     date date not null, -- format: 'yyyy-mm-dd'
     start_time time, -- format: 'hh:mm:ss'
     end_time time,
@@ -55,7 +56,8 @@ create table events (
 	flag_reggae boolean default false,
 	flag_techno boolean default false,
 	flag_electronic boolean default false,
-    foreign key (venue_code) references venues(code)
+    foreign key (venue_code) references venues(code),
+    foreign key (organizer_username) references organizers(username)
     
 );
 
@@ -65,16 +67,6 @@ create table users_events(		-- users join events
     
     primary key(username, event_code),
     foreign key (username) references users(username),
-    foreign key (event_code) references events(code)
-);
-
-create table organizers_events(		-- organizers create events
-	username varchar(20),
-    event_code varchar(20),
-    advertised boolean default false,
-    
-    primary key(username, event_code),
-    foreign key (username) references organizers(username),
     foreign key (event_code) references events(code)
 );
 

@@ -7,8 +7,8 @@ from event import Event
 def return_events(query_result):
     events=[]
     for row in query_result:
-        e = Event(row[1], row[2], row[3], DatabaseChecker().retrieve_venue(row[15], row[16], row[17]), row[5],
-                  row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13])
+        e = Event(row[1], row[2], row[3], DatabaseChecker().retrieve_venue(row[16], row[17], row[18]), row[5],
+                  row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14])
         e.code=row[0] # change the random code with the one retrieved from the database
         events.append(e)
     return events
@@ -33,7 +33,8 @@ class DatabaseEventHandler(DatabaseManager):
 
     # search the events that respect some criteria (CITY, DATE, GENRES)
     def search(self, criteria_city, criteria_date, criteria_genres):
-        base_query = 'SELECT * FROM events,venues WHERE events.venue_code=venues.code'
+        base_query = 'SELECT * FROM ' + self.table_events + ','+ self.table_venues+' WHERE ' + \
+                     self.table_events + '.venue_code=' + self.table_venues + '.code'
         query = base_query
         # Construction of the query basing on the search criteria
         if criteria_city:
@@ -62,6 +63,7 @@ class DatabaseEventHandler(DatabaseManager):
         events = return_events(result)
         return events
 
+    # method that takes from the database the events that a user joined
     def retrieve_joined_events(self, user):
         query = 'SELECT event_code FROM ' + self.table_users_events + ' WHERE username=%s'
         self.cursor.execute(query, (user.username,))
@@ -75,9 +77,22 @@ class DatabaseEventHandler(DatabaseManager):
             for row in result1:
                 self.cursor.execute(query, (row[0],))
                 result2 = self.cursor.fetchall()
-                user.joined_events.append(return_events(result2))
+                for e in return_events(result2):
+                    user.joined_events.append(e)
             return True, 'Joined events list retrieved successfully!'
 
+    def retrieve_organized_events(self, organizer):
+        condition = self.table_events + '.venue_code=' + self.table_venues + '.code AND ' + \
+                    self.table_events + '.organizer_username=%s'
+        query = 'SELECT * FROM '+self.table_events+','+self.table_venues+' WHERE '+ condition
+        self.cursor.execute(query, (organizer.username,))
+        result = self.cursor.fetchall()
+        if not result:
+            return False, 'No event organized by ' + organizer.username
+        else:
+            for e in return_events(result):
+                organizer.organized_events.append(e)
+            return True, 'Events organized by ' + organizer.username + 'retrieved correctly!'
 
 
 

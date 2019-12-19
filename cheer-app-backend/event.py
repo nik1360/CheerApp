@@ -3,13 +3,14 @@ import random
 
 
 class Event:
-    def __init__(self, name, description, price, venue, date, start_time, end_time,
+    def __init__(self, name, description, price, venue, organizer, date, start_time, end_time,
                  flag_rock, flag_hiphop, flag_reggaeton, flag_reggae, flag_techno, flag_electronic):
         self.code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
         self.name = name
         self.description = description
         self.price = price
         self.venue = venue
+        self.organizer = organizer
         self.date = date
         self.start_time = start_time
         self.end_time = end_time

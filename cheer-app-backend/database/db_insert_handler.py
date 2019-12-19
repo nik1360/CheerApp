@@ -59,13 +59,13 @@ class DatabaseInsertHandler(DatabaseManager):
         else:
             if self.checker.check_event_code(event.code):
                 if self.checker.check_venue_availability(event.venue.code, event.date):
-                    query = 'INSERT INTO ' + self.table_events + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+                    query = 'INSERT INTO ' + self.table_events + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
                     self.cursor.execute(query,
                                         (event.code, event.name, event.description, event.price, event.venue.code,
-                                         event.date, event.start_time, event.end_time, event.music_genres["rock"],
-                                         event.music_genres["hiphop"], event.music_genres["reggaeton"],
-                                         event.music_genres["reggae"], event.music_genres["techno"],
-                                         event.music_genres["electronic"],))
+                                         event.organizer.username, event.date, event.start_time, event.end_time,
+                                         event.music_genres["rock"],event.music_genres["hiphop"],
+                                         event.music_genres["reggaeton"],event.music_genres["reggae"],
+                                         event.music_genres["techno"],event.music_genres["electronic"],))
                     self.db.commit()
                     return True, 'Event registered correctly!'
                 else:

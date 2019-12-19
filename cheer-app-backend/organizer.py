@@ -1,4 +1,5 @@
 from database.db_insert_handler import DatabaseInsertHandler
+from database.db_event_handler import DatabaseEventHandler
 
 
 class Organizer:
@@ -16,3 +17,6 @@ class Organizer:
         result, msg = DatabaseInsertHandler().insert_event(event)
         return result, msg
 
+    def retrieve_organized_events(self):
+        result, msg = DatabaseEventHandler().retrieve_organized_events(self)
+        return result,msg
