@@ -1,7 +1,7 @@
 import React from 'react'
-import DrawerToggleButton from '../SideDrawer/DrawerToggleButton'
+import DrawerToggleButton from './drawer/DrawerToggleButton'
 
-import './Toolbar.css'
+import './styles/Toolbar.css'
 
 
 const Toolbar = props => (
@@ -11,7 +11,7 @@ const Toolbar = props => (
 				<div className='toolbar_drawer-toggle-button'>
 					<DrawerToggleButton click={props.drawerClickHandler}/>
 				</div>
-				<div className="toolbar_logo"> <img src={require('../../images/cheerApp_logo.png')} alt='cheerApp_logo' /> </div>
+				<div className="toolbar_logo"> <img src={require('../images/cheerApp_logo.png')} alt='cheerApp_logo' /> </div>
 				<div className="spacer"></div>
 				<div className="toolbar_navigation-items">
 					<ul>

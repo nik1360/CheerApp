@@ -1,27 +1,27 @@
 import React, {Component} from 'react';
-import Toolbar from './components/Toolbar/Toolbar';
-import SideDrawer from './components/SideDrawer/SideDrawer';
-import Backdrop from './components/Backdrop/Backdrop'
+import Toolbar from './components/Toolbar';
+import SideDrawer from './components/drawer/SideDrawer';
+import Backdrop from './components/drawer/Backdrop'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
-import Login from './components/Pages/Login/Login'
-import Home from './components/Pages/Homepage/Home'
+import Login from './components/LoginPage'
+import Home from './components/Home'
 
 class App extends Component {
 	state = {
 		sideDrawerOpen:false,
 		userLoggedIn:false,
 		organizerLoggedIn:false,
-		username:window.token,
-		password:window.token
-
+		username:''
 	};
 
-	loginUser=() => {
+	loginUser=(u) => {
+		this.setState({username:u})
 		this.setState({userLoggedIn:true});	
 	};
 
-	loginOrganizer=() => {
+	loginOrganizer=(u) => {
+		this.setState({username:u})
 		this.setState({organizerLoggedIn:true});
 	};
 
@@ -62,11 +62,11 @@ class App extends Component {
 					
 					<Switch>
 						<Route path="/" exact component={Home }/>
-						<Route path="/login" 
+						<Route path="/loginpage" 
 							render={() => 
 								<Login username={this.state.username} password={this.state.password} 
 									userLoggedIn={this.state.userLoggedIn} organizerLoggedIn={this.state.organizerLoggedIn}
-									loginUser={this.loginUser} loginOrganizer={this.loginOrganzier}
+									loginUser={this.loginUser} loginOrganizer={this.loginOrganizer}
 								/> 
 							} 
 						/>

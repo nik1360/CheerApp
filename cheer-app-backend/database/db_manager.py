@@ -39,7 +39,7 @@ class DatabaseManager:
         res = self.cursor.fetchall()  # list containing the row of the result of the query
         if not res:  # no record in the database corresponds to the combination username + password
             login_status = False
-            msg = 'Username' + username + ' does not exist'
+            msg = 'Username ' + username + ' does not exist'
             return login_status, None, msg
         # retrieve hashed password from the database
         hashed = res[0][1]

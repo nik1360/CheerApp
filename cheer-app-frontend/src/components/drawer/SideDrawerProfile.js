@@ -9,9 +9,17 @@ const SideDrawerProfile = props => {
     if(props.userLoggedIn||props.organizerLoggedIn){
         return(
             <div className='side-drawer-profile'>
-                <div className='side-drawer-profile-image'>
-                    <img src={require('../../images/account.png')} alt='account img' />
-                </div>
+                {props.organizerLoggedIn &&
+                    <div className='side-drawer-profile-image'>
+                        <img src={require('../../images/organizer.png')} alt='account img' />
+                    </div>
+                }
+                {props.userLoggedIn &&
+                    <div className='side-drawer-profile-image'>
+                        <img src={require('../../images/user.png')} alt='account img' />
+                    </div>
+                }
+                
                 <div className='side-drawer-profile-info'>
                     <h3>Hello, {props.username}</h3>
                     <button className='side-drawer-profile-view-button' > View Profile</button> 
@@ -26,10 +34,10 @@ const SideDrawerProfile = props => {
                 <h3>Entered ad Guest!</h3>
                 <p>You can continue as guest</p>
                 <p>or</p>
-                <Link to='/login'>
+                <Link to='/loginpage'>
                     <button className='side-drawer-guest-login-button' > Login</button>
                 </Link>
-                <Link to='/register'>
+                <Link to='/registerpage'>
                     <button className='side-drawer-guest-register-button' type='submit' formAction="/register" > Register</button>
                 </Link> 
             </div>
