@@ -1,10 +1,19 @@
 import React from 'react';
 import {withRouter,Link} from 'react-router-dom';
 
+import {logout} from '../UserFunctions'
+
+
 const SideDrawerProfile = props => {
     const logOut=()=>{
-        props.logOut();
-        props.history.push('/');
+        logout().then(response=>{
+            if (!response.error) {
+                props.logOut();
+                props.history.push('/');
+            }else{
+                alert(response.error);
+            }
+        })
     }
     if(props.userLoggedIn||props.organizerLoggedIn){
         return(

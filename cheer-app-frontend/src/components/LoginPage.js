@@ -2,13 +2,12 @@ import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
 import {loginUser,loginOrganizer} from './UserFunctions'
 
-import './styles/LoginPage.css'
+import './styles/LoginRegisterPage.css'
 
 const LoginPage = props => {
     
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    
     
     const onSubmitUser = e => {
         e.preventDefault()

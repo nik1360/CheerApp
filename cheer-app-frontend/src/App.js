@@ -4,7 +4,8 @@ import SideDrawer from './components/drawer/SideDrawer';
 import Backdrop from './components/drawer/Backdrop'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
-import Login from './components/LoginPage'
+import RegisterPage from './components/RegisterPage'
+import LoginPage from './components/LoginPage'
 import Home from './components/Home'
 
 class App extends Component {
@@ -64,12 +65,13 @@ class App extends Component {
 						<Route path="/" exact component={Home }/>
 						<Route path="/loginpage" 
 							render={() => 
-								<Login username={this.state.username} password={this.state.password} 
+								<LoginPage username={this.state.username} password={this.state.password} 
 									userLoggedIn={this.state.userLoggedIn} organizerLoggedIn={this.state.organizerLoggedIn}
 									loginUser={this.loginUser} loginOrganizer={this.loginOrganizer}
 								/> 
 							} 
 						/>
+						<Route path="/registerpage" exact component={RegisterPage }/>
 						
         			</Switch>
 					
