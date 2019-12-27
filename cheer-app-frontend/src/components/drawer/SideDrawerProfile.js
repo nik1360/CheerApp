@@ -43,6 +43,7 @@ const SideDrawerProfile = props => {
                 <h3>Entered ad Guest!</h3>
                 <p>You can continue as guest</p>
                 <p>or</p>
+                <br/>
                 <Link to='/loginpage'>
                     <button className='side-drawer-guest-login-button' > Login</button>
                 </Link>
