@@ -1,0 +1,122 @@
+
+
+.search-page {
+    width: 100%;
+    height: 100vh;
+    border: 0 0 0 0;
+    
+    display: block;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.search-form{
+    width: 100%;
+    height:100%;
+    border: 0 0 0 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+
+.form-box{
+    margin-left:5%;
+}
+
+.h1 {
+    color:#000;
+    margin-bottom: 30px;
+    font-size: 40px;
+    letter-spacing: 2px;
+    text-align:center;
+}
+
+.search-field
+{
+    height:50px;
+    border: none;
+    background: #f2f2f2;
+    border-radius: 25px;
+    margin-right: 5px;
+    text-align:center;
+}
+
+.city
+{
+    width: 300px;
+}
+
+.date
+{
+    width: 200px;
+}
+.search-btn
+{
+    height: 50px;
+    width: 150px;
+    background: #002a4d;
+    border:none;
+    color:#fff;
+    border-radius:25px
+}
+
+.taste-btn
+{
+    height: 50px;
+    width: 100px;
+    border:none;
+    color:#fff;
+    border-radius:25px;
+    margin-right:10px
+}
+
+/*Style of the table that shows the results*/
+
+
+.results{
+    width: 100%;
+    height:100%;
+    border: 0 0 0 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#results-table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+  }
+  
+  #results-table td, #results-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  #results-table tr:nth-child(even){background-color: #f2f2f2; }
+  
+  #results-table tr:hover {background-color: #ddd;}
+  
+  #results-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #002a4d;
+    color: white;
+  }
+.genre-btn
+{
+    height: 30px;
+    width: 100px;
+    border:none;
+    color:#fff;
+    background-color: #801336;
+    border-radius:15px;
+    margin-right:3px
+}

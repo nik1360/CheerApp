@@ -2,7 +2,7 @@ import React from 'react';
 import SideDrawerLinks from './SideDrawerLinks'
 import SideDrawerProfile from './SideDrawerProfile'
 
-import'../styles/SideDrawer.css';
+import'../../styles/SideDrawer.css';
 
 const SideDrawer = props =>{
     let drawerClasses = 'side-drawer'

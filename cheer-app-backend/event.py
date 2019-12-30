@@ -37,5 +37,4 @@ class Event:
             if value:
                 genres_string = genres_string + genre + ' '
         print(genres_string)
-        print ('----------------------------------')
-
+        print('----------------------------------')

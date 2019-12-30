@@ -1,8 +1,10 @@
-from flask import Flask, jsonify, request, json
+from flask import Flask, jsonify, request, json, Response
+import datetime
 
 from database.db_manager import DatabaseManager, logout
 from database.db_insert_handler import DatabaseInsertHandler
-from organizer import  Organizer
+from database.db_event_handler import DatabaseEventHandler
+from organizer import Organizer
 from registered_user import RegisteredUser
 
 
@@ -77,6 +79,34 @@ def register(type_of_user):
         result = jsonify({'error': False, 'message':msg})
     else:
         result = jsonify({"error": msg})
+    return result
+
+
+@app.route('/events/search', methods=['POST'])
+def search_events():
+    # retrieve information from the client
+    date = request.get_json()['date']
+    city = request.get_json()['city']
+    flag_rock = request.get_json()['flagrock']
+    flag_hiphop = request.get_json()['flaghiphop']
+    flag_reggae = request.get_json()['flagreggae']
+    flag_reggaeton = request.get_json()['flagreggaeton']
+    flag_techno = request.get_json()['flagtechno']
+    flag_electronic = request.get_json()['flagelectronic']
+    criteria_city = request.get_json()['criteriacity']
+    criteria_date = request.get_json()['criteriadate']
+    criteria_genres = request.get_json()['criteriagenres']
+
+    # search the events basing on the selected criteria
+    db_event = DatabaseEventHandler(city, date, flag_rock, flag_hiphop, flag_reggaeton,
+                                    flag_reggae, flag_techno, flag_electronic)
+    event_list = db_event.search(criteria_city, criteria_date, criteria_genres)
+    # check if some event was found
+    if not event_list:
+        result = jsonify({'error': True, 'message': 'No event respects the selected criteria'})
+    else:
+        json_data = json.dumps(event_list, default=lambda o: o.__dict__, indent=4)
+        result = jsonify({'events': json_data, 'error': False, 'message': 'Events are present'})
     return result
 
 

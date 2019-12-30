@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
 import {loginUser,loginOrganizer} from './UserFunctions'
 
-import './styles/LoginRegisterPage.css'
+import '../../styles/LoginRegisterPage.css'
 
 const LoginPage = props => {
     
@@ -19,7 +19,7 @@ const LoginPage = props => {
 
         loginUser(user).then(response => {
             if (!response.error) {
-                props.loginUser(user.u);
+                props.loginUser(response.username);
                 props.history.push('/');
             }else{
                 alert(response.error);

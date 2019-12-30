@@ -3,22 +3,23 @@ from .db_checker import DatabaseChecker
 
 from event import Event
 
+
 # create a list of events with the information retrieved from the query
 def return_events(query_result):
-    events=[]
+    events = []
     for row in query_result:
         e = Event(row[1], row[2], row[3], DatabaseChecker().retrieve_venue(row[16], row[17], row[18]), row[5],
-                  row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14])
-        e.code=row[0] # change the random code with the one retrieved from the database
+                  str(row[6]), str(row[7]), str(row[8]), row[9], row[10], row[11], row[12], row[13], row[14])
+        e.code = row[0]  # change the random code with the one retrieved from the database
         events.append(e)
     return events
 
 
 # class that manages everything related to events
 class DatabaseEventHandler(DatabaseManager):
-    def __init__(self, city ='', date='',
-                 flag_rock = False, flag_hiphop = False, flag_reggaeton = False, flag_reggae = False,
-                 flag_techno = False, flag_electronic = False):
+    def __init__(self, city='', date='',
+                 flag_rock=False, flag_hiphop=False, flag_reggaeton=False, flag_reggae=False,
+                 flag_techno=False, flag_electronic=False):
         DatabaseManager.__init__(self)
         self.city = city
         self.date = date

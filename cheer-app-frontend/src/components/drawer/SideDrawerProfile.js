@@ -1,7 +1,7 @@
 import React from 'react';
 import {withRouter,Link} from 'react-router-dom';
 
-import {logout} from '../UserFunctions'
+import {logout} from '../users/UserFunctions'
 
 
 const SideDrawerProfile = props => {

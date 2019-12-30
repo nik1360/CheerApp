@@ -8,7 +8,7 @@ const SideDrawerLinks = props => {
                 <Link to="/">
                     <li>Home (user)</li>
                 </Link>
-                <Link to="/">
+                <Link to="/findeventpage">
                     <li>Find Events</li>
                 </Link>
                 <Link to="/">
@@ -42,7 +42,7 @@ const SideDrawerLinks = props => {
                     <Link to="/">
                         <li>Home (guest)</li>
                     </Link>
-                    <Link to="/">
+                    <Link to="/findeventpage">
                         <li>Find Events</li>
                     </Link>
                     
