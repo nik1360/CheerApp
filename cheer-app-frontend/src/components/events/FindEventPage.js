@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import {findEvents} from './EventFunctions'
 
-import Event from './Event'
+import EventRow from './EventRow'
 import '../../styles/FindEventPage.css'
 
 
@@ -90,8 +90,7 @@ const FindEventPage = () => {
     
     const handleSubmit= e =>{
         e.preventDefault()
-        setShowSearch(false)
-        setShowResults(true)
+        
         const search ={
             date:date,
             city:city,
@@ -117,8 +116,12 @@ const FindEventPage = () => {
         }
 
         findEvents(search).then(response => {
+            setShowSearch(false)
+            setShowResults(true)
+
             if (!response.error) {
                 setResultPresent(true)
+                
                 setEvents(JSON.parse(response.events)) 
             }else{
                 setResultPresent(false)
@@ -145,7 +148,7 @@ const FindEventPage = () => {
                             <button className='search-btn' type='submit'>Search</button>
                         </div>
                         
-                        
+                        <div>
                             <p>Click on the music tastes that you like most</p>
                             <button className='taste-btn' type='button'style={{backgroundColor:rockColor}} onClick={() => {setFlagRock(!flagRock)}}>Rock</button>
                             <button className='taste-btn' type='button'style={{backgroundColor:hiphopColor}}  onClick={() => {setFlagHipHop(!flagHipHop)}} > HipHop</button>
@@ -153,7 +156,7 @@ const FindEventPage = () => {
                             <button className='taste-btn' type='button'style={{backgroundColor:reggaetonColor}} onClick={() => {setFlagReggaeton(!flagReggaeton)}} >Reggaeton</button>
                             <button className='taste-btn' type='button'style={{backgroundColor:technoColor}} onClick={() => {setFlagTechno(!flagTechno)}} >Techno</button>
                             <button className='taste-btn' type='button'style={{backgroundColor:electronicColor}} onClick={() => {setFlagElectronic(!flagElectronic)}} >Electronic</button>
-                        
+                        </div>
                     </form>
                 </div>
             }
@@ -172,7 +175,7 @@ const FindEventPage = () => {
                             </tr>
                             {
                                 Array.from(events).map(e=>(
-                                    <Event
+                                    <EventRow
                                         code={e.code}
                                         name={e.name}
                                         city ={e.venue.city}

@@ -1,0 +1,101 @@
+
+* {
+  box-sizing: border-box;
+}
+
+/* Style the body */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+/* Header/logo Title */
+.header {
+  padding: 40px;
+  text-align: left;
+  background: #ade6e6;
+  color: white;
+}
+
+/* Increase the font size of the heading */
+.header h1 {
+  font-size: 40px;
+}
+/* Sticky navbar - toggles between relative and fixed, depending on the scroll position. It is positioned relative until a given offset position is met in the viewport - then it "sticks" in place (like position:fixed). The sticky value is not supported in IE or Edge 15 and earlier versions. However, for these versions the navbar will inherit default position */
+.navbar {
+  overflow: hidden;
+  background-color: #86b1da;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}
+
+/*making a class for the labels*/
+.label {
+  color: white;
+  padding: 8px;
+  font-family: Arial;
+  background-color: #86b1da;
+}
+
+/*Making a class for the buttons*/
+.btn {
+  border: none;
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  width: 250px;
+  cursor: pointer;
+  background-color:#86b1da;
+  opacity: 1;
+  transition: 0.3s;
+}
+.btn.ticket {
+  background-color: #ecc1d7;
+  color: white;
+}
+.btn:hover {opacity: 0.6}
+
+/* Column container */
+.row {  
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+ }
+ /* Create two unequal columns that sits next to each other */
+/* Sidebar/left column */
+.side {
+  -ms-flex: 60%; /* IE10 */
+  flex: 60%;
+  background-color: #f2f3f4;
+  padding: 20px;
+}
+
+/* Main column */
+.main {   
+  -ms-flex: 40%; /* IE10 */
+  flex: 40%;
+  background-color: white;
+  padding: 20px;
+}
+/* Footer */
+.footer {
+  padding: 20px;
+  text-align: center;
+  background: #f2f3f4;
+}
+/* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 700px) {
+  .row {   
+    flex-direction: column;
+  }
+}
+
+/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+@media screen and (max-width: 400px) {
+  .navbar a {
+    float: none;
+    width: 100%;
+  }
+}

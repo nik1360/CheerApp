@@ -8,6 +8,7 @@ import Backdrop from './components/drawer/Backdrop'
 import RegisterPage from './components/users/RegisterPage'
 import LoginPage from './components/users/LoginPage'
 import FindEventPage from './components/events/FindEventPage'
+import Event from './components/events/Event'
 import Home from './components/Home'
 
 class App extends Component {
@@ -75,6 +76,7 @@ class App extends Component {
 						/>
 						<Route path="/registerpage" exact component={RegisterPage }/>
 						<Route path="/findeventpage" exact component={FindEventPage }/>
+						<Route path="/events/"  component={Event }/>
 						
         			</Switch>
 					

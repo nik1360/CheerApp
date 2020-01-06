@@ -1,4 +1,4 @@
-from database.db_event_handler import DatabaseEventHandler
+cd venvfrom database.db_event_handler import DatabaseEventHandler
 from database.db_manager import DatabaseManager,logout
 from database.db_checker import DatabaseChecker
 
