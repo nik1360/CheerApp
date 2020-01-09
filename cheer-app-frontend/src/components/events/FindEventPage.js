@@ -26,7 +26,7 @@ const FindEventPage = () => {
     const [technoColor, setTechnoColor] = useState(unselected);
     const [electronicColor, setElectronicColor] = useState(unselected);
 
-    const [events, setEvents] = useState('')
+    const [events, setEvents] = useState([])
     const [resultPresent, setResultPresent] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [showSearch, setShowSearch] = useState(true);
@@ -130,12 +130,6 @@ const FindEventPage = () => {
         
     }
 
-
-
-    useEffect(() => {
-        console.log(events)
-    }, [events]);
-
     return(
         <div className='search-page'>
             {showSearch &&
@@ -176,18 +170,23 @@ const FindEventPage = () => {
                             {
                                 Array.from(events).map(e=>(
                                     <EventRow
+                                        key ={e.code} /*every mapped element must have a key attribute*/
+
                                         code={e.code}
                                         name={e.name}
-                                        city ={e.venue.city}
-                                        venue = {e.venue.name}
+                                        description = {e.description}
                                         date = {e.date}
                                         music_genres = {e.music_genres}
+                                        venue={e.venue}
+                                        organizer={e.organizer}
+                                        price ={e.price}
+                                        start_time ={e.start_time}
+                                        end_time ={e.end_time}
                                     />
                                 ))
                             }
                         </tbody>
-                    </table>
-                    
+                    </table>         
                 </div> 
             }
 

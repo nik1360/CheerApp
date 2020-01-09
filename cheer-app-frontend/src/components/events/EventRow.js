@@ -1,17 +1,33 @@
 import React from 'react'
+import {withRouter} from 'react-router-dom';
 
 import '../../styles/FindEventPage.css'
 
-
 const EventRow = props => {
     
+    const genres = []
+
     const seeEventDetails = () =>{
         
-        var url='/events/'+props.code
-        window.location = url;
+        props.history.push({
+            pathname: '/events/'+props.code,
+            state:{
+                code:props.code,
+                name: props.name,
+                description: props.description,
+                date: props.date,
+                venue: props.venue,
+                genres: genres,
+                organizer: props.organizer,
+                price: props.price,
+                start_time: props.start_time,
+                end_time:props.end_time
+
+            }
+        })
+        
     }
 
-	var genres = []
     if(props.music_genres.rock===1){
         genres.push('Rock')
     }
@@ -34,13 +50,13 @@ const EventRow = props => {
     return(
         <tr onClick={seeEventDetails}>
             <td>{props.name}</td>
-            <td>{props.city}</td>
-            <td>{props.venue}</td>
+            <td>{props.venue.city}</td>
+            <td>{props.venue.name}</td>
             <td>{props.date}</td>
             <td>
                 {
                     Array.from(genres).map(g =>(
-                        <button type='button' className='genre-btn'>{g}</button>
+                        <button type='button' className='genre-btn'key ={g}>{g}</button>
                     ))
                 }
             </td>
@@ -49,4 +65,4 @@ const EventRow = props => {
 
 };
 
-export default EventRow;
+export default withRouter(EventRow);

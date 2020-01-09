@@ -11,9 +11,9 @@ body {
 
 /* Header/logo Title */
 .header {
-  padding: 40px;
+  padding: 20px;
   text-align: left;
-  background: #ade6e6;
+  background: #071f33;
   color: white;
 }
 
@@ -46,12 +46,11 @@ body {
   font-size: 16px;
   width: 250px;
   cursor: pointer;
-  background-color:#86b1da;
-  opacity: 1;
+  background-color:#114e80;
   transition: 0.3s;
 }
 .btn.ticket {
-  background-color: #ecc1d7;
+  background-color: #f071b3;
   color: white;
 }
 .btn:hover {opacity: 0.6}
@@ -98,4 +97,32 @@ body {
     float: none;
     width: 100%;
   }
+}
+
+.profile-view-button{
+  width: 120px;
+  height: 30%;
+  cursor: pointer;
+  color: white;  
+  background: #114e80;
+  border: 1px;
+  border-radius:15px;
+  margin-right:3px
+}
+
+.genre-btn
+{
+    height: 30px;
+    width: 100px;
+    border:none;
+    color:#fff;
+    background-color: #801336;
+    border-radius:15px;
+    margin-right:3px
+}
+
+.scrollable {
+  height:150px;
+  width:300px;
+  overflow-y:scroll;
 }

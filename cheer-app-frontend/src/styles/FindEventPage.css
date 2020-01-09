@@ -7,8 +7,7 @@
     
     display: block;
     justify-content: center;
-    align-items: center;
-    
+    align-items: center; 
 }
 
 .search-form{
@@ -92,6 +91,7 @@
     border-collapse: collapse;
     width: 80%;
   }
+
   
   #results-table td, #results-table th {
     border: 1px solid #ddd;

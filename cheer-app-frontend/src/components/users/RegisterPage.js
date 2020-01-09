@@ -52,7 +52,8 @@ const LoginPage = props => {
 
         registerOrganizer(org).then(response => {
             if (!response.error) {
-                props.history.push('/');
+                alert('Organizer ' + org.usr +' registered correctly')
+                props.history.push('/loginpage');
             }else{
                 alert(response.error);
             }
@@ -80,7 +81,8 @@ const LoginPage = props => {
 
         registerUser(usr).then(response => {
             if (!response.error) {
-                props.history.push('/');
+                alert('User ' + usr.usr +' registered correctly')
+                props.history.push('/loginpage');
             }else{
                 alert(response.error);
             }

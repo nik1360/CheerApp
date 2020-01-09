@@ -38,7 +38,7 @@ const LoginPage = props => {
         loginOrganizer(organizer).then(response => {
             if (!response.error) {
                 props.loginOrganizer(organizer.u);
-                props.history.push('/');
+                props.history.goBack();
             }else{
                 alert(response.error);
             }
@@ -55,13 +55,13 @@ const LoginPage = props => {
     return(
         <div className="login-page">
             <div className="form">
-                <form className="login-form" onSubmit={onSubmitUser}>
+                <form  onSubmit={onSubmitUser}>
                     <input className="form-text" type="text" placeholder="username" value={username} onChange={updateUsername}/>
                     <input className="form-text" type="password" placeholder="password" value={password} onChange={updatePassword}/>
                     <button className="form-button" type="submit" >login as user</button>
                 </form>
                 <br/>
-                <form className="login-form" onSubmit={onSubmitOrganizer} >
+                <form  onSubmit={onSubmitOrganizer} >
                     <button className="form-button" type="submit" >login as organizer</button>
                 </form>
                 <p className="message">Not registered? <a href="/register">Create an account</a></p>

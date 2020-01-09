@@ -1,59 +1,100 @@
-import React from 'react'
+import React from 'react';
+
+import {retrieveOrganizerDetails} from './EventFunctions'
 
 import '../../styles/Event.css'
 
 
 const Event = props => {
 
+    const askOrganizer = ()=> {
+        const event={
+            code:props.location.state.code,
+            organizer_username:props.location.state.organizer
+        }
+        retrieveOrganizerDetails(event).then(response => {
+
+            if (!response.error) {
+                window.location.href='mailto:'+response.email+'?subject=Questions about CheerApp event "'+props.location.state.name+'"'
+            }else{
+                console.log(response.msg)
+            }
+        })
+
+    }
+    const onClickLogin =() => {
+        props.history.push('/loginpage')
+    }
     return(
         <div>
-            <div class="header">
-                <h1>NAME EVENT</h1>
-                <p>Date - address </p>
-                <p>organised by: <i>nameorganiser</i></p>
+            <div className="header">
+                <h1>{props.location.state.name}</h1>
+                <p><b>Where: </b>{props.location.state.venue.name} - {props.location.state.venue.address} - {props.location.state.venue.city}</p>
+                <p><b>When: </b>{props.location.state.date} <b>from </b> {props.location.state.start_time}<b> to </b> {props.location.state.end_time}</p>
+                <p><b>Organised by: </b><i>{props.location.state.organizer}</i> &nbsp; <button className='profile-view-button'>VIEW PROFILE</button></p>
             </div>
 
 
-            <div class="row">
-                <div class="side">
-                    <span class="label ">Music type</span>
-                    <span class="label ">Income price</span>
-                    <span class="label ">Distance</span>
-                    <span class="label ">Price of a drink</span>
+            <div className="row">
+                <div className="side">
+                    <span >
+                        <b>Music type:</b> &nbsp;
+                    </span>
+                    <span >
+                        {
+                            (props.location.state.genres).map(g =>(
+                                <button type='button' className='genre-btn' key={g}> {g} </button>
+                            ))
+                        }
+                    </span>
+                        
+                    
+                    <span> <b>Income price: </b>{props.location.state.price}€ </span>
                     <br/>
-                    <h5>general information:</h5>
-                    <p> here should come the information the event maker gives in the process of uploading the event</p>
-                    <br/>
-                    <img src="img_girl.jpg" alt="eventphoto" width="200" height="240"/>
-                    <img src="img_chania.jpg" alt="eventphoto2" width="200" height="240"/>
-                    <img src="img_girl.jpg" alt="eventphoto3" width="200" height="240"/>
-
+                    <h4><b>Event description:</b></h4>
+                    <p> {props.location.state.description} </p>
+                    <h4><b>Event flyer:</b></h4>
+                    <img src="https://pic.pikbest.com/01/56/02/48dpIkbEsTMpR.jpg-1.jpg!bw700" alt="eventflyer" width="400" height="600"/> 
                 </div>
             
-                <div class="main">
-                    <button class="btn ">ATTEND</button>
-                    <br/>
-                    <br/>
-                    <button class="btn ">INTERESTED</button>
-                    <br/>
-                    <br/>
-                    <a href="file:///C:/Users/Julie/Documents/checkout%20cheerapp.html" ><button class="btn ticket">BUY TICKETS</button></a> 
-                    <br/>
-                    <br/>
-                    <h5>Friends who are going</h5>
-                    <p> Friend1, Friend2 and others are interested <br/> Friend4, Friend5 and others are going</p>
-                    <p/>
-                    <br/>
-                    <a href="pagewheretoaskquesions.com" target="_blank"><button class="btn">ASK Question</button></a> 
-                </div>
-            </div>
+                <div className="main">
+                    
+                    {props.userLoggedIn&&
+                        <div>
+                            <button className="btn ">ATTEND</button>
+                            <br/>
+                            <br/>
+                            <button className="btn ticket">BUY TICKETS</button> 
+                            <br/>
+                            <br/>
+                            <h5>Friends who are going</h5>
+                            <div className='scrollable'>
+                                <p> Friend1,<br/> Friend2 <br/>and <br/> others <br/> are <br/>interested <br/> Friend4,<br/> Friend5 <br/>and <br/>others are going</p>
+                            <p/>
+                            </div>
+                        </div>
 
-            <div class="footer">
-            <h2>Cheerapp, 2019</h2>
+
+                    }
+                    {!props.userLoggedIn&&
+                        <div>
+                            <p><b>You have to be logged in to attend an event and buy tickets!</b></p>
+                            <button className="btn " style={{backgroundColor:'red'}} onClick={onClickLogin}>Login</button>
+                            <br/>
+                            <br/>
+                        </div>
+
+                    }
+                    
+                    
+                    
+                    
+                    <br/>
+                    <button className="btn" onClick={askOrganizer}>Contact the organizer</button>
+                </div>
             </div>
         </div>
     )
 
 };
-
 export default Event;

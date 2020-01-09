@@ -2,7 +2,7 @@ from .db_manager import DatabaseManager
 from .db_checker import DatabaseChecker
 
 from event import Event
-
+from organizer import Organizer
 
 # create a list of events with the information retrieved from the query
 def return_events(query_result):
@@ -95,7 +95,15 @@ class DatabaseEventHandler(DatabaseManager):
                 organizer.organized_events.append(e)
             return True, 'Events organized by ' + organizer.username + 'retrieved correctly!'
 
+    def retrieve_organizer_details(self, username):
+        query='SELECT * FROM '+ self.table_organizers + ' WHERE username=%s'
+        self.cursor.execute(query, (username,))
+        res = self.cursor.fetchone()
+        if not res:
+            return False, None, 'No organizer with username ' + username
+        else:
+            org = Organizer(res[0], res[1], res[2], res[3], res[4], res[5], str(res[6]) )
 
-
+            return True, org, 'Details of organizer ' + username + 'retrieved correctly!'
 
 

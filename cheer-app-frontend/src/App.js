@@ -10,6 +10,7 @@ import LoginPage from './components/users/LoginPage'
 import FindEventPage from './components/events/FindEventPage'
 import Event from './components/events/Event'
 import Home from './components/Home'
+import './styles/General.css'
 
 class App extends Component {
 	state = {
@@ -54,31 +55,41 @@ class App extends Component {
 
 		return (
 			<Router>
-				<div stle={{height: '100%'}}>
-			
-					<Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>
-					<SideDrawer show={this.state.sideDrawerOpen} user={this.state.userLoggedIn} 
-						organizer={this.state.organizerLoggedIn} username={this.state.username}
-						logOut ={this.logOut}
-					/>
-					{backdrop}
-
-					
-					<Switch>
-						<Route path="/" exact component={Home }/>
-						<Route path="/loginpage" 
-							render={() => 
-								<LoginPage username={this.state.username} password={this.state.password} 
-									userLoggedIn={this.state.userLoggedIn} organizerLoggedIn={this.state.organizerLoggedIn}
-									loginUser={this.loginUser} loginOrganizer={this.loginOrganizer}
-								/> 
-							} 
-						/>
-						<Route path="/registerpage" exact component={RegisterPage }/>
-						<Route path="/findeventpage" exact component={FindEventPage }/>
-						<Route path="/events/"  component={Event }/>
+				<div className='page'>
+					<div className='toolbar'>
+						<Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>
+					</div>
+					<div className='content'>
 						
-        			</Switch>
+
+						
+						<SideDrawer show={this.state.sideDrawerOpen} user={this.state.userLoggedIn} 
+							organizer={this.state.organizerLoggedIn} username={this.state.username}
+							logOut ={this.logOut}
+						/>
+						{backdrop}
+						<Switch>
+							<Route path="/" exact component={Home }/>
+							<Route path="/loginpage" 
+								render={() => 
+									<LoginPage username={this.state.username} password={this.state.password} 
+										userLoggedIn={this.state.userLoggedIn} organizerLoggedIn={this.state.organizerLoggedIn}
+										loginUser={this.loginUser} loginOrganizer={this.loginOrganizer}
+									/> 
+								} 
+							/>
+							<Route path="/registerpage" exact component={RegisterPage }/>
+							<Route path="/findeventpage" exact component={FindEventPage }/>
+							<Route path="/events/"  
+								render={(props) =>
+									<Event {...props} userLoggedIn={this.state.userLoggedIn}/>
+								}
+							/>
+							
+						</Switch>
+						
+					</div>
+					
 					
 				
 				</div>

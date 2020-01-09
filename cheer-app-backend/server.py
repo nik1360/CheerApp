@@ -4,7 +4,6 @@ import datetime
 from database.db_manager import DatabaseManager, logout
 from database.db_insert_handler import DatabaseInsertHandler
 from database.db_event_handler import DatabaseEventHandler
-from organizer import Organizer
 from registered_user import RegisteredUser
 
 
@@ -109,6 +108,16 @@ def search_events():
         result = jsonify({'events': json_data, 'error': False, 'message': 'Events are present'})
     return result
 
+@app.route('/events/<event_code>/ask', methods=['POST'])
+def ask(event_code):
+    org_username = request.get_json()['username']
+    status, org, msg = DatabaseEventHandler().retrieve_organizer_details(org_username)
+
+    if status:
+        result = jsonify({'email':org.email,'error': False, 'message':msg})
+    else:
+        result = jsonify({'error': True,'message':msg})
+    return result
 
 if __name__ == '__main__':
     app.run(debug=True)
