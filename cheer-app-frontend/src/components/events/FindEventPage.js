@@ -138,7 +138,7 @@ const FindEventPage = () => {
                         <h1 className='h1'>Find your ideal event</h1>
                         <div>
                             <input type='text' className='search-field city' placeholder='City' value={city} onChange={updateCity}/>
-                            <input type='text' className='search-field date' placeholder='Date (yyyy-mm-dd)' value={date} onChange={updateDate}/>
+                            <input type='date' className='search-field date' placeholder='Date' value={date} onChange={updateDate}/>
                             <button className='search-btn' type='submit'>Search</button>
                         </div>
                         

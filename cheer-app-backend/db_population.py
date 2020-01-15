@@ -38,11 +38,8 @@ db_insert.insert_venue(Venue('Hiroshima Mon Amour', 'Turin', 'Via Dante 78'))
 
 # EVENTS population
 db_insert.insert_event(Event('Big Party', 'description', 15, db_checker.retrieve_venue('Alcatraz', 'Milan', 'Viale Indipendenza 66'),
-                             Organizer('jack', 'password', 'jack@mail.com', 'phone', 'Jack', 'Organizer', '1996-02-23'),
-                             '2019-12-24', '00:00:00', '00:00:00', False, False, True, False, False, True))
+                             'jack', '2019-12-24', '00:00:00', '00:00:00', False, False, True, False, False, True))
 db_insert.insert_event(Event('Christmas Party', 'description', 12, db_checker.retrieve_venue('Le Rotonde', 'Garlasco', 'Via Piave 3'),
-                             Organizer('jack', 'password', 'jack@mail.com', 'phone', 'Jack', 'Organizer', '1996-02-23'),
-                             '2019-12-25', '00:00:00', '00:00:00', False, True, True, False, False, True))
+                             'jack','2019-12-25', '00:00:00', '00:00:00', False, True, True, False, False, True))
 db_insert.insert_event(Event('New Year Party','description', 21, db_checker.retrieve_venue('Revolution', 'Mortara', 'Viale dei Mille 6'),
-                             Organizer('ver', 'password', 'veronica@mail.com', 'phone', 'Veronica', 'Doe', '1996-02-23'),
-                             '2019-12-31', '00:00:00', '00:00:00', False, True, True, False, False, True))
+                             'jack', '2019-12-31', '00:00:00', '00:00:00', False, True, True, False, False, True))

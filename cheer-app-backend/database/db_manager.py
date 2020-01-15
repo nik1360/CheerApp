@@ -24,6 +24,7 @@ class DatabaseManager:
         self.table_venues = 'venues'
         self.table_friends = 'friends'
         self.table_users_events = 'users_events'
+        self.table_ratings = 'ratings'
 
     # method that logs in a user or an organizer, returning a User object or an Organizer object
     def login(self, username, password, login_organizer):

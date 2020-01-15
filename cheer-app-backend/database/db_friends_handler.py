@@ -35,15 +35,14 @@ class DatabaseFriendsHandler(DatabaseManager):
             msg = 'There are users in  ' + city + '!'
             return True, user_list, msg
 
-    # retrieve a user's friends list
-    def retrieve_friends_list(self, user):
+    # Get the friend list of an user
+    def get_friends_list(self, username):
         query = 'SELECT username2 FROM ' + self.table_friends + ' WHERE username1 = %s'
-        self.cursor.execute(query, (user.username,))
+        self.cursor.execute(query, (username,))
         result = self.cursor.fetchall()
-        for r in result:
-            user.friends_list.append(r[0])
-        query = 'SELECT username1 FROM ' + self.table_friends + ' WHERE username2 = %s'
-        self.cursor.execute(query, (user.username,))
-        result = self.cursor.fetchall()
-        for r in result:
-            user.friends_list.append(r[0])
+        if not result:
+            msg = 'User have no friends'
+            return False, None, msg
+        else:
+            msg = 'Showing friends of the user: ' + username
+            return True, result, msg

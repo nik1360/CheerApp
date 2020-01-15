@@ -89,13 +89,31 @@ class DatabaseChecker(DatabaseManager):
             return False
 
     # check if a user already joined a particular event
-    def check_joined_events(self, user, event):
+    def check_joined_events(self, user_username, event_code):
         query = 'SELECT * FROM ' + self.table_users_events + ' WHERE (username = %s AND event_code=%s)'
-        self.cursor.execute(query, (user.username, event.code,))
+        self.cursor.execute(query, (user_username, event_code,))
         query_result = self.cursor.fetchall()
         if not query_result:  # the user haven't joined the event yet
             return True
         else:   # the user already joined the event
             return False
 
+# check if an event is organised by a specific organizer
+    def check_event_organizer(self, username, event):
+        query = 'SELECT * FROM ' + self.table_events + ' WHERE (organizer_username = %s AND code = %s)'
+        self.cursor.execute(query, (username, event.code,))
+        query_result = self.cursor.fetchall()
+        if not query_result:
+            return True # the organizer don't organize the event
+        else:
+            return False
 
+# check if a user already review a particular event
+    def check_rating_existence(self, user, event_code):
+        query = 'SELECT * FROM ' + self.table_ratings + ' WHERE (user_username = %s AND event_code = %s)'
+        self.cursor.execute(query, (user, event_code,))
+        query_result = self.cursor.fetchone()
+        if not query_result:
+            return True, None  # the user hasn't rated the event yet
+        else:
+            return False, query_result[3]

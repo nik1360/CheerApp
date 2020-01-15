@@ -40,7 +40,7 @@ const LoginPage = props => {
 
     const regOrganizer = () => {
         const org = {
-            usr: username,
+            usr: username.trim(),
             email:email,
             pwd: password,
             firstname:firstName,
@@ -62,7 +62,7 @@ const LoginPage = props => {
 
     const regUser = () => {
         const usr = {
-            usr: username,
+            usr: username.trim(),
             email:email,
             pwd: password,
             firstname:firstName,
@@ -122,11 +122,11 @@ const LoginPage = props => {
             <div className="form">
                 <form className="login-form" onSubmit={onSubmitHandler}>
                     <input className="form-text" type="text" placeholder="username" required value={username} onChange={updateUsername}/>
-                    <input className="form-text" type="text" placeholder="email" required value={email} onChange={updateEmail}/>
+                    <input className="form-text" type="email" placeholder="email" required value={email} onChange={updateEmail}/>
                     <input className="form-text" type="password" placeholder="password" required value={password} onChange={updatePassword}/>
                     <input className="form-text" type="text" placeholder="first name" required  value={firstName} onChange={updateFirstName}/>
                     <input className="form-text" type="text" placeholder="last name" required value={lastName} onChange={updateLastName}/>
-                    <input className="form-text" type="text" placeholder="date of birth (yyy-mm-dd)" required value={dateOfBirth} onChange={updateDateOfBirth}/>
+                    <input className="form-text" type="date" placeholder="date of birth" required value={dateOfBirth} onChange={updateDateOfBirth}/>
                     {!showOrganizerForm && !showUserForm &&
                         <div>
                             <p className="message">Choose one to show the other information</p>

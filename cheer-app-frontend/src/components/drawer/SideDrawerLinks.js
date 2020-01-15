@@ -27,7 +27,7 @@ const SideDrawerLinks = props => {
                     <Link to="/">
                         <li>Home (organizer)</li>
                     </Link>
-                    <Link to="/">
+                    <Link to="/createeventpage">
                         <li>Create Event</li>
                     </Link>
                     <Link to="/">

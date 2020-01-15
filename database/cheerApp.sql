@@ -79,3 +79,11 @@ create table friends(
     primary key(username1, username2)
 );
 
+create table ratings(
+	user_username varchar(20),
+    organizer_username varchar(20),
+    event_code varchar(6),
+    rating double,
+    
+    primary key(user_username, event_code)
+);

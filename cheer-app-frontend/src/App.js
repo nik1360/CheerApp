@@ -9,6 +9,7 @@ import RegisterPage from './components/users/RegisterPage'
 import LoginPage from './components/users/LoginPage'
 import FindEventPage from './components/events/FindEventPage'
 import Event from './components/events/Event'
+import CreateEventPage from './components/events/CreateEventPage'
 import Home from './components/Home'
 import './styles/General.css'
 
@@ -78,14 +79,20 @@ class App extends Component {
 									/> 
 								} 
 							/>
-							<Route path="/registerpage" exact component={RegisterPage }/>
-							<Route path="/findeventpage" exact component={FindEventPage }/>
+							<Route path="/registerpage" exact component={RegisterPage}/>
+							<Route path="/findeventpage" exact component={FindEventPage}/>
 							<Route path="/events/"  
 								render={(props) =>
-									<Event {...props} userLoggedIn={this.state.userLoggedIn}/>
+									<Event {...props} userLoggedIn={this.state.userLoggedIn} user_username={this.state.username}/>
 								}
 							/>
-							
+
+							<Route path="/createeventpage" exact  
+								render={(props) =>
+									<CreateEventPage {...props} organizer_username={this.state.username}/>
+								}
+							/>
+				
 						</Switch>
 						
 					</div>

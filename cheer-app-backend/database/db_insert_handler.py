@@ -17,7 +17,6 @@ class DatabaseInsertHandler(DatabaseManager):
 
     # Register a new user in the database
     def insert_user(self, user):
-
         if self.checker.check_username_email(user.username, user.email, 'USERS'):
             query = 'INSERT INTO ' + self.table_users + ' VALUES(%s,%s,%s,%s,%s,%s, %s, %s, %s, %s ,%s ,%s, %s, %s) '
             self.cursor.execute(query, (user.username, encode_password(user.password), user.email, user.name,
@@ -56,13 +55,14 @@ class DatabaseInsertHandler(DatabaseManager):
     def insert_event(self, event):
         if event.venue is None: # the venue is not registered yet
             return False, 'Venue is not registered yet!'
+
         else:
             if self.checker.check_event_code(event.code):
                 if self.checker.check_venue_availability(event.venue.code, event.date):
                     query = 'INSERT INTO ' + self.table_events + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
                     self.cursor.execute(query,
                                         (event.code, event.name, event.description, event.price, event.venue.code,
-                                         event.organizer.username, event.date, event.start_time, event.end_time,
+                                         event.organizer, event.date, event.start_time, event.end_time,
                                          event.music_genres["rock"],event.music_genres["hiphop"],
                                          event.music_genres["reggaeton"],event.music_genres["reggae"],
                                          event.music_genres["techno"],event.music_genres["electronic"],))
@@ -87,16 +87,16 @@ class DatabaseInsertHandler(DatabaseManager):
                 return False, username1 + ' and ' + username2 + ' were already friends!'
 
     # insert a new row in the table that correlates users and events
-    def insert_users_events(self, user, event,):
-        if not self.checker.check_event_existence(event):
-            return False, 'The event does not exist in the database'
-        else:
-            if self.checker.check_joined_events(user, event):
-                query = 'INSERT INTO ' + self.table_users_events + ' VALUES (%s, %s)'
-                self.cursor.execute(query, (user.username, event.code))
-                self.db.commit()
-                return True, user.username + ' joined ' + event.name
-            else:
-                return False, user.username + ' already joined ' + event.name
+    def insert_users_events(self, user_username, event_code,):
+        query = 'INSERT INTO ' + self.table_users_events + ' VALUES (%s, %s)'
+        self.cursor.execute(query, (user_username, event_code))
+        self.db.commit()
+        return True, user_username + ' joined ' + event_code
 
+    def insert_rating(self, user, organizer, event_code, rating):
+        query = 'INSERT INTO ' + self.table_ratings + ' VALUES (%s, %s, %s, %s)'
+        self.cursor.execute(query, (user, organizer, event_code, rating))
+        self.db.commit()
+
+        return True, 'The rating was inserted correctly'
 

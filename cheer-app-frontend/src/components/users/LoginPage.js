@@ -12,7 +12,7 @@ const LoginPage = props => {
     const onSubmitUser = e => {
         e.preventDefault()
         const user = {
-            u: username,
+            u: username.trim(),
             p: password,
             errors:{}
         }
@@ -20,7 +20,7 @@ const LoginPage = props => {
         loginUser(user).then(response => {
             if (!response.error) {
                 props.loginUser(response.username);
-                props.history.push('/');
+                props.history.goBack();
             }else{
                 alert(response.error);
             }
@@ -38,7 +38,7 @@ const LoginPage = props => {
         loginOrganizer(organizer).then(response => {
             if (!response.error) {
                 props.loginOrganizer(organizer.u);
-                props.history.goBack();
+                props.history.push('/');
             }else{
                 alert(response.error);
             }

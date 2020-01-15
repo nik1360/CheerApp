@@ -4,12 +4,18 @@ import datetime
 from database.db_manager import DatabaseManager, logout
 from database.db_insert_handler import DatabaseInsertHandler
 from database.db_event_handler import DatabaseEventHandler
+from database.db_checker import DatabaseChecker
+from database.db_delete_handler import DatabaseDeleteHandler
+
 from registered_user import RegisteredUser
+from venue import Venue
+from event import Event
 
 
 app = Flask(__name__)
 db = DatabaseManager()
 db_insert = DatabaseInsertHandler()
+db_delete = DatabaseDeleteHandler()
 
 logged_user = None
 login_status = False
@@ -118,6 +124,110 @@ def ask(event_code):
     else:
         result = jsonify({'error': True,'message':msg})
     return result
+
+@app.route('/register/event', methods=['POST'])
+def register_event():
+    name = request.get_json()['name']
+    description = request.get_json()['description']
+    date = request.get_json()['date']
+    start_time = request.get_json()['start_time']
+    end_time = request.get_json()['end_time']
+    city = request.get_json()['city']
+    address = request.get_json()['address']
+    venue_name = request.get_json()['venue']
+    price = request.get_json()['price']
+    flag_rock = request.get_json()['flagrock']
+    flag_hiphop = request.get_json()['flaghiphop']
+    flag_reggae = request.get_json()['flagreggae']
+    flag_reggaeton = request.get_json()['flagreggaeton']
+    flag_techno = request.get_json()['flagtechno']
+    flag_electronic = request.get_json()['flagelectronic']
+    organizer = request.get_json()['organizer']
+
+    venue = DatabaseChecker().retrieve_venue(venue_name, city, address)
+    if venue is None:
+        venue=Venue(venue_name,city,address)
+        db_insert.insert_venue(venue)
+
+    status, msg = db_insert.insert_event(Event(name=name,description=description,price=price,venue=venue,
+                                              organizer=organizer,date=date,start_time=start_time, end_time=end_time,
+                                              flag_rock=flag_rock, flag_hiphop=flag_hiphop, flag_reggae=flag_reggae,
+                                               flag_reggaeton=flag_reggaeton,flag_techno=flag_techno,
+                                               flag_electronic=flag_electronic))
+    status=True
+    msg='ok'
+    if status:
+        result = jsonify({'error': False, 'message':msg})
+    else:
+        result = jsonify({'error': True,'message':msg})
+    return result
+
+@app.route('/events/<event_code>/rate', methods=['POST'])
+def rate(event_code):
+    user_username = request.get_json()['user_username']
+    organizer_username = request.get_json()['organizer_username']
+    #event_code = request.get_json()['event_code']
+    rating = request.get_json()['rating_value']
+    try:
+        status, msg = db_insert.insert_rating(user=user_username, organizer=organizer_username,
+                                              event_code=event_code, rating=rating)
+    except Exception:
+        status=False
+        msg= user_username + ' already rated event ' + event_code
+    finally:
+        result = jsonify({'error': not status, 'message':msg})
+        return result
+
+@app.route('/events/<event_code>/deleteRating', methods=['POST'])
+def delete_rate(event_code):
+    user_username = request.get_json()['user_username']
+    try:
+        status,msg = db_delete.delete_rating(username=user_username, event_code=event_code)
+    except Exception as e:
+        status=False
+        msg= 'Impossible to delete the review'
+        print(str(e))
+    finally:
+        result = jsonify({'error': not status, 'message':msg})
+        return result
+
+@app.route('/events/<event_code>/attend', methods=['POST'])
+def attend(event_code):
+    user_username = request.get_json()['user_username']
+    try:
+        status,msg = db_insert.insert_users_events(user_username=user_username, event_code=event_code)
+    except Exception as e:
+        status=False
+        msg= user_username + ' already attend event ' + event_code
+        print(str(e))
+    finally:
+        result = jsonify({'error': not status, 'message':msg})
+        return result
+
+@app.route('/events/<event_code>/notAttend', methods=['POST'])
+def not_attend(event_code):
+    user_username = request.get_json()['user_username']
+    try:
+        status,msg = db_delete.delete_attendance(username=user_username, event_code=event_code)
+    except Exception as e:
+        status=False
+        msg= 'Impossible to remove attendance'
+        print(str(e))
+    finally:
+        result = jsonify({'error': not status, 'message':msg})
+        return result
+
+@app.route('/events/<event_code>/userstatus', methods=['POST'])
+def check_user_event_status(event_code):
+    user_username = request.get_json()['user_username']
+
+    rating_status, rating=DatabaseChecker().check_rating_existence(user=user_username,event_code=event_code)
+    attend_status = DatabaseChecker().check_joined_events(user_username=user_username,event_code=event_code)
+    result = jsonify({'show_rating': rating_status, 'show_attend': attend_status, 'rating':rating})
+    return result
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
