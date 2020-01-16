@@ -37,12 +37,22 @@ class DatabaseFriendsHandler(DatabaseManager):
 
     # Get the friend list of an user
     def get_friends_list(self, username):
+        friends_list = []
         query = 'SELECT username2 FROM ' + self.table_friends + ' WHERE username1 = %s'
         self.cursor.execute(query, (username,))
-        result = self.cursor.fetchall()
-        if not result:
+        result1 = self.cursor.fetchall()
+        query = 'SELECT username1 FROM ' + self.table_friends + ' WHERE username2 = %s'
+        self.cursor.execute(query, (username,))
+        result2 = self.cursor.fetchall()
+
+        for r in result1:
+            friends_list.append(r[0])
+        for r in result2:
+            friends_list.append(r[0])
+
+        if not friends_list:
             msg = 'User have no friends'
             return False, None, msg
         else:
             msg = 'Showing friends of the user: ' + username
-            return True, result, msg
+            return True, friends_list, msg

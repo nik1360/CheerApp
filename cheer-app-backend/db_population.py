@@ -43,3 +43,10 @@ db_insert.insert_event(Event('Christmas Party', 'description', 12, db_checker.re
                              'jack','2019-12-25', '00:00:00', '00:00:00', False, True, True, False, False, True))
 db_insert.insert_event(Event('New Year Party','description', 21, db_checker.retrieve_venue('Revolution', 'Mortara', 'Viale dei Mille 6'),
                              'jack', '2019-12-31', '00:00:00', '00:00:00', False, True, True, False, False, True))
+
+
+#FRINEDS population
+db_insert.insert_friends('jesus', 'nik')
+db_insert.insert_friends('evi', 'nik')
+db_insert.insert_friends('pierre', 'nik')
+db_insert.insert_friends('julie', 'nik')

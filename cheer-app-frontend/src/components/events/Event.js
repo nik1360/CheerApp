@@ -10,6 +10,7 @@ const Event = props => {
     const [ratingValue, setRatingValue] = useState(1)
     const [showAttend, setShowAttend] = useState(true)
     const [showRating, setShowRating] = useState(true)
+    const [friendsList, setFriendsList] = useState([])
     
     useEffect(() => {
         const event ={
@@ -17,6 +18,7 @@ const Event = props => {
             event_code: props.location.state.code
         }
         userEventStatus(event).then(response => {
+            setFriendsList(response.friends_attend_event)
             setShowAttend(response.show_attend)
             setShowRating(response.show_rating)
             setRatingValue(response.rating)
@@ -169,8 +171,14 @@ const Event = props => {
                             <br/>
                             <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
                             <div className='scrollable'>
-                                <p> Friend1,<br/> Friend2 <br/>and <br/> others <br/> are <br/>interested <br/> Friend4,<br/> Friend5 <br/>and <br/>others are going</p>
-                            <p/>
+                                <p>
+                                    {
+                                        (friendsList).map(f =>(
+                                            <i key={f}> {f} <br/> </i> 
+                                        ))
+                                    }
+                                </p>
+                                
                             </div>
                             
                             { showRating &&

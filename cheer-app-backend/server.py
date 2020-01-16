@@ -6,6 +6,7 @@ from database.db_insert_handler import DatabaseInsertHandler
 from database.db_event_handler import DatabaseEventHandler
 from database.db_checker import DatabaseChecker
 from database.db_delete_handler import DatabaseDeleteHandler
+from database.db_friends_handler import DatabaseFriendsHandler
 
 from registered_user import RegisteredUser
 from venue import Venue
@@ -222,11 +223,18 @@ def check_user_event_status(event_code):
     user_username = request.get_json()['user_username']
 
     rating_status, rating=DatabaseChecker().check_rating_existence(user=user_username,event_code=event_code)
-    attend_status = DatabaseChecker().check_joined_events(user_username=user_username,event_code=event_code)
-    result = jsonify({'show_rating': rating_status, 'show_attend': attend_status, 'rating':rating})
+    attend_status = DatabaseChecker().check_event_attendance(user_username=user_username, event_code=event_code)
+
+    f2 = []
+    if user_username != '': # a user is logged in
+        _ , friends, msg = DatabaseFriendsHandler().get_friends_list(user_username)
+        for f in friends: # the friend f attend the event
+            if not DatabaseChecker().check_event_attendance(user_username=f, event_code=event_code):
+                f2.append(f)
+
+    result = jsonify({'show_rating': rating_status, 'show_attend': attend_status, 'rating':rating,
+                      'friends_attend_event': f2})
     return result
-
-
 
 
 if __name__ == '__main__':

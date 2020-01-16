@@ -82,6 +82,7 @@ class DatabaseEventHandler(DatabaseManager):
                     user.joined_events.append(e)
             return True, 'Joined events list retrieved successfully!'
 
+
     def retrieve_organized_events(self, organizer):
         condition = self.table_events + '.venue_code=' + self.table_venues + '.code AND ' + \
                     self.table_events + '.organizer_username=%s'

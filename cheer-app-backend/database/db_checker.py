@@ -89,7 +89,7 @@ class DatabaseChecker(DatabaseManager):
             return False
 
     # check if a user already joined a particular event
-    def check_joined_events(self, user_username, event_code):
+    def check_event_attendance(self, user_username, event_code):
         query = 'SELECT * FROM ' + self.table_users_events + ' WHERE (username = %s AND event_code=%s)'
         self.cursor.execute(query, (user_username, event_code,))
         query_result = self.cursor.fetchall()
