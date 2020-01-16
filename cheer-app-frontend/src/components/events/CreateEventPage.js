@@ -11,8 +11,8 @@ const CreateEventPage = props => {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [date, setDate] = useState('')
-    const [startTime, setStartTime] = useState('')
-    const [endTime, setEndTime] = useState('')
+    const [startTime, setStartTime] = useState('23:00')
+    const [endTime, setEndTime] = useState('04:00')
     const [city, setCity] = useState('')
     const [address, setAddress] = useState('')
     const [venue, setVenue] = useState('')
@@ -33,6 +33,23 @@ const CreateEventPage = props => {
     const [electronicColor, setElectronicColor] = useState(unselected);
 
     
+    const [todayDate, setTodayDate] = useState()
+
+    useEffect(() => {
+        var today = new Date()
+        var yyyy=today.getFullYear()
+        var mm = today.getMonth()+1
+        var dd = today.getDate()
+        if(dd<10){
+            dd='0'+dd
+        }
+        if(mm<10){
+            mm='0'+mm
+        }
+        setTodayDate(`${yyyy}-${mm}-${dd}`)
+        setDate(`${yyyy}-${mm}-${dd}`)
+        
+    }, []);
 
     const updateName = e =>{
         setName(e.target.value);
@@ -132,15 +149,15 @@ const CreateEventPage = props => {
             organizer: props.organizer_username,
             errors:{}
         }
-        console.log(event)
         createEvent(event).then(response => {
             if (!response.error) {
-                alert('ok') 
+                props.history.push('/') 
             }else{
                 alert(response.message) 
             }
         })
     }
+
 
 
     return(
@@ -149,13 +166,13 @@ const CreateEventPage = props => {
                 <form onSubmit={handleSubmit}>
                     <input className="form-text" type="text" required placeholder="Name" value={name} onChange={updateName}/>
                     <textarea className="form-text" required rows="5" cols="49" placeholder="Description"value={description} onChange={updateDescription}/>
-                    <input className="form-text" id = "date" type="date" required value={date} onChange={updateDate}/>
+                    <input className="form-text" id = "date" type="date" required value={date} min={todayDate} onChange={updateDate}/>
                     <input className="form-text" id="start-time" type="time" required value={startTime} onChange={updateStartTime}/>
                     <input className="form-text" id="end-time" type="time"  required value={endTime} onChange={updateEndTime}/>
                     <input className="form-text" type="text" required placeholder="City" value={city} onChange={updateCity}/>
                     <input className="form-text" type="text" required placeholder="Address" value={address} onChange={updateAddress}/>
                     <input className="form-text" type="text" required placeholder="Venue" value={venue} onChange={updateVenue}/>
-                    <input className="form-text" type="text" required placeholder="Entrance Price (€)" value={price} onChange={updatePrice}/>
+                    <input className="form-text" type="number" min="0" required placeholder="Entrance Price (€)" value={price} onChange={updatePrice}/>
 
                     <div>
                         <p className="message">What is the music that it will be played at the event?</p>
@@ -167,7 +184,7 @@ const CreateEventPage = props => {
                         <button className='taste-btn' type='button'style={{backgroundColor:technoColor}} onClick={() => {setFlagTechno(!flagTechno)}} >Techno</button>
                         <button className='taste-btn' type='button'style={{backgroundColor:electronicColor}} onClick={() => {setFlagElectronic(!flagElectronic)}} >Electronic</button> <br/>
                     </div>
-                        <br/>
+                    <br/>
                     <button className="form-button" type="submit" >Create the event!</button>
                 </form> 
             </div>

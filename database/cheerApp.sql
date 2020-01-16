@@ -25,9 +25,9 @@ create table organizers (
 	username varchar(20) primary key,
 	password varchar(100) not null,
 	email varchar(40) not null unique, 
-    phone varchar(10) not null,
-	name varchar (20),
-	surname varchar(20),
+    phone varchar(20) not null,
+	name varchar (30),
+	surname varchar(30),
 	date_of_birth date not null-- format: 'yyyy-mm-dd'
 );
 

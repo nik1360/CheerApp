@@ -11,6 +11,7 @@ from database.db_friends_handler import DatabaseFriendsHandler
 from registered_user import RegisteredUser
 from venue import Venue
 from event import Event
+from organizer import Organizer
 
 
 app = Flask(__name__)
@@ -228,9 +229,10 @@ def check_user_event_status(event_code):
     f2 = []
     if user_username != '': # a user is logged in
         _ , friends, msg = DatabaseFriendsHandler().get_friends_list(user_username)
-        for f in friends: # the friend f attend the event
-            if not DatabaseChecker().check_event_attendance(user_username=f, event_code=event_code):
-                f2.append(f)
+        if friends is not None:
+            for f in friends: # the friend f attend the event
+                if not DatabaseChecker().check_event_attendance(user_username=f, event_code=event_code):
+                    f2.append(f)
 
     result = jsonify({'show_rating': rating_status, 'show_attend': attend_status, 'rating':rating,
                       'friends_attend_event': f2})

@@ -5,6 +5,7 @@ import EventRow from './EventRow'
 import '../../styles/FindEventPage.css'
 
 
+
 const FindEventPage = () => {
     
     const selected='#801336'
@@ -31,6 +32,22 @@ const FindEventPage = () => {
     const [showResults, setShowResults] = useState(false);
     const [showSearch, setShowSearch] = useState(true);
 
+    const [todayDate, setTodayDate] = useState()
+
+    useEffect(() => {
+        var today = new Date()
+        var yyyy=today.getFullYear()
+        var mm = today.getMonth()+1
+        var dd = today.getDate()
+        if(dd<10){
+            dd='0'+dd
+        }
+        if(mm<10){
+            mm='0'+mm
+        }
+        setTodayDate(`${yyyy}-${mm}-${dd}`)
+        
+    }, []);
 
     const updateCity = e =>{
         setCity(e.target.value);
@@ -138,7 +155,7 @@ const FindEventPage = () => {
                         <h1 className='h1'>Find your ideal event</h1>
                         <div>
                             <input type='text' className='search-field city' placeholder='City' value={city} onChange={updateCity}/>
-                            <input type='date' className='search-field date' placeholder='Date' value={date} onChange={updateDate}/>
+                            <input type='date' className='search-field date' placeholder='Date' value={date} min={todayDate} onChange={updateDate}/>
                             <button className='search-btn' type='submit'>Search</button>
                         </div>
                         
@@ -168,20 +185,23 @@ const FindEventPage = () => {
                                 <th>GENRES</th>
                             </tr>
                             {
-                                Array.from(events).map(e=>(
+                                Array.from(events)
+                                /*.filter(e => Date.parse(e.date) >= Date.parse(todayDate))*/ /*Keep only upcoming events */
+                                .map(e=>(
+                                    
                                     <EventRow
-                                        key ={e.code} /*every mapped element must have a key attribute*/
+                                    key ={e.code} /*every mapped element must have a key attribute*/
 
-                                        code={e.code}
-                                        name={e.name}
-                                        description = {e.description}
-                                        date = {e.date}
-                                        music_genres = {e.music_genres}
-                                        venue={e.venue}
-                                        organizer={e.organizer}
-                                        price ={e.price}
-                                        start_time ={e.start_time}
-                                        end_time ={e.end_time}
+                                    code={e.code}
+                                    name={e.name}
+                                    description = {e.description}
+                                    date = {e.date}
+                                    music_genres = {e.music_genres}
+                                    venue={e.venue}
+                                    organizer={e.organizer}
+                                    price ={e.price}
+                                    start_time ={e.start_time}
+                                    end_time ={e.end_time}
                                     />
                                 ))
                             }

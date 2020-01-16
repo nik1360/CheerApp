@@ -10,7 +10,12 @@ const Event = props => {
     const [ratingValue, setRatingValue] = useState(1)
     const [showAttend, setShowAttend] = useState(true)
     const [showRating, setShowRating] = useState(true)
+    const [eventIsPassed, setEventIsPassed] = useState()
     const [friendsList, setFriendsList] = useState([])
+    const [showFriendsList, setShowFriendsList] = useState(true)
+
+    const [todayDate, setTodayDate] = useState()
+    
     
     useEffect(() => {
         const event ={
@@ -18,12 +23,37 @@ const Event = props => {
             event_code: props.location.state.code
         }
         userEventStatus(event).then(response => {
+            if(response.friends_attend_event.length !== 0){
+                setShowFriendsList(true)
+            }else{
+                setShowFriendsList(false)
+            }
             setFriendsList(response.friends_attend_event)
             setShowAttend(response.show_attend)
             setShowRating(response.show_rating)
             setRatingValue(response.rating)
         })
-    }, []);
+
+        var today = new Date()
+        var yyyy=today.getFullYear()
+        var mm = today.getMonth()+1
+        var dd = today.getDate()
+        if(dd<10){
+            dd='0'+dd
+        }
+        if(mm<10){
+            mm='0'+mm
+        }
+        setTodayDate(`${yyyy}-${mm}-${dd}`)
+
+        if(Date.parse(props.location.state.date)< Date.parse(todayDate)){
+            setEventIsPassed(true)
+        }else{
+            setEventIsPassed(false)
+        }
+
+    }, [props.location.state.code, props.location.state.date, props.user_username, todayDate, eventIsPassed]);
+
     const askOrganizer = ()=> {
         const event={
             code:props.location.state.code,
@@ -37,7 +67,6 @@ const Event = props => {
                 console.log(response.msg)
             }
         })
-
     }
 
     const submitRating = e => {
@@ -104,15 +133,12 @@ const Event = props => {
         userNotAttendsEvent(event).then(response => {
 
             if (!response.error) {
-                alert(response.message)
                 setShowAttend(true)
             }else{
                 alert(response.message)
             }
         })
-        
     }
-
 
     const onClickLogin =() => {
         props.history.push('/loginpage')
@@ -153,14 +179,20 @@ const Event = props => {
                     
                     {props.userLoggedIn &&
                         <div>
-                            {showAttend &&
+                            {showAttend && !eventIsPassed &&
                                 <div>
                                     <button className="btn" onClick={attendEvent}>I WILL ATTEND</button>
                                 </div>
                             }
-                            {!showAttend &&
+                            {!showAttend && !eventIsPassed &&
                                 <div>
                                     <button className="btn" onClick={notAttendEvent}>I WON'T ATTEND ANYMORE</button>
+                                </div>
+                            }
+
+                            {eventIsPassed &&
+                                <div>
+                                    <button className="btn" disabled>CAN'T ATTEND, EVENT IS PASSED</button>
                                 </div>
                             }
                             
@@ -169,19 +201,32 @@ const Event = props => {
                             <button className="btn ticket">BUY TICKETS</button> 
                             <br/>
                             <br/>
-                            <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
-                            <div className='scrollable'>
-                                <p>
-                                    {
-                                        (friendsList).map(f =>(
-                                            <i key={f}> {f} <br/> </i> 
-                                        ))
-                                    }
-                                </p>
+                            {showFriendsList &&
+                                <div>
+                                    <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
+                                    <div className='scrollable'>
+                                        <p>
+                                            {
+                                                (friendsList).map(f =>(
+                                                    <i key={f}> {f} <br/> </i> 
+                                                ))
+                                            }
+                                        </p>
+                                        
+                                    </div>
+                                </div>
                                 
-                            </div>
+                            }
+                            {!showFriendsList &&
+                                <div>
+                                    <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Non of your friends is attending the event</h5>
+                                    
+                                </div>
+                                
+                            }
                             
-                            { showRating &&
+                            
+                            {showRating && eventIsPassed &&
                                 <div>
                                     <h5 style={{marginTop:'15px', marginBottom:'0px'}}>Rate this event!</h5>
                                     <form id="rating" method="post" onSubmit={submitRating}>
@@ -205,7 +250,15 @@ const Event = props => {
                                      </form>
                                 </div>
                             }
-                            {!showRating &&
+
+                            {!eventIsPassed &&
+                                <div>
+                                    <h4 style={{marginTop:'50px', marginBottom:'20px'}}>You have to wait that the event is passed to review the event!</h4>
+                                </div>
+                                
+                            }
+
+                            {!showRating && eventIsPassed &&
                                 <div>
                                     <h4 style={{marginTop:'50px', marginBottom:'20px'}}>You have already rated this event with {ratingValue} stars!</h4>
                                     <button className="btn " style={{backgroundColor:'#ee4540'}} onClick={removeRating}>DELETE YOUR RATING</button>
@@ -214,8 +267,6 @@ const Event = props => {
                             }
 
                         </div>
-
-
                     }
                     {!props.userLoggedIn&&
                         <div>

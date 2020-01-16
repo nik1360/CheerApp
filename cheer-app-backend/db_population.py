@@ -32,7 +32,7 @@ db_insert.insert_venue(Venue('Alcatraz', 'Milan', 'Viale Indipendenza 66'))
 db_insert.insert_venue(Venue('Hiroshima Mon Amour', 'Turin', 'Via Dante 78'))
 db_insert.insert_venue(Venue('Revolution', 'Mortara', 'Viale dei Mille 6'))
 db_insert.insert_venue(Venue('Le Rotonde', 'Garlasco', 'Via Piave 3'))
-db_insert.insert_venue(Venue('Hiroshima Mon Amour', 'Turin', 'Via Dante 78'))
+
 
 
 
