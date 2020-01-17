@@ -5,6 +5,7 @@ import {logout} from '../users/UserFunctions'
 
 
 const SideDrawerProfile = props => {
+    const profile_url='/users/'+props.username
     const logOut=()=>{
         logout().then(response=>{
             if (!response.error) {
@@ -31,7 +32,9 @@ const SideDrawerProfile = props => {
                 
                 <div className='side-drawer-profile-info'>
                     <h3>Hello, {props.username}</h3>
-                    <button className='side-drawer-profile-view-button' > View Profile</button> 
+                    <Link to={profile_url}>
+                        <button className='side-drawer-profile-view-button' > View Profile</button> 
+                    </Link>
                     <button className='side-drawer-profile-logout-button' onClick={logOut}> Log Out</button>
                 </div>   
             </div>

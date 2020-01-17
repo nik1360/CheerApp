@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 
 import {retrieveOrganizerDetails,insertRating, deleteRating, userAttendsEvent, userNotAttendsEvent, userEventStatus} from './EventFunctions'
 
-import '../../styles/Event.css'
+import '../../styles/EventProfilePage.css'
 
 
 const Event = props => {
@@ -277,10 +277,6 @@ const Event = props => {
                         </div>
 
                     }
-                    
-                    
-                    
-                    
                     <br/>
                     <button className="btn" onClick={askOrganizer}>Contact the organizer</button>
                 </div>

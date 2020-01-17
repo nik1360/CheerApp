@@ -186,7 +186,7 @@ const FindEventPage = () => {
                             </tr>
                             {
                                 Array.from(events)
-                                /*.filter(e => Date.parse(e.date) >= Date.parse(todayDate))*/ /*Keep only upcoming events */
+                                .filter(e => Date.parse(e.date) >= Date.parse(todayDate)) /*Keep only upcoming events */
                                 .map(e=>(
                                     
                                     <EventRow

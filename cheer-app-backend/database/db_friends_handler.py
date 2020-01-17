@@ -1,4 +1,5 @@
 from database.db_manager import DatabaseManager
+from registered_user import RegisteredUser
 
 # class that manages interactions between users
 class DatabaseFriendsHandler(DatabaseManager):
@@ -6,17 +7,18 @@ class DatabaseFriendsHandler(DatabaseManager):
         DatabaseManager.__init__(self)
     # search a user by its username
     def find_user_username(self, username):
-        query = 'SELECT username, name, city FROM ' + self.table_users + ' WHERE username=%s'
+        query = 'SELECT * FROM ' + self.table_users + ' WHERE username=%s'
         self.cursor.execute(query, (username,))
-        result = self.cursor.fetchall()
-        if not result:
-
+        r = self.cursor.fetchone()
+        if not r:
             msg = 'User does not exist!'
             return False, None, msg
         else:
-            details = {result[0][0], result[0][1], result[0][2]}  # create a tuple with username, name and city
+            user = RegisteredUser(username=r[0], password=r[1], email=r[2], name=r[3], surname=r[4], date_of_birth=str(r[5]),
+                                  city= r[6], nationality=r[7], flag_rock=r[8], flag_hiphop=r[9], flag_reggaeton=r[10],
+                                  flag_reggae=r[11], flag_techno=r[12], flag_electronic=r[13])
             msg = 'User ' + username + ' exists!'
-            return True, details, msg
+            return True, user, msg
 
     # find the users in a particular city
     def find_user_city(self, city):

@@ -238,6 +238,20 @@ def check_user_event_status(event_code):
                       'friends_attend_event': f2})
     return result
 
+@app.route('/users/<username>/getDetails', methods=['POST'])
+def retrieve_user_info(username):
+    status, user, msg = DatabaseFriendsHandler().find_user_username(username=username)
+    if status:
+        DatabaseEventHandler().retrieve_joined_events(user=user)
+        _, f_list, _ = DatabaseFriendsHandler().get_friends_list(username)
+        user.friends_list.append(f_list)
+        json_user = json.dumps(user, default=lambda o: o.__dict__, indent=4)
+        json_tastes = json.dumps(user.music_tastes, default=lambda o: o.__dict__, indent=4)
+        result = jsonify({'user': json_user, 'music_tastes':json_tastes, 'error':False, 'message': msg })
+    else:
+        result = jsonify({'user': None, 'error': True, 'message': msg})
+    return result
+
 
 if __name__ == '__main__':
     app.run(debug=True)

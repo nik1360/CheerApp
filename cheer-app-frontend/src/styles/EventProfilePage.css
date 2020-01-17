@@ -178,3 +178,74 @@ body {
 form.amp-form-submit-error [submit-error] {
   color: red;
 }
+
+.header-profile-image-table {
+  text-align: center;
+  margin: 0;
+  width: 20%;
+  float:left;
+}
+
+.profile-info{
+  margin:5px;
+}
+
+.btn1{
+	border: none;
+	color: white;
+	font-size: 16px;
+	cursor: pointer;
+	background-color:#86b1da;
+	opacity: 1;
+	transition: 0.3s;
+  }
+  
+.btn1.ticket {
+  background-color: #ecc1d7;
+  color: white;
+}
+
+.btn1:hover {opacity: 0.6}
+
+.friends-events-lists {
+	-ms-flex: 33%; /* IE10 */
+  flex: 33%;
+	background-color: whitesmoke;
+  padding: 20px;
+  color:black;
+}
+
+
+.my-custom-scrollbar {
+	position: relative;
+	width: 200px;
+	height: 150px;
+	overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+	display: block;
+}
+
+.lists-table {
+  font-family: Arial, Helvetica, sans-serif;
+  width:100%;
+  table-layout: fixed;
+}
+
+#table td, #table th {
+  border-bottom:1px solid #e0e0d1;
+  
+  }
+  
+.profile-row{
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top:5%;
+	display: -ms-flexbox; /* IE10 */
+	display: flex;
+	-ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  background-color: white;
+}

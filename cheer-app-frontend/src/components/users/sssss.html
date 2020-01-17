@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Profile Page</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script language=JavaScript src=ScrollableTable.js></script>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* Style the body */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+/* Header/logo Title */
+.header {
+  padding: 40px;
+  text-align: left;
+  background: #ade6e6;
+  color: white;
+}
+
+/* Increase the font size of the heading */
+.header h1 {
+  font-size: 40px;
+}
+/* Sticky navbar - toggles between relative and fixed, depending on the scroll position. It is positioned relative until a given offset position is met in the viewport - then it "sticks" in place (like position:fixed). The sticky value is not supported in IE or Edge 15 and earlier versions. However, for these versions the navbar will inherit default position */
+.navbar {
+  overflow: hidden;
+  background-color: #86b1da;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+}
+
+/*making a class for the labels*/
+.label {
+  color: white;
+  padding: 6px;
+  border-radius: 30%;
+  font-family: Arial;
+  background-color: #86b1da;
+}
+
+/*Making a class for the buttons*/
+.btn {
+  border: none;
+  color: white;
+  padding: 10px 28px 10px;
+  font-size: 16px;
+  width: 190px;
+  cursor: pointer;
+  background-color:#86b1da;
+  opacity: 1;
+  transition: 0.3s;
+}
+.btn.ticket {
+  background-color: #ecc1d7;
+  color: white;
+}
+.btn:hover {opacity: 0.6}
+
+.btn1{
+	border: none;
+	color: white;
+	font-size: 16px;
+	cursor: pointer;
+	background-color:#86b1da;
+	opacity: 1;
+	transition: 0.3s;
+  }
+  
+.btn1.ticket {
+  background-color: #ecc1d7;
+  color: white;
+}
+
+.btn1:hover {opacity: 0.6}
+	
+
+/* Column container */
+.row {  
+	width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+	display: -ms-flexbox; /* IE10 */
+	display: flex;
+	-ms-flex-wrap: wrap; /* IE10 */
+	flex-wrap: wrap;
+  }
+  
+ /* Create three tables that sit next to each other */
+/* Sidebar/left column */
+.side1 {
+	-ms-flex: 33%; /* IE10 */
+	flex: 33%;
+	background-color: white;
+	padding: 20px;
+}
+
+/* Sidebar/medium column */
+.side2 {
+	-ms-flex: 33%; /* IE10 */
+	flex: 33%;
+	background-color: white;
+	padding: 20px;
+}
+
+
+.imgButton{
+    text-align:center;
+}
+
+.my-custom-scrollbar {
+	position: relative;
+	width: 200px;
+	height: 150px;
+	overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+	display: block;
+}
+
+#table {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#table td, #table th {
+	border-bottom:1px solid #e0e0d1;
+	}
+
+/* Footer */
+.footer {
+	padding: 20px;
+	text-align: center;
+	background: #f2f3f4;
+}
+/* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 700px) {
+  .row {   
+    flex-direction: column;
+  }
+}
+
+/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+@media screen and (max-width: 400px) {
+  .navbar a {
+    float: none;
+    width: 100%;}
+
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <table style = "float:left;"> <tr> <td>
+	<img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Circle-icons-profile.svg" alt="Profile picture" width="200" height="150"/>
+	</td> </tr>
+	<tr> <td>
+	<button class = "btn" style = "float:right-side;"> Edit Profile </button>
+	</tr> </td> </table> 
+	<table style = "float:right;">
+	<p style="margin-top:20px;"></p>
+    <p><h2><b>Username</b></h2></p>
+	<p> <i> Name Surname </i> </p>
+    <p> Date of Birth: <i> 07/07/1999</i></p>
+	<p> Email: <i> evratsanou@gmail.com </i> </p>
+	<p> Music Taste:
+		<span class="label "> <i> Regge </i> </span> 
+		&nbsp;
+		<span class="label "> <i> Pop </i> </span>
+		&nbsp;
+		<span class="label "> <i> Rock </i> </span>
+		&nbsp;
+		</p>
+	</table>
+</div>
+
+<div class = "row">
+<div class = "side1"> 
+<h3> Friends </h3>		
+<div class="table-wrapper-scroll-y my-custom-scrollbar" >
+	<table id = "table" >
+  <tbody>
+    <tr>
+    	<td>Friend 1</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+	</tr>
+	<tr>
+    	<td>Friend 2</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+	</tr>
+	<tr>
+    	<td>Friend 3</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+	</tr>
+	<tr>
+    	<td>Friend 4</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+	</tr>
+	<tr>
+    	<td>Friend 5</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+    </tr>
+	<tr>
+    	<td>Friend 6</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+    </tr>
+	<tr>
+    	<td>Friend 7</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+    </tr>
+	<tr>
+    	<td>Friend 8</td>
+		<td>&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+			&nbsp;
+		</td>
+		<td> <button class="btn1"><i class="fa fa-close"></i></button> </td>
+    </tr>
+  </tbody>
+</table>
+
+ </div>
+</div>
+
+<div class = "side2"> 	
+<h3> Events that I' m going </h3>	
+<div class="table-wrapper-scroll-y my-custom-scrollbar" >
+	<table>
+  <tbody>
+    <tr>
+    	<td> Event 1</td>
+	</tr>
+	<tr>
+    	<td> Event 2</td>
+	</tr>
+	<tr>
+    	<td> Event 3</td>
+	</tr>
+	<tr>
+    	<td> Event 4</td>
+	</tr>
+	<tr>
+    	<td> Event 5</td>
+    </tr>
+	<tr>
+    	<td> Event 6</td>
+    </tr>
+	<tr>
+    	<td> Event 7</td>
+    </tr>
+	<tr>
+    	<td> Event 8</td>
+    </tr>
+  </tbody>
+</table>
+
+ </div>
+</div>
+
+
+</div>
+
+<br>
+<br>
+<br>
+<div class="footer">
+  <h2>Cheerapp, 2019</h2>
+</div>
+
+
+</body>
+</html>

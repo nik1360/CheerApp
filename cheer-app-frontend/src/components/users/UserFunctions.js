@@ -84,3 +84,16 @@ export const registerUser = async usr => {
     console.log(err)
   }
 }
+
+export const getUserDetails = async user => {
+  try {
+    const response = await axios
+      .post('/users/'+user.username+'/getDetails', {
+        username: user.username,
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}

@@ -10,6 +10,8 @@ import LoginPage from './components/users/LoginPage'
 import FindEventPage from './components/events/FindEventPage'
 import Event from './components/events/Event'
 import CreateEventPage from './components/events/CreateEventPage'
+import UserProfilePage from './components/users/UserProfilePage'
+
 import Home from './components/Home'
 import './styles/General.css'
 
@@ -18,7 +20,7 @@ class App extends Component {
 		sideDrawerOpen:false,
 		userLoggedIn:false,
 		organizerLoggedIn:false,
-		username:''
+		username:'nik'
 	};
 
 	loginUser=(u) => {
@@ -90,6 +92,11 @@ class App extends Component {
 							<Route path="/createeventpage" exact  
 								render={(props) =>
 									<CreateEventPage {...props} organizer_username={this.state.username}/>
+								}
+							/>
+							<Route path="/users/" 
+								render={(props) =>
+									<UserProfilePage {...props} user_username={this.state.username}/>
 								}
 							/>
 				
