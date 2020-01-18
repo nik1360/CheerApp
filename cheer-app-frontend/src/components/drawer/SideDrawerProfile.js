@@ -33,7 +33,7 @@ const SideDrawerProfile = props => {
                 <div className='side-drawer-profile-info'>
                     <h3>Hello, {props.username}</h3>
                     <Link to={profile_url}>
-                        <button className='side-drawer-profile-view-button' > View Profile</button> 
+                        <button className='side-drawer-profile-view-button'> View Profile</button> 
                     </Link>
                     <button className='side-drawer-profile-logout-button' onClick={logOut}> Log Out</button>
                 </div>   

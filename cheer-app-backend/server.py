@@ -246,10 +246,24 @@ def retrieve_user_info(username):
         _, f_list, _ = DatabaseFriendsHandler().get_friends_list(username)
         user.friends_list.append(f_list)
         json_user = json.dumps(user, default=lambda o: o.__dict__, indent=4)
-        json_tastes = json.dumps(user.music_tastes, default=lambda o: o.__dict__, indent=4)
-        result = jsonify({'user': json_user, 'music_tastes':json_tastes, 'error':False, 'message': msg })
+        json_friends = json.dumps(user.friends_list, default=lambda o: o.__dict__, indent=4)
+        json_events = json.dumps(user.joined_events, default=lambda o: o.__dict__, indent=4)
+
+        result = jsonify({'user': json_user, 'joined_events': json_events,'friends':json_friends,'error':False, 'message': msg })
     else:
         result = jsonify({'user': None, 'error': True, 'message': msg})
+    return result
+
+@app.route('/events/<event_code>/getDetails', methods=['POST'])
+def retrieve_event_info(event_code):
+
+    status, event, msg = DatabaseEventHandler().retrieve_event_by_code(event_code=event_code)
+    if status:
+        event=event[0]
+        json_event = json.dumps(event, default=lambda o: o.__dict__, indent=4)
+        result = jsonify({'event': json_event, 'error':False, 'message': msg })
+    else:
+        result = jsonify({'event': None, 'error': True, 'message': msg})
     return result
 
 

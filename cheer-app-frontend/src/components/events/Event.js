@@ -1,11 +1,28 @@
 import React, {useState, useEffect} from 'react';
 
-import {retrieveOrganizerDetails,insertRating, deleteRating, userAttendsEvent, userNotAttendsEvent, userEventStatus} from './EventFunctions'
+import {retrieveOrganizerDetails,insertRating, deleteRating, userAttendsEvent, userNotAttendsEvent, userEventStatus, getEventDetails} from './EventFunctions'
 
 import '../../styles/EventProfilePage.css'
 
 
 const Event = props => {
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
+    const [date, setDate] = useState('')
+    const [startTime, setStartTime] = useState('23:00')
+    const [endTime, setEndTime] = useState('04:00')
+    const [city, setCity] = useState('')
+    const [address, setAddress] = useState('')
+    const [venue, setVenue] = useState('')
+    const [price, setPrice] = useState('')
+    const [organizer, setOrganizer] = useState('')
+
+    const [flagRock, setFlagRock] = useState(false);
+    const [flagHipHop, setFlagHipHop] = useState(false);
+    const [flagReggae, setFlagReggae] = useState(false);
+    const [flagReggaeton, setFlagReggaeton] = useState(false);
+    const [flagTechno, setFlagTechno] = useState(false);
+    const [flagElectronic, setFlagElectronic] = useState(false);
 
     const [ratingValue, setRatingValue] = useState(1)
     const [showAttend, setShowAttend] = useState(true)
@@ -13,10 +30,36 @@ const Event = props => {
     const [eventIsPassed, setEventIsPassed] = useState()
     const [friendsList, setFriendsList] = useState([])
     const [showFriendsList, setShowFriendsList] = useState(true)
-
+    
     const [todayDate, setTodayDate] = useState()
     
-    
+    useEffect(() => {
+        const event ={
+            event_code: props.location.state.code
+        }
+        getEventDetails(event).then(response => {
+            var parsed_event = JSON.parse(response.event)
+            console.log(parsed_event)
+            setName(parsed_event.name)
+            setDescription(parsed_event.description)
+            setDate(parsed_event.date)
+            setStartTime(parsed_event.start_time)
+            setEndTime(parsed_event.end_time)
+            setCity(parsed_event.venue.city)
+            setAddress(parsed_event.venue.address)
+            setVenue(parsed_event.venue.name)
+            setPrice(parsed_event.price)
+            setOrganizer(parsed_event.organizer)
+
+            setFlagRock(parsed_event.music_genres.rock)
+            setFlagHipHop(parsed_event.music_genres.hiphop)
+            setFlagReggae(parsed_event.music_genres.reggae)
+            setFlagReggaeton(parsed_event.music_genres.reggaeton)
+            setFlagTechno(parsed_event.music_genres.techno)
+            setFlagElectronic(parsed_event.music_genres.electronic) 
+        })
+    }, [props.location.state.code]);
+
     useEffect(() => {
         const event ={
             user_username: props.user_username,
@@ -46,18 +89,18 @@ const Event = props => {
         }
         setTodayDate(`${yyyy}-${mm}-${dd}`)
 
-        if(Date.parse(props.location.state.date)< Date.parse(todayDate)){
+        if(Date.parse(date)< Date.parse(todayDate)){
             setEventIsPassed(true)
         }else{
             setEventIsPassed(false)
         }
 
-    }, [props.location.state.code, props.location.state.date, props.user_username, todayDate, eventIsPassed]);
+    }, [props.location.state.code, date, props.user_username, todayDate, eventIsPassed]);
 
     const askOrganizer = ()=> {
         const event={
             code:props.location.state.code,
-            organizer_username:props.location.state.organizer
+            organizer_username:organizer
         }
         retrieveOrganizerDetails(event).then(response => {
 
@@ -74,7 +117,7 @@ const Event = props => {
         const rating ={
             event_code:props.location.state.code,
             user_username: props.user_username ,
-            organizer_username:props.location.state.organizer,
+            organizer_username:organizer,
             rating_value: ratingValue
         }
         insertRating(rating).then(response => {
@@ -143,13 +186,30 @@ const Event = props => {
     const onClickLogin =() => {
         props.history.push('/loginpage')
     }
+
+
+    const handleClick =() =>{
+        const modal = document.querySelector(".modal")
+        const closeBtn = document.querySelector(".close")
+        modal.style.display = "block";
+        closeBtn.addEventListener("click", () => {
+          modal.style.display = "none";
+        })
+    }
+
     return(
         <div>
+            <div className="modal">
+                <div className="modal_content">
+                <span className="close">&times;</span>
+                 <p>You unsuscribed from this event</p>
+                </div>
+            </div>
             <div className="header">
-                <h1>{props.location.state.name}</h1>
-                <p><b>Where: </b>{props.location.state.venue.name} - {props.location.state.venue.address} - {props.location.state.venue.city}</p>
-                <p><b>When: </b>{props.location.state.date} <b>from </b> {props.location.state.start_time}<b> to </b> {props.location.state.end_time}</p>
-                <p><b>Organised by: </b><i>{props.location.state.organizer}</i> &nbsp; <button className='profile-view-button'>VIEW PROFILE</button></p>
+                <h1>{name}</h1>
+                <p><b>Where: </b>{venue} - {address} - {city}</p>
+                <p><b>When: </b>{date} <b>from </b> {startTime}<b> to </b> {endTime}</p>
+                <p><b>Organised by: </b><i>{organizer}</i> &nbsp; <button className='profile-view-button'>VIEW PROFILE</button></p>
             </div>
 
 
@@ -159,18 +219,20 @@ const Event = props => {
                         <b>Music type:</b> &nbsp;
                     </span>
                     <span >
-                        {
-                            (props.location.state.genres).map(g =>(
-                                <button type='button' className='genre-btn' key={g}> {g} </button>
-                            ))
-                        }
+                        {(flagRock===1) && < button className="genre-btn">Rock</button>}
+                        {(flagHipHop===1) && < button className="genre-btn">HipHop</button>}
+                        {(flagReggae===1) && < button className="genre-btn">Reggae</button>}
+                        {(flagReggaeton===1) && < button className="genre-btn">Reggaeton</button>}
+                        {(flagTechno===1) && < button className="genre-btn">Techno</button>}
+                        {(flagElectronic===1) && < button className="genre-btn">Electronic</button>}
+                        
                     </span>
                         
                     
-                    <span> <b>Income price: </b>{props.location.state.price}€ </span>
+                    <span> <b>Income price: </b>{price}€ </span>
                     <br/>
                     <h4><b>Event description:</b></h4>
-                    <p> {props.location.state.description} </p>
+                    <p> {description} </p>
                     <h4><b>Event flyer:</b></h4>
                     <img src="https://pic.pikbest.com/01/56/02/48dpIkbEsTMpR.jpg-1.jpg!bw700" alt="eventflyer" width="400" height="600"/> 
                 </div>

@@ -205,16 +205,26 @@ const FindEventPage = () => {
                                     />
                                 ))
                             }
+                            <tr className="lastrow">
+                                <td colSpan="5">  
+                                    <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true)}} type='submit'>Go back</button>  
+                                </td>
+                            </tr>
                         </tbody>
                     </table>         
                 </div> 
             }
 
             {showResults && !resultPresent &&
-                <div className='results'>
-                   <h1>No event satisfies the selected criteria!</h1>
-                </div> 
-            }    
+                <div> 
+                    <div className='results'>
+                    <h1>No event satisfies the selected criteria!</h1>
+                    </div> 
+                    <div className='results'>
+                    <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true)}} type='submit'>Go back</button>  
+                    </div> 
+                </div>
+            }     
         </div>
     );  
 }

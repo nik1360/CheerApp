@@ -139,3 +139,16 @@ export const userEventStatus = async event => {
   }
 }
 
+export const getEventDetails = async event => {
+  try {
+    const response = await axios
+      .post('/events/' + event.event_code + '/getDetails', {
+        event_code: event.event_code,
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+

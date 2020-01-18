@@ -13,16 +13,6 @@ const EventRow = props => {
             pathname: '/events/'+props.code,
             state:{
                 code:props.code,
-                name: props.name,
-                description: props.description,
-                date: props.date,
-                venue: props.venue,
-                genres: genres,
-                organizer: props.organizer,
-                price: props.price,
-                start_time: props.start_time,
-                end_time:props.end_time
-
             }
         })
         

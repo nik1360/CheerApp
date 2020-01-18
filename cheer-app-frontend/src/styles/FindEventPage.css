@@ -128,3 +128,7 @@
     border-radius:15px;
     margin-right:3px
 }
+
+.lastrow:hover {
+    background-color: white !important;
+}

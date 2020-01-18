@@ -64,6 +64,21 @@ class DatabaseEventHandler(DatabaseManager):
         events = return_events(result)
         return events
 
+    def retrieve_event_by_code(self,event_code):
+        base_query = 'SELECT * FROM ' + self.table_events + ',' + self.table_venues + ' WHERE (' + \
+                     self.table_events + '.venue_code=' + self.table_venues + '.code) AND (' + \
+                     self.table_events + '.code=%s)'
+        query = base_query
+
+        self.cursor.execute(query, (event_code,))
+        r = self.cursor.fetchall()
+
+        if r is None:
+            return False, None, 'The event does not exists'
+        else:
+            e = return_events(r)
+            return True, e, 'Event retrieved correctly'
+
     # method that takes from the database the events that a user joined
     def retrieve_joined_events(self, user):
         query = 'SELECT event_code FROM ' + self.table_users_events + ' WHERE username=%s'
