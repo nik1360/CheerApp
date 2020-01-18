@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import Toolbar from './components/drawer/Toolbar';
@@ -15,69 +15,78 @@ import UserProfilePage from './components/users/UserProfilePage'
 import Home from './components/Home'
 import './styles/General.css'
 
-class App extends Component {
-	state = {
-		sideDrawerOpen:false,
-		userLoggedIn:false,
-		organizerLoggedIn:false,
-		username:'nik'
+const App = () =>{
+	const usernameSessionKey = 'username'
+	const userLoginSessionKey = 'userLoggedIn'
+	const organizerLoginSessionKey = 'organizerLoggedIn'
+
+	const [sideDrawerOpen, setSideDrawerOpen] = useState(false)
+	const [loggedInUsername, setloggedInUsername] = useState(sessionStorage.getItem(usernameSessionKey) || null)
+	const [organizerLoggedIn, setOrganizerLoggedIn] = useState(JSON.parse(sessionStorage.getItem(organizerLoginSessionKey) || false))
+	const [userLoggedIn, setUserLoggedIn] = useState(JSON.parse(sessionStorage.getItem(userLoginSessionKey) || false))
+
+	
+	const loginUser=(u) => {
+		sessionStorage.setItem(userLoginSessionKey, true);
+		//sessionStorage.setItem(organizerLoginSessionKey, false);
+		sessionStorage.setItem(usernameSessionKey, u);
+
+		setUserLoggedIn(true)
+		setOrganizerLoggedIn(false)
+		setloggedInUsername(u)
 	};
 
-	loginUser=(u) => {
-		this.setState({username:u})
-		this.setState({userLoggedIn:true});	
-	};
-
-	loginOrganizer=(u) => {
-		this.setState({username:u})
-		this.setState({organizerLoggedIn:true});
-	};
-
-	logOut=()=>{
-		this.setState({userLoggedIn:false});
-		this.setState({organizerLoggedIn:false});		
-	};
-
-	drawerToggleClickHandler = () => {
-		this.setState((prevState) => {
-			return{sideDrawerOpen: !prevState.sideDrawerOpen};
-		});
-	};
-
-	backdropClickHandler = () => {
-		this.setState({sideDrawerOpen:false});
-	};
-
-	render(){
+	const loginOrganizer=(u) => {
 		
-		let backdrop;
+		sessionStorage.setItem(organizerLoginSessionKey, true);
+		//sessionStorage.setItem(userLoginSessionKey, false);
+		sessionStorage.setItem(usernameSessionKey, u);	
 
-		if(this.state.sideDrawerOpen){
-			backdrop = <Backdrop click={this.backdropClickHandler}/>;
-		}
+		setOrganizerLoggedIn(true)
+		setUserLoggedIn(false)
+		setloggedInUsername(u)
+	};
 
-		return (
-			<Router>
+	const logOut=()=>{
+		sessionStorage.setItem(userLoginSessionKey, false);
+		sessionStorage.setItem(organizerLoginSessionKey, false);
+		sessionStorage.setItem(usernameSessionKey, '');
+
+		setUserLoggedIn(false)
+		setOrganizerLoggedIn(false)	
+		setloggedInUsername('')
+	};
+
+	const drawerToggleClickHandler = () => {
+		setSideDrawerOpen(!sideDrawerOpen)
+	};
+
+	const backdropClickHandler = () => {
+		setSideDrawerOpen(false)
+	};
+
+	return(
+		<Router>
 				<div className='page'>
 					<div className='toolbar'>
-						<Toolbar drawerClickHandler={this.drawerToggleClickHandler}/>
+						<Toolbar drawerClickHandler={drawerToggleClickHandler}/>
 					</div>
 					<div className='content'>
-						
-
-						
-						<SideDrawer show={this.state.sideDrawerOpen} user={this.state.userLoggedIn} 
-							organizer={this.state.organizerLoggedIn} username={this.state.username}
-							logOut ={this.logOut}
+						<SideDrawer show={sideDrawerOpen} user={userLoggedIn} 
+							organizer={organizerLoggedIn} username={loggedInUsername}
+							logOut ={logOut}
 						/>
-						{backdrop}
+						{sideDrawerOpen &&
+							<Backdrop click={backdropClickHandler}/>
+
+						}
 						<Switch>
 							<Route path="/" exact component={Home }/>
 							<Route path="/loginpage" 
 								render={() => 
-									<LoginPage username={this.state.username} password={this.state.password} 
-										userLoggedIn={this.state.userLoggedIn} organizerLoggedIn={this.state.organizerLoggedIn}
-										loginUser={this.loginUser} loginOrganizer={this.loginOrganizer}
+									<LoginPage username={loggedInUsername}  
+										userLoggedIn={userLoggedIn} organizerLoggedIn={organizerLoggedIn}
+										loginUser={loginUser} loginOrganizer={loginOrganizer}
 									/> 
 								} 
 							/>
@@ -85,34 +94,25 @@ class App extends Component {
 							<Route path="/findeventpage" exact component={FindEventPage}/>
 							<Route path="/events/"  
 								render={(props) =>
-									<Event {...props} userLoggedIn={this.state.userLoggedIn} user_username={this.state.username}/>
+									<Event {...props} userLoggedIn={userLoggedIn} organizerLoggedIn={organizerLoggedIn} user_username={loggedInUsername}/>
 								}
 							/>
 
 							<Route path="/createeventpage" exact  
 								render={(props) =>
-									<CreateEventPage {...props} organizer_username={this.state.username}/>
+									<CreateEventPage {...props} organizer_username={loggedInUsername}/>
 								}
 							/>
 							<Route path="/users/" 
 								render={(props) =>
-									<UserProfilePage {...props} user_username={this.state.username}/>
+									<UserProfilePage {...props} user_username={loggedInUsername}/>
 								}
 							/>
-				
 						</Switch>
-						
 					</div>
-					
-					
-				
 				</div>
 			</Router>
-			
-			
-		);
-	}
-	
+	)
 }
 
 export default App;

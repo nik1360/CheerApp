@@ -5,6 +5,7 @@ import {logout} from '../users/UserFunctions'
 
 
 const SideDrawerProfile = props => {
+    
     const profile_url='/users/'+props.username
     const logOut=()=>{
         logout().then(response=>{
@@ -19,7 +20,9 @@ const SideDrawerProfile = props => {
     if(props.userLoggedIn||props.organizerLoggedIn){
         return(
             <div className='side-drawer-profile'>
-                {props.organizerLoggedIn &&
+                {
+                
+                    props.organizerLoggedIn &&
                     <div className='side-drawer-profile-image'>
                         <img src={require('../../images/organizer.png')} alt='account img' />
                     </div>

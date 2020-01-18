@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 
 import {retrieveOrganizerDetails,insertRating, deleteRating, userAttendsEvent, userNotAttendsEvent, userEventStatus, getEventDetails} from './EventFunctions'
-
+import TodayDate from '../TodayDate' 
 import '../../styles/EventProfilePage.css'
 
 
 const Event = props => {
+
+    /* States tht are necessary for the correct behaviour of the component */
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [date, setDate] = useState('')
@@ -33,13 +35,15 @@ const Event = props => {
     
     const [todayDate, setTodayDate] = useState()
     
+    /* When the component is loaded, the client asks the server the details of the event
+    and the info related to the user (attendance, friends list and review)  */
     useEffect(() => {
         const event ={
-            event_code: props.location.state.code
+            event_code: props.location.state.code,
+            user_username: props.user_username
         }
         getEventDetails(event).then(response => {
             var parsed_event = JSON.parse(response.event)
-            console.log(parsed_event)
             setName(parsed_event.name)
             setDescription(parsed_event.description)
             setDate(parsed_event.date)
@@ -57,46 +61,31 @@ const Event = props => {
             setFlagReggaeton(parsed_event.music_genres.reggaeton)
             setFlagTechno(parsed_event.music_genres.techno)
             setFlagElectronic(parsed_event.music_genres.electronic) 
-        })
-    }, [props.location.state.code]);
 
-    useEffect(() => {
-        const event ={
-            user_username: props.user_username,
-            event_code: props.location.state.code
-        }
-        userEventStatus(event).then(response => {
-            if(response.friends_attend_event.length !== 0){
-                setShowFriendsList(true)
-            }else{
-                setShowFriendsList(false)
+            if(props.userLoggedIn){
+                userEventStatus(event).then(response => {
+                    if(response.friends_attend_event.length !== 0){
+                        setShowFriendsList(true)
+                    }else{
+                        setShowFriendsList(false)
+                    }
+                    setFriendsList(response.friends_attend_event)
+                    setShowAttend(response.show_attend)
+                    setShowRating(response.show_rating)
+                    setRatingValue(response.rating)
+                })
             }
-            setFriendsList(response.friends_attend_event)
-            setShowAttend(response.show_attend)
-            setShowRating(response.show_rating)
-            setRatingValue(response.rating)
         })
+    }, [props.location.state.code, props.userLoggedIn, props.user_username]);
 
-        var today = new Date()
-        var yyyy=today.getFullYear()
-        var mm = today.getMonth()+1
-        var dd = today.getDate()
-        if(dd<10){
-            dd='0'+dd
-        }
-        if(mm<10){
-            mm='0'+mm
-        }
-        setTodayDate(`${yyyy}-${mm}-${dd}`)
+    /* retrieve the current date and check if the event is passed */
+    useEffect(() => {
+        setTodayDate(TodayDate())
+        setEventIsPassed(Date.parse(date)< Date.parse(todayDate))
+    }, [date, todayDate, eventIsPassed]);
 
-        if(Date.parse(date)< Date.parse(todayDate)){
-            setEventIsPassed(true)
-        }else{
-            setEventIsPassed(false)
-        }
 
-    }, [props.location.state.code, date, props.user_username, todayDate, eventIsPassed]);
-
+    /*Send an email to the organizer */
     const askOrganizer = ()=> {
         const event={
             code:props.location.state.code,
@@ -112,6 +101,7 @@ const Event = props => {
         })
     }
 
+    /*Rate the event */
     const submitRating = e => {
         e.preventDefault()
         const rating ={
@@ -128,10 +118,10 @@ const Event = props => {
             }else{
                 alert(response.message)
             }
-        })
-        
+        })  
     }
 
+    /* Delete the previous rating of the event */
     const removeRating = e => {
         e.preventDefault()
         const rating ={
@@ -148,7 +138,7 @@ const Event = props => {
         })  
     }
 
-
+    /*Attend the event */
     const attendEvent = e => {
         e.preventDefault()
         const event ={
@@ -167,6 +157,7 @@ const Event = props => {
         
     }
 
+    /*Delete the attendance to the event*/
     const notAttendEvent = e => {
         e.preventDefault()
         const event ={
@@ -183,11 +174,13 @@ const Event = props => {
         })
     }
 
+    /*Redirect to the login page */
     const onClickLogin =() => {
         props.history.push('/loginpage')
     }
 
-
+    /*Show custom alert */
+    /*
     const handleClick =() =>{
         const modal = document.querySelector(".modal")
         const closeBtn = document.querySelector(".close")
@@ -195,8 +188,155 @@ const Event = props => {
         closeBtn.addEventListener("click", () => {
           modal.style.display = "none";
         })
+    }*/
+
+
+    /* --------------------------------------- CONDITIONAL RENDER ---------------------------------------------- */
+    function Rating(){
+        if(props.organizerLoggedIn){
+            return null
+        }
+        if(props.userLoggedIn){
+            if(showRating && eventIsPassed){
+                return(
+                    <div>
+                        <h5 style={{marginTop:'15px', marginBottom:'0px'}}>Rate this event!</h5>
+                        <form id="rating" method="post" onSubmit={submitRating}>
+                            <fieldset className="rating">
+                                <input name="rating" type="radio" id="rating5" value="5" onClick={() => {setRatingValue(5)}}/>
+                                <label htmlFor="rating5" title="5 stars">☆</label>
+    
+                                <input name="rating" type="radio" id="rating4" value="4" onClick={() => {setRatingValue(4)}}/>
+                                <label htmlFor="rating4" title="4 stars">☆</label>
+    
+                                <input name="rating" type="radio" id="rating3" value="3" onClick={() => {setRatingValue(3)}}/>
+                                <label htmlFor="rating3" title="3 stars">☆</label>
+    
+                                <input name="rating" type="radio" id="rating2" value="2" onClick={() => {setRatingValue(2)}}/>
+                                <label htmlFor="rating2" title="2 stars">☆</label>
+    
+                                <input name="rating" type="radio" id="rating1" value="1" onClick={() => {setRatingValue(1)}}/>
+                                <label htmlFor="rating1" title="1 stars">☆</label>
+                            </fieldset>
+                            <button className="btn" type="submit"  value="Submit">Submit your rating!</button>
+                            </form>
+                    </div>
+                )
+            }
+            if(!showRating && eventIsPassed){
+                return(
+                    <div>
+                        <h4 style={{marginTop:'50px', marginBottom:'20px'}}>You have already rated this event with {ratingValue} stars!</h4>
+                        <button className="btn " style={{backgroundColor:'#ee4540'}} onClick={removeRating}>DELETE YOUR RATING</button>
+                    </div>
+                )  
+            }
+            if(!eventIsPassed){
+                return(
+                    <div>
+                        <h4 style={{marginTop:'50px', marginBottom:'20px'}}>You have to wait that the event is passed to review the event!</h4>
+                    </div>
+                )                       
+            }
+        }else{
+            return null
+        }
+        
     }
 
+    function Friends(){
+        if(props.organizerLoggedIn){
+            return null
+        }
+        if(props.userLoggedIn){
+            if(showFriendsList){
+                return(
+                    <div>
+                        <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
+                        <div className='scrollable'>
+                            <p>
+                                {
+                                    (friendsList).map(f =>(
+                                        <i key={f}> {f} <br/> </i> 
+                                    ))
+                                }
+                            </p>
+                        </div>
+                    </div>
+                )
+            }else{
+                return(
+                    <div>
+                        <h5 style={{marginTop:'0px', marginBottom:'0px'}}>None of your friends is attending the event</h5>
+                    </div>
+                )
+            }
+        }else{
+            return null
+        }
+    }
+
+    function Attendance(){
+        if(props.organizerLoggedIn){
+            return null
+        }
+        if(props.userLoggedIn){
+            if(showAttend && !eventIsPassed){
+                return(
+                    <button className="btn" onClick={attendEvent}>I WILL ATTEND</button>
+                )
+            }
+            if(!showAttend && !eventIsPassed){
+                return(
+                    <button className="btn" onClick={notAttendEvent}>I WON'T ATTEND ANYMORE</button>
+                )
+            }
+            if(eventIsPassed){
+                return(
+                    <button className="btn" disabled>CAN'T ATTEND, EVENT IS PASSED</button>
+                )
+            }
+            
+        }else{
+            return(
+                <div>
+                    <p><b>You have to be logged in to attend an event and buy tickets!</b></p>
+                    <button className="btn " style={{backgroundColor:'#ee4540'}} onClick={onClickLogin}>Login</button>
+                    <br/>
+                    <br/>
+                </div>
+            )
+        }
+    }
+
+    function BuyTickets(){
+        if(props.organizerLoggedIn){
+            return null
+        }
+        if(props.userLoggedIn){
+            return(
+                <div>
+                   <br/><br/> <button className="btn ticket">BUY TICKETS</button> <br/> <br/>    
+                </div>
+                  
+            )
+        }
+        else{
+            return null
+        }
+    }
+
+    function ContactOrganizer(){
+        if(props.organizerLoggedIn){
+            return null
+        }else{
+            return(
+                <button className="btn" onClick={askOrganizer}>Contact the organizer</button>
+            )
+        }
+    }
+    
+    /*------------------------------ Main render of the component    ---------------------------------*/
     return(
         <div>
             <div className="modal">
@@ -209,9 +349,11 @@ const Event = props => {
                 <h1>{name}</h1>
                 <p><b>Where: </b>{venue} - {address} - {city}</p>
                 <p><b>When: </b>{date} <b>from </b> {startTime}<b> to </b> {endTime}</p>
-                <p><b>Organised by: </b><i>{organizer}</i> &nbsp; <button className='profile-view-button'>VIEW PROFILE</button></p>
+                {!props.organizerLoggedIn &&
+                    <p><b>Organised by: </b><i>{organizer}</i> &nbsp; <button className='profile-view-button'>VIEW PROFILE</button></p>
+                }
+                
             </div>
-
 
             <div className="row">
                 <div className="side">
@@ -225,10 +367,7 @@ const Event = props => {
                         {(flagReggaeton===1) && < button className="genre-btn">Reggaeton</button>}
                         {(flagTechno===1) && < button className="genre-btn">Techno</button>}
                         {(flagElectronic===1) && < button className="genre-btn">Electronic</button>}
-                        
                     </span>
-                        
-                    
                     <span> <b>Income price: </b>{price}€ </span>
                     <br/>
                     <h4><b>Event description:</b></h4>
@@ -237,114 +376,15 @@ const Event = props => {
                     <img src="https://pic.pikbest.com/01/56/02/48dpIkbEsTMpR.jpg-1.jpg!bw700" alt="eventflyer" width="400" height="600"/> 
                 </div>
             
-                <div className="main">
-                    
-                    {props.userLoggedIn &&
-                        <div>
-                            {showAttend && !eventIsPassed &&
-                                <div>
-                                    <button className="btn" onClick={attendEvent}>I WILL ATTEND</button>
-                                </div>
-                            }
-                            {!showAttend && !eventIsPassed &&
-                                <div>
-                                    <button className="btn" onClick={notAttendEvent}>I WON'T ATTEND ANYMORE</button>
-                                </div>
-                            }
-
-                            {eventIsPassed &&
-                                <div>
-                                    <button className="btn" disabled>CAN'T ATTEND, EVENT IS PASSED</button>
-                                </div>
-                            }
-                            
-                            <br/>
-                            <br/>
-                            <button className="btn ticket">BUY TICKETS</button> 
-                            <br/>
-                            <br/>
-                            {showFriendsList &&
-                                <div>
-                                    <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
-                                    <div className='scrollable'>
-                                        <p>
-                                            {
-                                                (friendsList).map(f =>(
-                                                    <i key={f}> {f} <br/> </i> 
-                                                ))
-                                            }
-                                        </p>
-                                        
-                                    </div>
-                                </div>
-                                
-                            }
-                            {!showFriendsList &&
-                                <div>
-                                    <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Non of your friends is attending the event</h5>
-                                    
-                                </div>
-                                
-                            }
-                            
-                            
-                            {showRating && eventIsPassed &&
-                                <div>
-                                    <h5 style={{marginTop:'15px', marginBottom:'0px'}}>Rate this event!</h5>
-                                    <form id="rating" method="post" onSubmit={submitRating}>
-                                        <fieldset className="rating">
-                                            <input name="rating" type="radio" id="rating5" value="5" onClick={() => {setRatingValue(5)}}/>
-                                            <label htmlFor="rating5" title="5 stars">☆</label>
-
-                                            <input name="rating" type="radio" id="rating4" value="4" onClick={() => {setRatingValue(4)}}/>
-                                            <label htmlFor="rating4" title="4 stars">☆</label>
-
-                                            <input name="rating" type="radio" id="rating3" value="3" onClick={() => {setRatingValue(3)}}/>
-                                            <label htmlFor="rating3" title="3 stars">☆</label>
-
-                                            <input name="rating" type="radio" id="rating2" value="2" onClick={() => {setRatingValue(2)}}/>
-                                            <label htmlFor="rating2" title="2 stars">☆</label>
-
-                                            <input name="rating" type="radio" id="rating1" value="1" onClick={() => {setRatingValue(1)}}/>
-                                            <label htmlFor="rating1" title="1 stars">☆</label>
-                                        </fieldset>
-                                        <button className="btn" type="submit"  value="Submit">Submit your rating!</button>
-                                     </form>
-                                </div>
-                            }
-
-                            {!eventIsPassed &&
-                                <div>
-                                    <h4 style={{marginTop:'50px', marginBottom:'20px'}}>You have to wait that the event is passed to review the event!</h4>
-                                </div>
-                                
-                            }
-
-                            {!showRating && eventIsPassed &&
-                                <div>
-                                    <h4 style={{marginTop:'50px', marginBottom:'20px'}}>You have already rated this event with {ratingValue} stars!</h4>
-                                    <button className="btn " style={{backgroundColor:'#ee4540'}} onClick={removeRating}>DELETE YOUR RATING</button>
-                                </div>
-                                
-                            }
-
-                        </div>
-                    }
-                    {!props.userLoggedIn&&
-                        <div>
-                            <p><b>You have to be logged in to attend an event and buy tickets!</b></p>
-                            <button className="btn " style={{backgroundColor:'#ee4540'}} onClick={onClickLogin}>Login</button>
-                            <br/>
-                            <br/>
-                        </div>
-
-                    }
-                    <br/>
-                    <button className="btn" onClick={askOrganizer}>Contact the organizer</button>
+                <div className="main"> 
+                    <Attendance/>
+                    <BuyTickets/>
+                    <Friends/>
+                    <Rating/>
+                    <ContactOrganizer/>
                 </div>
             </div>
         </div>
     )
-
 };
 export default Event;

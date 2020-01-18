@@ -175,16 +175,13 @@ const UserProfilePage = props => {
                                                 .map(e=>{
                                                     var event_code=e.code
                                                     return(
-                                                        <tr onClick={() => seeEventPage(event_code)}> <td> {e.name} </td> </tr>
+                                                        <tr key= {event_code} onClick={() => seeEventPage(event_code)}><td> {e.name} </td></tr>
                                                     )
                                                 })
                                             }
                                         </tbody>
                                     </table>
-
-                                </div>
-                                
-                                
+                                </div>              
                             </td>
                             <td className = "friends-events-lists">
                             
@@ -199,15 +196,13 @@ const UserProfilePage = props => {
                                                 .map(e=>{
                                                     var event_code=e.code
                                                     return(
-                                                        <tr onClick={() => seeEventPage(event_code)}> <td> {e.name} </td> </tr>
+                                                        <tr key={event_code} onClick={() => seeEventPage(event_code)}><td> {e.name} </td></tr>
                                                     )
                                                 })
                                             }
                                         </tbody>
                                     </table>
-
-                                </div>
-                                
+                                </div>   
                             </td>
                         </tr>
                     </tbody>
@@ -215,6 +210,5 @@ const UserProfilePage = props => {
             </div>
         </div>
     )
-
 };
 export default UserProfilePage;

@@ -1,10 +1,9 @@
 import React, {useState,useEffect} from 'react';
 import {findEvents} from './EventFunctions'
-
 import EventRow from './EventRow'
+import TodayDate from '../TodayDate'
+
 import '../../styles/FindEventPage.css'
-
-
 
 const FindEventPage = () => {
     
@@ -33,20 +32,9 @@ const FindEventPage = () => {
     const [showSearch, setShowSearch] = useState(true);
 
     const [todayDate, setTodayDate] = useState()
-
+    
     useEffect(() => {
-        var today = new Date()
-        var yyyy=today.getFullYear()
-        var mm = today.getMonth()+1
-        var dd = today.getDate()
-        if(dd<10){
-            dd='0'+dd
-        }
-        if(mm<10){
-            mm='0'+mm
-        }
-        setTodayDate(`${yyyy}-${mm}-${dd}`)
-        
+        setTodayDate(TodayDate())
     }, []);
 
     const updateCity = e =>{
@@ -147,9 +135,10 @@ const FindEventPage = () => {
         
     }
 
-    return(
-        <div className='search-page'>
-            {showSearch &&
+    /*--------------------------------Conditional rendering ------------------------------------ */
+    function SearchForm(){
+        if (showSearch){
+            return(
                 <div className='search-form'>
                     <form className='form-box' onSubmit={handleSubmit}>
                         <h1 className='h1'>Find your ideal event</h1>
@@ -170,61 +159,75 @@ const FindEventPage = () => {
                         </div>
                     </form>
                 </div>
-            }
-            
-            
-            {showResults && resultPresent &&
-                <div className='results'>
-                    <table id ='results-table'>
-                        <tbody>
-                            <tr>
-                                <th>NAME</th>
-                                <th>CITY</th>
-                                <th>VENUE</th>
-                                <th>DATE</th>
-                                <th>GENRES</th>
-                            </tr>
-                            {
-                                Array.from(events)
-                                .filter(e => Date.parse(e.date) >= Date.parse(todayDate)) /*Keep only upcoming events */
-                                .map(e=>(
-                                    
-                                    <EventRow
-                                    key ={e.code} /*every mapped element must have a key attribute*/
+            )
+        }else{
+            return null
+        }
+    }
 
-                                    code={e.code}
-                                    name={e.name}
-                                    description = {e.description}
-                                    date = {e.date}
-                                    music_genres = {e.music_genres}
-                                    venue={e.venue}
-                                    organizer={e.organizer}
-                                    price ={e.price}
-                                    start_time ={e.start_time}
-                                    end_time ={e.end_time}
-                                    />
-                                ))
-                            }
-                            <tr className="lastrow">
-                                <td colSpan="5">  
-                                    <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true)}} type='submit'>Go back</button>  
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>         
-                </div> 
+    function Results(){
+        if(showResults){
+            if(resultPresent){
+                return(
+                    <div className='results'>
+                        <table id ='results-table'>
+                            <tbody>
+                                <tr>
+                                    <th>NAME</th>
+                                    <th>CITY</th>
+                                    <th>VENUE</th>
+                                    <th>DATE</th>
+                                    <th>GENRES</th>
+                                </tr>
+                                {
+                                    Array.from(events)
+                                    .filter(e => Date.parse(e.date) >= Date.parse(todayDate)) /*Keep only upcoming events */
+                                    .map(e=>(
+                                        <EventRow
+                                        key ={e.code} /*every mapped element must have a key attribute*/
+                                        code={e.code}
+                                        name={e.name}
+                                        description = {e.description}
+                                        date = {e.date}
+                                        music_genres = {e.music_genres}
+                                        venue={e.venue}
+                                        organizer={e.organizer}
+                                        price ={e.price}
+                                        start_time ={e.start_time}
+                                        end_time ={e.end_time}
+                                        />
+                                    ))
+                                }
+                                <tr className="lastrow">
+                                    <td colSpan="5">  
+                                        <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true)}} type='submit'>Go back</button>  
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>         
+                    </div> 
+                )
+            }else{
+                return(
+                    <div> 
+                        <div className='results'>
+                            <h1>No event satisfies the selected criteria!</h1>
+                        </div> 
+                        <div className='results'>
+                            <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true)}} type='submit'>Go back</button>  
+                        </div> 
+                    </div>
+                )
             }
-
-            {showResults && !resultPresent &&
-                <div> 
-                    <div className='results'>
-                    <h1>No event satisfies the selected criteria!</h1>
-                    </div> 
-                    <div className='results'>
-                    <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true)}} type='submit'>Go back</button>  
-                    </div> 
-                </div>
-            }     
+        }else{
+            return null
+        }
+    }
+/*------------------------------------------------------Render of the main component---------------------------- */
+    return(
+        <div className='search-page'>
+            <SearchForm/>
+            <Results/>    
         </div>
     );  
 }

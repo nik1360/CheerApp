@@ -151,15 +151,15 @@ def register_event():
         venue=Venue(venue_name,city,address)
         db_insert.insert_venue(venue)
 
-    status, msg = db_insert.insert_event(Event(name=name,description=description,price=price,venue=venue,
+    ev=Event(name=name,description=description,price=price,venue=venue,
                                               organizer=organizer,date=date,start_time=start_time, end_time=end_time,
                                               flag_rock=flag_rock, flag_hiphop=flag_hiphop, flag_reggae=flag_reggae,
                                                flag_reggaeton=flag_reggaeton,flag_techno=flag_techno,
-                                               flag_electronic=flag_electronic))
-    status=True
-    msg='ok'
+                                               flag_electronic=flag_electronic)
+    status, msg = db_insert.insert_event(ev)
+
     if status:
-        result = jsonify({'error': False, 'message':msg})
+        result = jsonify({'event_code': ev.code ,'error': False, 'message':msg})
     else:
         result = jsonify({'error': True,'message':msg})
     return result

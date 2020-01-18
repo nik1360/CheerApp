@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {createEvent} from './EventFunctions'
+import TodayDate from '../TodayDate'
 
 import '../../styles/CreateEventPage.css'
 
@@ -36,18 +37,8 @@ const CreateEventPage = props => {
     const [todayDate, setTodayDate] = useState()
 
     useEffect(() => {
-        var today = new Date()
-        var yyyy=today.getFullYear()
-        var mm = today.getMonth()+1
-        var dd = today.getDate()
-        if(dd<10){
-            dd='0'+dd
-        }
-        if(mm<10){
-            mm='0'+mm
-        }
-        setTodayDate(`${yyyy}-${mm}-${dd}`)
-        setDate(`${yyyy}-${mm}-${dd}`)
+        setTodayDate(TodayDate())
+        setDate(TodayDate())
         
     }, []);
 
@@ -151,7 +142,12 @@ const CreateEventPage = props => {
         }
         createEvent(event).then(response => {
             if (!response.error) {
-                props.history.push('/') 
+                props.history.push({
+                    pathname: '/events/'+response.event_code,
+                    state:{
+                        code:response.event_code,
+                    }
+                })
             }else{
                 alert(response.message) 
             }
