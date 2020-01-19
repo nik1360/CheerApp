@@ -3,16 +3,16 @@ import {withRouter} from 'react-router-dom';
 
 import '../../styles/FindEventUserPage.css'
 
-const EventRow = props => {
+const UserRow = props => {
     
     const genres = []
 
     const seeEventDetails = () =>{
         
         props.history.push({
-            pathname: '/events/'+props.code,
+            pathname: '/users/'+props.username,
             state:{
-                code:props.code,
+                username:props.username,
             }
         })
         
@@ -38,11 +38,9 @@ const EventRow = props => {
     }
 
     return(
-        <tr onClick={seeEventDetails}>
-            <td>{props.name}</td>
-            <td>{props.venue.city}</td>
-            <td>{props.venue.name}</td>
-            <td>{props.date}</td>
+        <tr onClick={seeEventDetails} style ={{maxHeight:"50px"}} >
+            <td>{props.username}</td>
+            <td>{props.city}</td>
             <td>
                 {
                     Array.from(genres).map(g =>(
@@ -55,4 +53,4 @@ const EventRow = props => {
 
 };
 
-export default withRouter(EventRow);
+export default withRouter(UserRow);

@@ -97,3 +97,26 @@ export const getUserDetails = async user => {
     console.log(err)
   }
 }
+
+export const findUsers = async search => {
+  try {
+    const response = await axios
+      .post('/users/search', {
+        username: search.username,
+        city: search.city,
+        flagrock: search.flagrock,
+        flaghiphop: search.flaghiphop,
+        flagreggae: search.flagreggae,
+        flagreggaeton: search.flagreggaeton,
+        flagtechno: search.flagtechno,
+        flagelectronic: search.flagelectronic,
+        criteriacity: search.criteriacity,
+        criteriausername: search.criteriausername,
+        criteriagenres: search.criteriagenres,
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}

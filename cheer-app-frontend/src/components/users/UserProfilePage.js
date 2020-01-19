@@ -66,9 +66,13 @@ const UserProfilePage = props => {
             setEventsList(parsed_events)
             
             /*the following is to extract the arrays (don't know why it is needed)*/
-            parsed_friends.map(f=>{
-                setFriendsList(f)
-            })  
+            if (parsed_friends[0]!== null){ //check if friends are present
+                parsed_friends.map(f=>{
+                    setFriendsList(f)
+                    return null
+                })  
+            }
+            
         })
     }, [props.user_username]);
     
@@ -144,7 +148,6 @@ const UserProfilePage = props => {
                                             <tbody>
                                             {
                                                 friendsList
-                                                
                                                 .map(f =>(
                                                     <tr key={f}>
                                                     <td>{f}</td>
@@ -165,7 +168,7 @@ const UserProfilePage = props => {
                             </td>
                             <td className = "friends-events-lists">
                                 
-                                <h3> Events that I' m going </h3>	
+                                <h3> Upcoming events </h3>	
                                 <div className="table-wrapper-scroll-y my-custom-scrollbar" >
                                     <table>
                                         <tbody>
@@ -185,7 +188,7 @@ const UserProfilePage = props => {
                             </td>
                             <td className = "friends-events-lists">
                             
-                                <h3> Events that I already attended </h3>	
+                                <h3> Past events </h3>	
                                 
                                 <div className="table-wrapper-scroll-y my-custom-scrollbar" >
                                     <table>

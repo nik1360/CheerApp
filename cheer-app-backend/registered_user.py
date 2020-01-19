@@ -1,12 +1,8 @@
 
-from database.db_event_handler import DatabaseEventHandler
-from database.db_insert_handler import DatabaseInsertHandler
-
-
 class RegisteredUser:
-    def __init__(self, username, password, email,  name, surname,
-                 date_of_birth,  city, nationality, flag_rock, flag_hiphop,
-                 flag_reggaeton, flag_reggae, flag_techno, flag_electronic):
+    def __init__(self, username, password=None, email=None,  name=None, surname=None,
+                 date_of_birth=None,  city=None, nationality=None, flag_rock=False, flag_hiphop=False,
+                 flag_reggaeton=False, flag_reggae=False, flag_techno=False, flag_electronic=False):
         self.username = username
         self.email = email
         self.password = password
@@ -26,16 +22,5 @@ class RegisteredUser:
         self.friends_list = []  # contains the username of each friend
         self.joined_events = []
 
-    def join_event(self,event):
-        result, msg = DatabaseInsertHandler().insert_users_events(self,event)
-        return result, msg
-
-    def add_friend(self, username2):
-        result, msg = DatabaseInsertHandler().insert_friends(self.username, username2)
-        return result, msg
-
-    def retrieve_joined_events_list(self):
-        result, msg = DatabaseEventHandler().retrieve_joined_events(self)
-        return result,msg
 
 

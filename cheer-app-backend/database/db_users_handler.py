@@ -2,7 +2,7 @@ from database.db_manager import DatabaseManager
 from registered_user import RegisteredUser
 
 # class that manages interactions between users
-class DatabaseFriendsHandler(DatabaseManager):
+class DatabaseUsersHandler(DatabaseManager):
     def __init__(self):
         DatabaseManager.__init__(self)
     # search a user by its username
@@ -14,7 +14,7 @@ class DatabaseFriendsHandler(DatabaseManager):
             msg = 'User does not exist!'
             return False, None, msg
         else:
-            user = RegisteredUser(username=r[0], password=r[1], email=r[2], name=r[3], surname=r[4], date_of_birth=str(r[5]),
+            user = RegisteredUser(username=r[0], password=None, email=r[2], name=r[3], surname=r[4], date_of_birth=str(r[5]),
                                   city= r[6], nationality=r[7], flag_rock=r[8], flag_hiphop=r[9], flag_reggaeton=r[10],
                                   flag_reggae=r[11], flag_techno=r[12], flag_electronic=r[13])
             msg = 'User ' + username + ' exists!'
@@ -22,6 +22,7 @@ class DatabaseFriendsHandler(DatabaseManager):
 
     # find the users in a particular city
     def find_user_city(self, city):
+
         query = 'SELECT username, name FROM ' + self.table_users + ' WHERE city=%s'
         self.cursor.execute(query, (city,))
 
@@ -36,6 +37,40 @@ class DatabaseFriendsHandler(DatabaseManager):
 
             msg = 'There are users in  ' + city + '!'
             return True, user_list, msg
+
+    def search(self, username, city, criteria_username, criteria_city, criteria_genres, music_tastes):
+        base_query = 'SELECT * FROM ' + self.table_users +' WHERE true'
+        query = base_query
+        # Construction of the query basing on the search criteria
+        if criteria_username:
+            query = query + ' AND username=%s'
+        if criteria_city:
+            query = query + ' AND city=%s'
+        if criteria_genres:
+            query = query + ' AND ('
+            for genre, value in music_tastes.items():
+                if value:
+                    query = query + self.table_users + '.flag_' + genre + "=true OR "
+            query = query[:-4] + ')'  # Remove the last OR (and 2 spaces) from the query
+        # Only city and date criteria require parameters, so only them will be tested
+        if criteria_city and criteria_username:  # both criteria
+            self.cursor.execute(query, (username, city))
+        elif criteria_city and not criteria_username:  # city criteria selected
+            self.cursor.execute(query, (city,))
+        elif not criteria_city and criteria_username:  # date criteria selected
+            self.cursor.execute(query, (username,))
+        elif not criteria_city and not criteria_username:  # neither city or date criteria
+            self.cursor.execute(query)  # if criteria_genres = false, all the events will be showed
+        result = self.cursor.fetchall()
+        users = []
+        for r in result:
+            users.append(RegisteredUser(username=r[0], city=r[6], flag_rock=r[8], flag_hiphop=r[9], flag_reggaeton=r[10],
+                                        flag_reggae=r[11], flag_techno=r[12], flag_electronic=r[13]))
+        return users
+
+
+
+
 
     # Get the friend list of an user
     def get_friends_list(self, username):

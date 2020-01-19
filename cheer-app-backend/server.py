@@ -6,7 +6,7 @@ from database.db_insert_handler import DatabaseInsertHandler
 from database.db_event_handler import DatabaseEventHandler
 from database.db_checker import DatabaseChecker
 from database.db_delete_handler import DatabaseDeleteHandler
-from database.db_friends_handler import DatabaseFriendsHandler
+from database.db_users_handler import DatabaseUsersHandler
 
 from registered_user import RegisteredUser
 from venue import Venue
@@ -228,7 +228,7 @@ def check_user_event_status(event_code):
 
     f2 = []
     if user_username != '': # a user is logged in
-        _ , friends, msg = DatabaseFriendsHandler().get_friends_list(user_username)
+        _ , friends, msg = DatabaseUsersHandler().get_friends_list(user_username)
         if friends is not None:
             for f in friends: # the friend f attend the event
                 if not DatabaseChecker().check_event_attendance(user_username=f, event_code=event_code):
@@ -240,10 +240,10 @@ def check_user_event_status(event_code):
 
 @app.route('/users/<username>/getDetails', methods=['POST'])
 def retrieve_user_info(username):
-    status, user, msg = DatabaseFriendsHandler().find_user_username(username=username)
+    status, user, msg = DatabaseUsersHandler().find_user_username(username=username)
     if status:
         DatabaseEventHandler().retrieve_joined_events(user=user)
-        _, f_list, _ = DatabaseFriendsHandler().get_friends_list(username)
+        _, f_list, _ = DatabaseUsersHandler().get_friends_list(username)
         user.friends_list.append(f_list)
         json_user = json.dumps(user, default=lambda o: o.__dict__, indent=4)
         json_friends = json.dumps(user.friends_list, default=lambda o: o.__dict__, indent=4)
@@ -266,6 +266,40 @@ def retrieve_event_info(event_code):
         result = jsonify({'event': None, 'error': True, 'message': msg})
     return result
 
+@app.route('/users/search', methods=['POST'])
+def search_users():
+    # retrieve information from the client
+    username = request.get_json()['username']
+    city = request.get_json()['city']
+    flag_rock = request.get_json()['flagrock']
+    flag_hiphop = request.get_json()['flaghiphop']
+    flag_reggae = request.get_json()['flagreggae']
+    flag_reggaeton = request.get_json()['flagreggaeton']
+    flag_techno = request.get_json()['flagtechno']
+    flag_electronic = request.get_json()['flagelectronic']
+    criteria_username = request.get_json()['criteriausername']
+    criteria_city = request.get_json()['criteriacity']
+    criteria_genres = request.get_json()['criteriagenres']
+
+    music_tastes = {
+        "rock": flag_rock,
+        "hiphop": flag_hiphop,
+        "reggaeton": flag_reggaeton,
+        "reggae": flag_reggae,
+        "techno": flag_techno,
+        "electronic": flag_electronic
+    }
+
+    users_list = DatabaseUsersHandler().search(username=username, city=city, music_tastes=music_tastes,
+                                  criteria_city=criteria_city, criteria_username=criteria_username,
+                                  criteria_genres=criteria_genres)
+    # check if some event was found
+    if not users_list:
+        result = jsonify({'error': True, 'message': 'No users'})
+    else:
+        json_data = json.dumps(users_list, default=lambda o: o.__dict__, indent=4)
+        result = jsonify({'users': json_data, 'error': False, 'message': 'Users found'})
+    return result
 
 if __name__ == '__main__':
     app.run(debug=True)

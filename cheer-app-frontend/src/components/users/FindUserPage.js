@@ -1,18 +1,18 @@
 import React, {useState,useEffect} from 'react';
-import {findEvents} from './EventFunctions'
-import EventRow from './EventRow'
-import TodayDate from '../TodayDate'
+import {findUsers} from './UserFunctions'
+import UserRow from './UserRow'
+
 
 import '../../styles/FindEventUserPage.css'
 
-const FindEventPage = () => {
+const FindUserPage = () => {
     
     const selected='#801336'
     const unselected='#002a4d'
     const [height, setHeight] = useState('50%')
 
+    const[username,setUsername] = useState('')
     const[city,setCity] = useState('')
-    const [date, setDate] = useState('');
     const [flagRock, setFlagRock] = useState(false);
     const [flagHipHop, setFlagHipHop] = useState(false);
     const [flagReggae, setFlagReggae] = useState(false);
@@ -27,23 +27,17 @@ const FindEventPage = () => {
     const [technoColor, setTechnoColor] = useState(unselected);
     const [electronicColor, setElectronicColor] = useState(unselected);
 
-    const [events, setEvents] = useState([])
+    const [users, setUsers] = useState([])
     const [resultPresent, setResultPresent] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [showSearch, setShowSearch] = useState(true);
-
-    const [todayDate, setTodayDate] = useState()
-    
-    useEffect(() => {
-        setTodayDate(TodayDate())
-    }, []);
 
     const updateCity = e =>{
         setCity(e.target.value);
     }
 
-    const updateDate = e =>{
-        setDate(e.target.value);
+    const updateUsername = e =>{
+        setUsername(e.target.value);
     }
 
     useEffect(() => {
@@ -98,7 +92,7 @@ const FindEventPage = () => {
         e.preventDefault()
         
         const search ={
-            date:date,
+            username:username,
             city:city,
             flagrock:flagRock,
             flaghiphop: flagHipHop,
@@ -106,38 +100,43 @@ const FindEventPage = () => {
             flagreggaeton:flagReggaeton,
             flagtechno:flagTechno,
             flagelectronic:flagElectronic,
+            criteriausername:false,
             criteriacity:false,
-            criteriadate:false,
             criteriagenres:false,
             errors:{}
         }
         if(flagRock||flagHipHop||flagReggae||flagReggaeton||flagTechno||flagElectronic){
             search.criteriagenres=true
         }
-        if(date!==''){
-            search.criteriadate=true
+        if(username!==''){
+            search.criteriausername=true
         }
         if(city!==''){
             search.criteriacity=true
         }
 
-        findEvents(search).then(response => {
-            setShowSearch(false)
-            setHeight('auto')
-            setShowResults(true)
-
-            if (!response.error) {
-                setResultPresent(true)
-                
-                setEvents(JSON.parse(response.events)) 
-            }else{
-                setResultPresent(false)
-            }
-        })
+        if((search.criteriacity || search.criteriagenres || search.criteriausername)){
+            findUsers(search).then(response => {
+                setShowSearch(false)
+                setHeight('auto')
+                setShowResults(true)
+                if (!response.error) {
+                    setResultPresent(true)
+                    setUsers(JSON.parse(response.users)) 
+                }else{
+                    setResultPresent(false)
+                }
+            })
+        }
+        else{
+            alert('Please choose at least one criteria!')
+        }
+        
         
     }
 
     /*--------------------------------Conditional rendering ------------------------------------ */
+
     function Results(){
         if(showResults){
             if(resultPresent){
@@ -146,28 +145,18 @@ const FindEventPage = () => {
                         <table id ='results-table'>
                             <tbody>
                                 <tr>
-                                    <th>NAME</th>
+                                    <th>USERNAME</th>
                                     <th>CITY</th>
-                                    <th>VENUE</th>
-                                    <th>DATE</th>
-                                    <th>GENRES</th>
+                                    <th>MUSIC TASTES</th>
                                 </tr>
-                                {
-                                    Array.from(events)
-                                    .filter(e => Date.parse(e.date) >= Date.parse(todayDate)) /*Keep only upcoming events */
-                                    .map(e=>(
-                                        <EventRow
-                                        key ={e.code} /*every mapped element must have a key attribute*/
-                                        code={e.code}
-                                        name={e.name}
-                                        description = {e.description}
-                                        date = {e.date}
-                                        music_genres = {e.music_genres}
-                                        venue={e.venue}
-                                        organizer={e.organizer}
-                                        price ={e.price}
-                                        start_time ={e.start_time}
-                                        end_time ={e.end_time}
+                                {   
+                                    Array.from(users)
+                                    .map(u=>(
+                                        <UserRow
+                                        key ={u.username} 
+                                        username={u.username}
+                                        city={u.city}
+                                        music_genres = {u.music_tastes}
                                         />
                                     ))
                                 }
@@ -184,7 +173,7 @@ const FindEventPage = () => {
                 return(
                     <div> 
                         <div className='results'>
-                            <h1>No event satisfies the selected criteria!</h1>
+                            <h1>No user found!</h1>
                         </div> 
                         <div className='results'>
                             <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true); setHeight('50%')}} type='submit'>Go back</button>  
@@ -202,15 +191,16 @@ const FindEventPage = () => {
             {showSearch &&
                 <div className='search-form'>
                     <form className='form-box' onSubmit={handleSubmit}>
-                        <h1 className='h1'>See upcoming events!</h1>
+                        <h1 className='h1'>Find a new friend!</h1>
                         <div>
+                            <input type='text' className='search-field username' placeholder='Username' value={username} onChange={updateUsername}/>
                             <input type='text' className='search-field city' placeholder='City' value={city} onChange={updateCity}/>
-                            <input type='date' className='search-field date' placeholder='Date' value={date} min={todayDate} onChange={updateDate}/>
+                            
                             <button className='search-btn' type='submit'>Search</button>
                         </div>
                         
                         <div>
-                            <p>Click on the music tastes that you like most</p>
+                            <p>Look for friends with your music tastes</p>
                             <button className='taste-btn' type='button'style={{backgroundColor:rockColor}} onClick={() => {setFlagRock(!flagRock)}}>Rock</button>
                             <button className='taste-btn' type='button'style={{backgroundColor:hiphopColor}}  onClick={() => {setFlagHipHop(!flagHipHop)}} > HipHop</button>
                             <button className='taste-btn' type='button'style={{backgroundColor:reggaeColor}}  onClick={() => {setFlagReggae(!flagReggae)}} >Reggae</button> 
@@ -220,10 +210,10 @@ const FindEventPage = () => {
                         </div>
                     </form>
                 </div>
-
+                
             }
             <Results/>    
         </div>
     );  
 }
-export default FindEventPage;
+export default FindUserPage;

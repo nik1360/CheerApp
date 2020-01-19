@@ -2,7 +2,7 @@
 
 .search-page {
     width: 70%;
-    height: 50%;
+    /*height: 50%;*/
     border: 0 0 0 0;
     
     margin-top: 15%;
@@ -55,7 +55,7 @@
     width: 300px;
 }
 
-.date
+.username
 {
     width: 200px;
 }
@@ -129,6 +129,9 @@
     margin-right:3px
 }
 
+.lastrow{
+    background-color: white !important;
+}
 .lastrow:hover {
     background-color: white !important;
 }

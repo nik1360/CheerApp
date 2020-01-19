@@ -14,7 +14,7 @@ const SideDrawerLinks = props => {
                 <Link to="/">
                     <li>Suggest Me!</li>
                 </Link>
-                <Link to="/">
+                <Link to="/finduserpage">
                     <li>Find Friends</li>
                 </Link>
             </ul>

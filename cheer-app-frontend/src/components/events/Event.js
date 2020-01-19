@@ -94,7 +94,7 @@ const Event = props => {
         retrieveOrganizerDetails(event).then(response => {
 
             if (!response.error) {
-                window.location.href='mailto:'+response.email+'?subject=Questions about CheerApp event "'+props.location.state.name+'"'
+                window.location.href='mailto:'+response.email+'?subject=Questions about CheerApp event "'+name+'"'
             }else{
                 console.log(response.msg)
             }
@@ -293,7 +293,7 @@ const Event = props => {
             }
             if(eventIsPassed){
                 return(
-                    <button className="btn" disabled>CAN'T ATTEND, EVENT IS PASSED</button>
+                    <button className="btn" disabled>EVENT IS PASSED</button>
                 )
             }
             
@@ -381,6 +381,7 @@ const Event = props => {
                     <BuyTickets/>
                     <Friends/>
                     <Rating/>
+                    <br/>
                     <ContactOrganizer/>
                 </div>
             </div>

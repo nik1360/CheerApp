@@ -11,8 +11,10 @@ import FindEventPage from './components/events/FindEventPage'
 import Event from './components/events/Event'
 import CreateEventPage from './components/events/CreateEventPage'
 import UserProfilePage from './components/users/UserProfilePage'
+import FinduserPage from './components/users/FindUserPage'
 
 import Home from './components/Home'
+import AccessDenied from './components/AccessDenied'
 import './styles/General.css'
 
 const App = () =>{
@@ -64,7 +66,6 @@ const App = () =>{
 	const backdropClickHandler = () => {
 		setSideDrawerOpen(false)
 	};
-
 	return(
 		<Router>
 				<div className='page'>
@@ -92,6 +93,7 @@ const App = () =>{
 							/>
 							<Route path="/registerpage" exact component={RegisterPage}/>
 							<Route path="/findeventpage" exact component={FindEventPage}/>
+							<Route path="/finduserpage" exact component={FinduserPage}/>
 							<Route path="/events/"  
 								render={(props) =>
 									<Event {...props} userLoggedIn={userLoggedIn} organizerLoggedIn={organizerLoggedIn} user_username={loggedInUsername}/>
