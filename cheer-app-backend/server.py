@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, json, Response
+from flask import Flask, jsonify, request, json, Response, redirect
 import datetime
 
 from database.db_manager import DatabaseManager, logout
@@ -13,6 +13,9 @@ from venue import Venue
 from event import Event
 from organizer import Organizer
 
+import stripe
+import os
+
 
 app = Flask(__name__)
 db = DatabaseManager()
@@ -21,6 +24,9 @@ db_delete = DatabaseDeleteHandler()
 
 logged_user = None
 login_status = False
+
+amount = 0
+name = 0
 
 
 @app.route('/login/<type_of_user>', methods=['POST'])
@@ -129,6 +135,8 @@ def ask(event_code):
 
 @app.route('/register/event', methods=['POST'])
 def register_event():
+
+
     name = request.get_json()['name']
     description = request.get_json()['description']
     date = request.get_json()['date']
@@ -256,12 +264,17 @@ def retrieve_user_info(username):
 
 @app.route('/events/<event_code>/getDetails', methods=['POST'])
 def retrieve_event_info(event_code):
+    global amount  # used by charge function
+    global name
 
     status, event, msg = DatabaseEventHandler().retrieve_event_by_code(event_code=event_code)
     if status:
         event=event[0]
+        amount = event.price * 100
+        name = event.name
+
         json_event = json.dumps(event, default=lambda o: o.__dict__, indent=4)
-        result = jsonify({'event': json_event, 'error':False, 'message': msg })
+        result = jsonify({'event': json_event, 'stripe_pub_key':os.getenv('STRIPE_PUBLISHABLE_KEY'),'error':False, 'message': msg })
     else:
         result = jsonify({'event': None, 'error': True, 'message': msg})
     return result
@@ -300,6 +313,38 @@ def search_users():
         json_data = json.dumps(users_list, default=lambda o: o.__dict__, indent=4)
         result = jsonify({'users': json_data, 'error': False, 'message': 'Users found'})
     return result
+
+@app.route('/charge', methods=['POST'])
+def charge():
+
+    global amount #the value is defined when the event page is loaded
+    global name
+
+    description="Payment for CheerApp event " + str(name)
+
+    stripe_keys = {
+        #'secret_key': os.getenv('STRIPE_SECRET_KEY'),
+        #'publishable_key': os.getenv('STRIPE_PUBLISHABLE_KEY')
+        'publishable_key': 'pk_test_vmJlznHnNFRVjoz1ed3PWCaZ00urrW39vK',
+        'secret_key': 'sk_test_kFA90HNMGaHdvNt27R5Yx44q00k864ydbO'
+    }
+
+    stripe.api_key = stripe_keys['secret_key']
+    email = request.form['stripeEmail']
+
+    customer = stripe.Customer.create(
+        email=email,
+        source=request.form['stripeToken']
+    )
+
+    stripe.Charge.create(
+        customer=customer.id,
+        amount=int(amount),
+        currency='eur',
+        description=description
+    )
+
+    return redirect("http://localhost:3000/", code=302)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -62,6 +62,7 @@ const Event = props => {
             setFlagTechno(parsed_event.music_genres.techno)
             setFlagElectronic(parsed_event.music_genres.electronic) 
 
+            
             if(props.userLoggedIn){
                 userEventStatus(event).then(response => {
                     if(response.friends_attend_event.length !== 0){
@@ -314,9 +315,26 @@ const Event = props => {
             return null
         }
         if(props.userLoggedIn){
+            const script = document.createElement("script");
+            script.src = "https://checkout.stripe.com/checkout.js";
+            script.async = true;
+
+            document.body.appendChild(script);
+
             return(
                 <div>
-                   <br/><br/> <button className="btn ticket">BUY TICKETS</button> <br/> <br/>    
+
+                    <form action="/charge" method="post">
+                    <script
+                        src="https://checkout.stripe.com/checkout.js"
+                        class="stripe-button"
+                        data-key="pk_test_vmJlznHnNFRVjoz1ed3PWCaZ00urrW39vK"
+                        data-description={'Payment for event ' + name}
+                        data-currency='eur'
+                        data-amount={price*100}
+                        data-locale="auto">
+                    </script>
+                    </form>
                 </div>
                   
             )

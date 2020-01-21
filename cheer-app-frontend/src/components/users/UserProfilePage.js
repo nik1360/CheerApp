@@ -44,7 +44,7 @@ const UserProfilePage = props => {
 
     useEffect(() => {
         const user ={
-            username: props.user_username,
+            username: props.location.state.username,
         }
         getUserDetails(user).then(response => {
             var parsed_user= JSON.parse(response.user)
@@ -74,7 +74,7 @@ const UserProfilePage = props => {
             }
             
         })
-    }, [props.user_username]);
+    }, [props.location.state.username]);
     
    const seeEventPage = code =>{
         props.history.push({

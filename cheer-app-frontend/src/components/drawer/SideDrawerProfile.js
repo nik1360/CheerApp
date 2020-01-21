@@ -7,7 +7,12 @@ import {logout} from '../users/UserFunctions'
 const SideDrawerProfile = props => {
     
     const viewProfile=()=>{
-        props.history.push('/users/'+props.username)
+        props.history.push({
+            pathname: '/users/'+props.username,
+            state:{
+                username:props.username,
+            }
+        })
     }
     const logOut=()=>{
         logout().then(response=>{

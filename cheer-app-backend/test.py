@@ -5,7 +5,3 @@ from database.db_users_handler import DatabaseUsersHandler
 
 from registered_user import RegisteredUser
 from event import Event
-
-s='ciao'
-
-print (s.upper())

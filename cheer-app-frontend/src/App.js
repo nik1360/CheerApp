@@ -94,6 +94,8 @@ const App = () =>{
 							<Route path="/registerpage" exact component={RegisterPage}/>
 							<Route path="/findeventpage" exact component={FindEventPage}/>
 							<Route path="/finduserpage" exact component={FinduserPage}/>
+							
+							
 							<Route path="/events/"  
 								render={(props) =>
 									<Event {...props} userLoggedIn={userLoggedIn} organizerLoggedIn={organizerLoggedIn} user_username={loggedInUsername}/>
