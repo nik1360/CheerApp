@@ -109,7 +109,7 @@ const App = () =>{
 							/>
 							<Route path="/users/" 
 								render={(props) =>
-									<UserProfilePage {...props} user_username={loggedInUsername}/>
+									<UserProfilePage {...props} loggedInUsername={loggedInUsername}/>
 								}
 							/>
 						</Switch>

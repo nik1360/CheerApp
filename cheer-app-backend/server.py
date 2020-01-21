@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, json, Response, redirect
+from flask import Flask, jsonify, request, json, redirect
 import datetime
 
 from database.db_manager import DatabaseManager, logout
@@ -314,6 +314,28 @@ def search_users():
         result = jsonify({'users': json_data, 'error': False, 'message': 'Users found'})
     return result
 
+@app.route('/users/<username>/addFriend', methods=['POST'])
+def add_friend(username):
+    logged_user = request.get_json()['loggedusername']
+    status, msg = DatabaseInsertHandler().insert_friends(username1=logged_user,username2=username)
+    result = jsonify({'error': not status, 'message': msg})
+    return result
+
+@app.route('/users/<username>/checkFriend', methods=['POST'])
+def check_friends(username):
+    logged_user = request.get_json()['loggedusername']
+    status = DatabaseChecker().check_friends(username1=logged_user, username2=username) #returns true if they are NOT friends
+    result = jsonify({'error': status})
+    return result
+
+@app.route('/users/<username>/deleteFriend', methods=['POST'])
+def delete_friend(username):
+    logged_user = request.get_json()['loggedusername']
+    status = DatabaseDeleteHandler().delete_friend(username1=logged_user, username2=username)
+    result = jsonify({'error': not status})
+    return result
+
+
 @app.route('/charge', methods=['POST'])
 def charge():
 
@@ -331,12 +353,10 @@ def charge():
 
     stripe.api_key = stripe_keys['secret_key']
     email = request.form['stripeEmail']
-
     customer = stripe.Customer.create(
         email=email,
         source=request.form['stripeToken']
     )
-
     stripe.Charge.create(
         customer=customer.id,
         amount=int(amount),

@@ -42,9 +42,12 @@ const SideDrawerProfile = props => {
                 
                 <div className='side-drawer-profile-info'>
                     <h3>Hello, {props.username}</h3>
-                    
-                    <button className='side-drawer-profile-view-button' onClick={viewProfile}> View Profile</button> 
-                    
+                    {props.userLoggedIn &&
+                        <button className='side-drawer-profile-view-button' onClick={viewProfile}> View Profile</button> 
+                    }
+                    {props.organizerLoggedIn &&
+                        <button className='side-drawer-profile-view-button' > View Profile</button> 
+                    }                    
                     <button className='side-drawer-profile-logout-button' onClick={logOut}> Log Out</button>
                 </div>   
             </div>

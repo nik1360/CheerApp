@@ -191,6 +191,15 @@ const Event = props => {
         })
     }*/
 
+    const viewUserProfile = f =>{
+        props.history.push({
+            pathname: '/users/'+f,
+            state:{
+                username:f,
+            }
+        })
+    }
+
 
     /* --------------------------------------- CONDITIONAL RENDER ---------------------------------------------- */
     function Rating(){
@@ -253,14 +262,22 @@ const Event = props => {
             if(showFriendsList){
                 return(
                     <div>
+                        <br/>
                         <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
                         <div className='scrollable'>
                             <p>
+                                <table>
+
+                                
                                 {
                                     (friendsList).map(f =>(
-                                        <i key={f}> {f} <br/> </i> 
+                                        <tr key={f} onClick={()=>viewUserProfile(f)}>
+                                            <td>{f}</td>
+                                        </tr>
+                                        
                                     ))
                                 }
+                                </table>
                             </p>
                         </div>
                     </div>
@@ -268,6 +285,7 @@ const Event = props => {
             }else{
                 return(
                     <div>
+                        <br/>
                         <h5 style={{marginTop:'0px', marginBottom:'0px'}}>None of your friends is attending the event</h5>
                     </div>
                 )
@@ -323,8 +341,8 @@ const Event = props => {
 
             return(
                 <div>
-
-                    <form action="/charge" method="post">
+                    <br/>
+                    <form style={{marginLeft:'65px'}}action="/charge" method="post">
                     <script
                         src="https://checkout.stripe.com/checkout.js"
                         class="stripe-button"

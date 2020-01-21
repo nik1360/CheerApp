@@ -120,3 +120,45 @@ export const findUsers = async search => {
     console.log(err)
   }
 }
+
+export const addUserAsFriend = async friends => {
+  try {
+    const response = await axios
+      .post('/users/'+friends.username2+'/addFriend', {
+        loggedusername: friends.loggedusername,
+        username2: friends.username2
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
+export const checkIfFriend = async friends => {
+  try {
+    const response = await axios
+      .post('/users/'+friends.username2+'/checkFriend', {
+        loggedusername: friends.loggedusername,
+        username2: friends.username2
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
+export const deleteFriend = async friends => {
+  try {
+    const response = await axios
+      .post('/users/'+friends.username2+'/deleteFriend', {
+        loggedusername: friends.loggedusername,
+        username2: friends.username2
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
