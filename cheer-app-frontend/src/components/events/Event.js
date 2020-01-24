@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 
 import {retrieveOrganizerDetails,insertRating, deleteRating, userAttendsEvent, userNotAttendsEvent, userEventStatus, getEventDetails} from './EventFunctions'
 import TodayDate from '../TodayDate' 
+import { toast } from 'react-toastify';
+
 import '../../styles/EventProfilePage.css'
 
 
@@ -105,6 +107,7 @@ const Event = props => {
     /*Rate the event */
     const submitRating = e => {
         e.preventDefault()
+        
         const rating ={
             event_code:props.location.state.code,
             user_username: props.user_username ,
@@ -115,9 +118,10 @@ const Event = props => {
 
             if (!response.error) {
                 //alert(response.message)
+                toast.success('Rating submitted successfully!')
                 setShowRating(false)
             }else{
-                alert(response.message)
+                toast.error(response.message)
             }
         })  
     }
@@ -127,14 +131,16 @@ const Event = props => {
         e.preventDefault()
         const rating ={
             event_code:props.location.state.code,
-            user_username: props.user_username ,
+            organizer_username:organizer,
+            user_username: props.user_username,
         }
         deleteRating(rating).then(response => {
             if (!response.error) {
                 //alert(response.message)
+                toast.success('Rating removed successfully!')
                 setShowRating(true)
             }else{
-                alert(response.message)
+                toast.error(response.message)
             }
         })  
     }
@@ -150,9 +156,10 @@ const Event = props => {
 
             if (!response.error) {
                 //alert(response.message)
+                toast.success('You will now attend the event!')
                 setShowAttend(false)
             }else{
-                alert(response.message)
+                toast.error(response.message)
             }
         })
         
@@ -168,9 +175,10 @@ const Event = props => {
         userNotAttendsEvent(event).then(response => {
 
             if (!response.error) {
+                toast.warn('You will not attend the event anymore!')
                 setShowAttend(true)
             }else{
-                alert(response.message)
+                toast.error(response.message)
             }
         })
     }
@@ -179,17 +187,6 @@ const Event = props => {
     const onClickLogin =() => {
         props.history.push('/loginpage')
     }
-
-    /*Show custom alert */
-    /*
-    const handleClick =() =>{
-        const modal = document.querySelector(".modal")
-        const closeBtn = document.querySelector(".close")
-        modal.style.display = "block";
-        closeBtn.addEventListener("click", () => {
-          modal.style.display = "none";
-        })
-    }*/
 
     const viewUserProfile = f =>{
         props.history.push({
@@ -265,10 +262,7 @@ const Event = props => {
                         <br/>
                         <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
                         <div className='scrollable'>
-                            <p>
-                                <table>
-
-                                
+                                <table> 
                                 {
                                     (friendsList).map(f =>(
                                         <tr key={f} onClick={()=>viewUserProfile(f)}>
@@ -278,7 +272,6 @@ const Event = props => {
                                     ))
                                 }
                                 </table>
-                            </p>
                         </div>
                     </div>
                 )
@@ -345,7 +338,7 @@ const Event = props => {
                     <form style={{marginLeft:'65px'}}action="/charge" method="post">
                     <script
                         src="https://checkout.stripe.com/checkout.js"
-                        class="stripe-button"
+                        className="stripe-button"
                         data-key="pk_test_vmJlznHnNFRVjoz1ed3PWCaZ00urrW39vK"
                         data-description={'Payment for event ' + name}
                         data-currency='eur'

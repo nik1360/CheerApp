@@ -14,8 +14,12 @@ import UserProfilePage from './components/users/UserProfilePage'
 import FinduserPage from './components/users/FindUserPage'
 
 import Home from './components/Home'
-import AccessDenied from './components/AccessDenied'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './styles/General.css'
+
+toast.configure()
 
 const App = () =>{
 	const usernameSessionKey = 'username'
@@ -27,10 +31,8 @@ const App = () =>{
 	const [organizerLoggedIn, setOrganizerLoggedIn] = useState(JSON.parse(sessionStorage.getItem(organizerLoginSessionKey) || false))
 	const [userLoggedIn, setUserLoggedIn] = useState(JSON.parse(sessionStorage.getItem(userLoginSessionKey) || false))
 
-	
 	const loginUser=(u) => {
 		sessionStorage.setItem(userLoginSessionKey, true);
-		//sessionStorage.setItem(organizerLoginSessionKey, false);
 		sessionStorage.setItem(usernameSessionKey, u);
 
 		setUserLoggedIn(true)
@@ -66,6 +68,8 @@ const App = () =>{
 	const backdropClickHandler = () => {
 		setSideDrawerOpen(false)
 	};
+
+
 	return(
 		<Router>
 				<div className='page'>
@@ -116,6 +120,7 @@ const App = () =>{
 					</div>
 				</div>
 			</Router>
+			
 	)
 }
 

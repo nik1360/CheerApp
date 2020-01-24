@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { toast } from 'react-toastify';
 
 import '../../styles/EventProfilePage.css'
 import { getUserDetails, checkIfFriend, addUserAsFriend, deleteFriend } from './UserFunctions';
@@ -123,9 +124,10 @@ const UserProfilePage = props => {
         
         addUserAsFriend(users).then(response => {
             if(!response.error){
-                setLoggedUserIsFriend(false)
+                setLoggedUserIsFriend(true)
+                toast.success('You and ' + props.location.state.username + ' are now friends!')
             }else{
-                console.log(response.message)
+                toast.error(response.message)
             }
             
         })
@@ -140,8 +142,9 @@ const UserProfilePage = props => {
         deleteFriend(users).then(response => {
             if(!response.error){
                 setLoggedUserIsFriend(false)
+                toast.warn('You and ' + props.location.state.username + ' are not friends anymore!')
             }else{
-                console.log(response.message)
+                toast.error(response.message)
             }
             
         })

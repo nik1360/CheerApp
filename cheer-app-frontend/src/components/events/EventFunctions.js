@@ -88,6 +88,7 @@ export const deleteRating = async rating => {
     const response = await axios
       .post('/events/' + rating.event_code + '/deleteRating', {
         event_code: rating.event_code,
+        organizer_username: rating.organizer_username,
         user_username: rating.user_username,
       })
     return response.data

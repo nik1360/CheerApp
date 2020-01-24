@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {withRouter} from 'react-router-dom';
 import {loginUser,loginOrganizer} from './UserFunctions'
+import { toast } from 'react-toastify';
 
 import '../../styles/LoginRegisterPage.css'
 
@@ -20,9 +21,10 @@ const LoginPage = props => {
         loginUser(user).then(response => {
             if (!response.error) {
                 props.loginUser(response.username);
+                toast.success('You are logged in as '+ response.username)
                 props.history.goBack();
             }else{
-                alert(response.error);
+                toast.error(response.message)
             }
         })
     }

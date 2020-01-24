@@ -16,6 +16,7 @@ const SideDrawerProfile = props => {
     }
     const logOut=()=>{
         logout().then(response=>{
+            
             if (!response.error) {
                 props.logOut();
                 props.history.push('/');

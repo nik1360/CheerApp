@@ -32,9 +32,9 @@ class DatabaseInsertHandler(DatabaseManager):
     # Register a new organizer in the database
     def insert_organizer(self, organizer):
         if self.checker.check_username_email(organizer.username, organizer.email, 'ORGANIZERS'):
-            query = 'INSERT INTO ' + self.table_organizers + ' VALUES(%s,%s,%s,%s,%s,%s,%s)'
+            query = 'INSERT INTO ' + self.table_organizers + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
             self.cursor.execute(query, (organizer.username, encode_password(organizer.password), organizer.email,
-                                        organizer.phone, organizer.name, organizer.surname, organizer.date_of_birth))
+                                        organizer.phone, organizer.name, organizer.surname, organizer.date_of_birth,'0','0','0'))
             self.db.commit()
             return True, 'Organizer registered correctly!'
         else:

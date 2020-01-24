@@ -36,7 +36,7 @@ class DatabaseDeleteHandler(DatabaseManager):
         self.db.commit()
         return True, username + " won't attend event " + event_code + "!"
 
-    def delete_rating(self,username, event_code):
+    def delete_rating(self, username, event_code):
         condition = ' WHERE (user_username = %s AND event_code = %s)'
         query = 'DELETE FROM ' + self.table_ratings + condition
         self.cursor.execute(query, (username, event_code))

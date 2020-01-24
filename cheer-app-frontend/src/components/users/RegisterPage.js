@@ -1,10 +1,11 @@
 import React, {useState,useEffect} from 'react';
 import {withRouter} from 'react-router-dom';
 import{registerOrganizer, registerUser} from './UserFunctions'
+import { toast } from 'react-toastify';
 
 import '../../styles/LoginRegisterPage.css'
 
-const LoginPage = props => {
+const RegisterPage= props => {
 
     const selected='#801336'
     const unselected='#002a4d'
@@ -15,6 +16,7 @@ const LoginPage = props => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [repeatedPassword, setRepeatedPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
@@ -60,11 +62,16 @@ const LoginPage = props => {
 
     const onSubmitHandler = e => {
         e.preventDefault()
-        if (showOrganizerForm){
-            regOrganizer()
+        if(password===repeatedPassword){
+            if (showOrganizerForm){
+                regOrganizer()
+            }else{
+                regUser()
+            }
         }else{
-            regUser()
+            toast.error('Passwords do not match')
         }
+        
     }
 
     const regOrganizer = () => {
@@ -81,10 +88,10 @@ const LoginPage = props => {
 
         registerOrganizer(org).then(response => {
             if (!response.error) {
-                alert('Organizer ' + org.usr +' registered correctly')
+                toast.success('Organizer ' + org.usr +' registered correctly')
                 props.history.push('/loginpage');
             }else{
-                alert(response.error);
+                toast.error(response.error);
             }
         })
     }
@@ -110,10 +117,10 @@ const LoginPage = props => {
 
         registerUser(usr).then(response => {
             if (!response.error) {
-                alert('User ' + usr.usr +' registered correctly')
+                toast.success('User ' + usr.usr +' registered correctly')
                 props.history.push('/loginpage');
             }else{
-                alert(response.error);
+                toast.error(response.message);
             }
         })
     }
@@ -126,6 +133,9 @@ const LoginPage = props => {
     }
     const updatePassword = e =>{
         setPassword(e.target.value);
+    }
+    const updateRepeatedPassword = e =>{
+        setRepeatedPassword(e.target.value);
     }
     const updateFirstName = e =>{
         setFirstName(e.target.value);
@@ -198,12 +208,13 @@ const LoginPage = props => {
         <div className="login-page">
             <div className="form">
                 <form className="login-form" onSubmit={onSubmitHandler}>
-                    <input className="form-text" type="text" placeholder="username" required value={username}onChange={updateUsername}/>
-                    <input className="form-text" type="email" placeholder="email" required value={email} onChange={updateEmail}/>
-                    <input className="form-text" type="password" placeholder="password" required value={password} onChange={updatePassword}/>
-                    <input className="form-text" type="text" placeholder="first name" required  value={firstName} onChange={updateFirstName}/>
-                    <input className="form-text" type="text" placeholder="last name" required value={lastName} onChange={updateLastName}/>
-                    <input className="form-text" type="date" placeholder="date of birth" required value={dateOfBirth} max={maxBirthDate} onChange={updateDateOfBirth}/>
+                    <input className="form-text" type="text" placeholder="Username" required value={username}onChange={updateUsername}/>
+                    <input className="form-text" type="email" placeholder="Email" required value={email} onChange={updateEmail}/>
+                    <input className="form-text" type="password" placeholder="Password" required value={password} onChange={updatePassword}/>
+                    <input className="form-text" type="password" placeholder="Repeat password" required value={repeatedPassword} onChange={updateRepeatedPassword}/>
+                    <input className="form-text" type="text" placeholder="First name" required  value={firstName} onChange={updateFirstName}/>
+                    <input className="form-text" type="text" placeholder="Fast name" required value={lastName} onChange={updateLastName}/>
+                    <input className="form-text" type="date" placeholder="Date of birth" required value={dateOfBirth} max={maxBirthDate} onChange={updateDateOfBirth}/>
                     {!showOrganizerForm && !showUserForm &&
                         <div>
                             <p className="message">Choose one to show the other information</p>
@@ -222,6 +233,9 @@ const LoginPage = props => {
                         <div>
                             <input className="form-text" type="tel" placeholder="phone number" pattern="[0-9]{10}"required value={phoneNumber} onChange={updatePhoneNumber}/> 
                             <button className="form-button" type="submit">Register organizer</button>
+                            <br/>
+                            <br/>
+                            <button className="form-button"  onClick={()=>{setShowOrganizerForm(false)}}>Go back</button>
                         </div>  
                     }
                     {showUserForm &&
@@ -229,7 +243,7 @@ const LoginPage = props => {
                             <input className="form-text" type="text" placeholder="city" required value={city} onChange={updateCity}/> 
                             <input className="form-text" type="text" placeholder="nationality" required value={nationality} onChange={updateNationality}/> 
                             <div>
-                                <p className="message">What is the music that it will be played at the event?</p>
+                                <p className="message">What are your music tastes?</p>
                                 <br/>
                                 <button className='taste-btn' type='button'style={{backgroundColor:rockColor}} onClick={() => {setFlagRock(!flagRock)}}>Rock</button>
                                 <button className='taste-btn' type='button'style={{backgroundColor:hiphopColor}}  onClick={() => {setFlagHipHop(!flagHipHop)}} > HipHop</button> 
@@ -240,6 +254,9 @@ const LoginPage = props => {
                             </div>
                             <br/>
                             <button className="form-button" type="submit">Register user</button>
+                            <br/>
+                            <br/>
+                            <button className="form-button"  onClick={()=>{setShowUserForm(false)}}>Go back</button>
                         </div>  
                     }
                 </form>      
@@ -249,4 +266,4 @@ const LoginPage = props => {
     );  
   
 }
-export default withRouter(LoginPage);
+export default withRouter(RegisterPage);

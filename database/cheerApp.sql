@@ -28,7 +28,10 @@ create table organizers (
     phone varchar(20) not null,
 	name varchar (30),
 	surname varchar(30),
-	date_of_birth date not null-- format: 'yyyy-mm-dd'
+	date_of_birth date not null,-- format: 'yyyy-mm-dd'
+    rating_count int,
+    sum_rating int,
+    avg_rating double 
 );
 
 create table venues (
