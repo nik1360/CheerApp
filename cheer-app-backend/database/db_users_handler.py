@@ -1,10 +1,12 @@
 from database.db_manager import DatabaseManager
 from registered_user import RegisteredUser
+from organizer import Organizer
 
 # class that manages interactions between users
 class DatabaseUsersHandler(DatabaseManager):
     def __init__(self):
         DatabaseManager.__init__(self)
+
     # search a user by its username
     def find_user_username(self, username):
         query = 'SELECT * FROM ' + self.table_users + ' WHERE username=%s'
@@ -19,6 +21,19 @@ class DatabaseUsersHandler(DatabaseManager):
                                   flag_reggae=r[11], flag_techno=r[12], flag_electronic=r[13])
             msg = 'User ' + username + ' exists!'
             return True, user, msg
+
+    def find_organizer_username(self, username):
+        query = 'SELECT * FROM ' + self.table_organizers + ' WHERE username=%s'
+        self.cursor.execute(query, (username,))
+        r = self.cursor.fetchone()
+        if not r:
+            msg = 'Organizer does not exist!'
+            return False, None, msg
+        else:
+            org = Organizer(username=r[0], email=r[2], phone=r[3], name=r[4], surname=r[5], date_of_birth=r[6],
+                            avg_rating=r[9])
+            msg = 'Organizer ' + username + ' exists!'
+            return True, org, msg
 
     # find the users in a particular city
     def find_user_city(self, city):
@@ -67,10 +82,6 @@ class DatabaseUsersHandler(DatabaseManager):
             users.append(RegisteredUser(username=r[0], city=r[6], flag_rock=r[8], flag_hiphop=r[9], flag_reggaeton=r[10],
                                         flag_reggae=r[11], flag_techno=r[12], flag_electronic=r[13]))
         return users
-
-
-
-
 
     # Get the friend list of an user
     def get_friends_list(self, username):

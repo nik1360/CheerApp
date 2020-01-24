@@ -423,7 +423,17 @@ def retrieve_event_info(event_code):
 # --------------------------------FUNCTION THAT MANAGE THE EVENT SUGGESTION ------------------------------------------
 @app.route('/suggestEvent', methods=['POST'])
 def suggest():
-    # retrieve list of all the future events
+    current_date = '2020-01-24'
+    db_event = DatabaseEventHandler()
+    event_list = db_event.search(False, False, False)
+    future_events = []
+    for e in event_list:
+        if e.date > current_date:
+            future_events.append(e)
+            print(e.name)
+    _, user, _ = DatabaseUsersHandler().find_user_username('nik')
+
+
     #retrieve logged user details
     # for each event, compute the score
     return None
