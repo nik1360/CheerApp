@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react';
 import {findEvents} from './EventFunctions'
 import EventRow from './EventRow'
 import TodayDate from '../TodayDate'
+import { trackPromise } from 'react-promise-tracker';
 
 import '../../styles/FindEventUserPage.css'
 
@@ -120,20 +121,22 @@ const FindEventPage = () => {
         if(city!==''){
             search.criteriacity=true
         }
-
-        findEvents(search).then(response => {
-            setShowSearch(false)
-            setHeight('auto')
-            setShowResults(true)
-
-            if (!response.error) {
-                setResultPresent(true)
-                
-                setEvents(JSON.parse(response.events)) 
-            }else{
-                setResultPresent(false)
-            }
-        })
+        trackPromise(
+            findEvents(search).then(response => {
+                setShowSearch(false)
+                setHeight('auto')
+                setShowResults(true)
+    
+                if (!response.error) {
+                    setResultPresent(true)
+                    
+                    setEvents(JSON.parse(response.events)) 
+                }else{
+                    setResultPresent(false)
+                }
+            })
+        )
+        
         
     }
 

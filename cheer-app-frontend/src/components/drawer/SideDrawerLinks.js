@@ -2,21 +2,24 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 const SideDrawerLinks = props => {
+
+
     if(props.userLoggedIn){
         return(
             <ul>
                 <Link to="/">
-                    <li>Home (user)</li>
+                    <li>Home</li>
                 </Link>
                 <Link to="/findeventpage">
                     <li>Find Events</li>
                 </Link>
-                <Link to="/">
-                    <li>Suggest Me!</li>
-                </Link>
                 <Link to="/finduserpage">
                     <li>Find Friends</li>
                 </Link>
+                <Link to="/suggesteventpage">
+                    <li>Suggest Me!</li>
+                </Link>
+                
             </ul>
         );
     
@@ -25,7 +28,7 @@ const SideDrawerLinks = props => {
             return(
                 <ul>
                     <Link to="/">
-                        <li>Home (organizer)</li>
+                        <li>Home</li>
                     </Link>
                     <Link to="/createeventpage">
                         <li>Create Event</li>
@@ -40,7 +43,7 @@ const SideDrawerLinks = props => {
             return(
                 <ul>
                     <Link to="/">
-                        <li>Home (guest)</li>
+                        <li>Home</li>
                     </Link>
                     <Link to="/findeventpage">
                         <li>Find Events</li>

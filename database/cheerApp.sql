@@ -90,3 +90,12 @@ create table ratings(
     
     primary key(user_username, event_code)
 );
+
+create table invitations(
+	sender varchar(20),
+    recipient varchar(20),
+    event_code varchar(6),
+    event_name varchar(40),
+    
+    primary key(sender,recipient,event_code)
+);

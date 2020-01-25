@@ -15,9 +15,12 @@ import FinduserPage from './components/users/FindUserPage'
 
 import Home from './components/Home'
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { usePromiseTracker } from "react-promise-tracker";
+import Loader from 'react-loader-spinner';
 
+import 'react-toastify/dist/ReactToastify.css';
 import './styles/General.css'
+import SuggestEvent from './components/events/SuggestEvent';
 
 toast.configure()
 
@@ -31,6 +34,25 @@ const App = () =>{
 	const [organizerLoggedIn, setOrganizerLoggedIn] = useState(JSON.parse(sessionStorage.getItem(organizerLoginSessionKey) || false))
 	const [userLoggedIn, setUserLoggedIn] = useState(JSON.parse(sessionStorage.getItem(userLoginSessionKey) || false))
 
+	const { promiseInProgress } = usePromiseTracker();
+
+	const LoadingIndicator = props => {
+		return (
+			promiseInProgress && 
+			<div
+				style={{
+				width: "100%",
+				height: "100%",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				zIndex:'200',
+				position:'absolute'
+				}}>
+		     	<Loader type="Circles" color="#1f90ec" height={200} width={200} />
+		    </div>
+		);  
+	}
 	const loginUser=(u) => {
 		sessionStorage.setItem(userLoginSessionKey, true);
 		sessionStorage.setItem(usernameSessionKey, u);
@@ -71,15 +93,18 @@ const App = () =>{
 
 
 	return(
+		
 		<Router>
 				<div className='page'>
+				
 					<div className='toolbar'>
 						<Toolbar drawerClickHandler={drawerToggleClickHandler}/>
 					</div>
 					<div className='content'>
+						<LoadingIndicator/>
 						<SideDrawer show={sideDrawerOpen} user={userLoggedIn} 
 							organizer={organizerLoggedIn} username={loggedInUsername}
-							logOut ={logOut}
+							logOut ={logOut} 
 						/>
 						{sideDrawerOpen &&
 							<Backdrop click={backdropClickHandler}/>
@@ -97,12 +122,23 @@ const App = () =>{
 							/>
 							<Route path="/registerpage" exact component={RegisterPage}/>
 							<Route path="/findeventpage" exact component={FindEventPage}/>
-							<Route path="/finduserpage" exact component={FinduserPage}/>
+							<Route path="/finduserpage" exact 
+								render={(props)=>
+									<FinduserPage {...props} loggedInUsername={loggedInUsername}/>
+								}
+							
+							/>
 							
 							
 							<Route path="/events/"  
 								render={(props) =>
 									<Event {...props} userLoggedIn={userLoggedIn} organizerLoggedIn={organizerLoggedIn} user_username={loggedInUsername}/>
+								}
+							/>
+							
+							<Route path="/suggesteventpage"  
+								render={(props) =>
+									<SuggestEvent {...props} user_username={loggedInUsername}/>
 								}
 							/>
 

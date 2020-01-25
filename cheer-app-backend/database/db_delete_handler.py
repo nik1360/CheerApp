@@ -42,3 +42,9 @@ class DatabaseDeleteHandler(DatabaseManager):
         self.cursor.execute(query, (username, event_code))
         self.db.commit()
         return True, "Rating successfully deleted!"
+
+    def delete_invitation(self, sender, recipient, event_code):
+        condition = ' WHERE (sender = %s AND recipient = %s AND event_code = %s)'
+        query = 'DELETE FROM ' + self.table_invitations + condition
+        self.cursor.execute(query, (sender, recipient, event_code))
+        self.db.commit()

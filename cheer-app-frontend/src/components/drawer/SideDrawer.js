@@ -19,7 +19,7 @@ const SideDrawer = props =>{
             </div>
             <SideDrawerProfile userLoggedIn={props.user} organizerLoggedIn={props.organizer}
                 username={props.username} logOut={props.logOut}/>
-            <SideDrawerLinks userLoggedIn={props.user} organizerLoggedIn={props.organizer}/>
+            <SideDrawerLinks userLoggedIn={props.user} organizerLoggedIn={props.organizer} loggedInUSername={props.username}/>
         </nav>
     )  
 };

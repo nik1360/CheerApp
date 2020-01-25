@@ -1,0 +1,20 @@
+.suggest-page {
+    width: 70%;
+    height: 50%;
+    border: 0 0 0 0;
+    border-radius: 30px;
+    
+    margin-top: 15%;
+    margin-bottom: 10%;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: white;
+    display: block;
+    justify-content: center;
+    align-items: center;   
+
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}

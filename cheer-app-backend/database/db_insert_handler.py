@@ -100,3 +100,11 @@ class DatabaseInsertHandler(DatabaseManager):
 
         return True, 'The rating was inserted correctly'
 
+    def insert_invitation(self, sender, recipient, event_code, event_name):
+        if DatabaseChecker().check_invitation(sender=sender, recipient=recipient, event_code=event_code):
+            query = 'INSERT INTO ' + self.table_invitations + ' VALUES (%s, %s, %s, %s)'
+            self.cursor.execute(query, (sender, recipient, event_code, event_name))
+            self.db.commit()
+            return True
+        else:
+            return False

@@ -1,8 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { toast } from 'react-toastify';
 
+import { getUserDetails, checkIfFriend, addUserAsFriend, deleteFriend, acceptInvitation, refuseInvitation } from './UserFunctions';
+import { trackPromise } from 'react-promise-tracker';
+import Popup from "reactjs-popup";
+
+
 import '../../styles/EventProfilePage.css'
-import { getUserDetails, checkIfFriend, addUserAsFriend, deleteFriend } from './UserFunctions';
+
 
 
 const UserProfilePage = props => {
@@ -23,8 +28,11 @@ const UserProfilePage = props => {
 
     const [friendsList, setFriendsList] = useState([])
     const [eventsList, setEventsList] = useState([])
+    const [invitationsList, setInvitationsList] = useState([])
     const [loggedUserProfile, setLoggedUserProfile] = useState(true)
     const [loggeUserIsFriend, setLoggedUserIsFriend] = useState(false)
+    
+
 
     const [todayDate, setTodayDate] = useState()
     
@@ -43,8 +51,45 @@ const UserProfilePage = props => {
 
     }, []);
 
-
-
+    const retrieveDetails = useCallback(
+        ()=>{
+            const user ={
+                username: props.location.state.username,
+            }
+            trackPromise(
+                getUserDetails(user).then(response => {
+                    var parsed_user= JSON.parse(response.user)
+                    var parsed_friends = JSON.parse(response.friends)
+                    var parsed_events = JSON.parse(response.joined_events)
+                    var parsed_invitations = JSON.parse(response.invitations)
+                    setUsername( parsed_user.username)
+                    setEmail( parsed_user.email)
+                    setFirstName( parsed_user.name)
+                    setLastName( parsed_user.surname)
+                    setDateOfBirth( parsed_user.date_of_birth)
+                    setCity( parsed_user.city)
+                    setNationality( parsed_user.nationality)
+                    setFlagRock(parsed_user.music_tastes.rock)
+                    setFlagHipHop(parsed_user.music_tastes.hiphop)
+                    setFlagReggae(parsed_user.music_tastes.reggae)
+                    setFlagReggaeton(parsed_user.music_tastes.reggaeton)
+                    setFlagTechno(parsed_user.music_tastes.techno)
+                    setFlagElectronic(parsed_user.music_tastes.electronic)
+                    setEventsList(parsed_events)
+                    setInvitationsList(parsed_invitations)
+                    
+                    /*the following is to extract the arrays (don't know why it is needed)*/
+                    if (parsed_friends[0]!== null){ //check if friends are present
+                        parsed_friends.map(f=>{
+                            setFriendsList(f)
+                            return null
+                        })  
+                    }  
+                })
+            )   
+        },[props.location.state.username]
+    )
+    
     useEffect(() => {
         /* Check if it's the logged user profile page */
         if(props.location.state.username === props.loggedInUsername){
@@ -59,52 +104,21 @@ const UserProfilePage = props => {
                 loggedusername: props.loggedInUsername,
                 username2: props.location.state.username 
             }
-            checkIfFriend(users).then(response=>{
-                if(!response.error){
-                    setLoggedUserIsFriend(true)
-                }
-
-            })
-
+            trackPromise(
+                checkIfFriend(users).then(response=>{
+                    if(!response.error){
+                        setLoggedUserIsFriend(true)
+                    }
+                })
+            )
             /* Retrieve the user details */
             if(loggeUserIsFriend){
                 retrieveDetails()
             }
         }
-    }, [props.location.state.username, props.loggedInUsername, loggedUserProfile, loggeUserIsFriend]);
+    }, [props.location.state.username, props.loggedInUsername, retrieveDetails,loggedUserProfile, loggeUserIsFriend]);
     
-    const retrieveDetails = () =>{
-        const user ={
-            username: props.location.state.username,
-        }
-        getUserDetails(user).then(response => {
-            var parsed_user= JSON.parse(response.user)
-            var parsed_friends = JSON.parse(response.friends)
-            var parsed_events = JSON.parse(response.joined_events)
-            setUsername( parsed_user.username)
-            setEmail( parsed_user.email)
-            setFirstName( parsed_user.name)
-            setLastName( parsed_user.surname)
-            setDateOfBirth( parsed_user.date_of_birth)
-            setCity( parsed_user.city)
-            setNationality( parsed_user.nationality)
-            setFlagRock(parsed_user.music_tastes.rock)
-            setFlagHipHop(parsed_user.music_tastes.hiphop)
-            setFlagReggae(parsed_user.music_tastes.reggae)
-            setFlagReggaeton(parsed_user.music_tastes.reggaeton)
-            setFlagTechno(parsed_user.music_tastes.techno)
-            setFlagElectronic(parsed_user.music_tastes.electronic)
-            setEventsList(parsed_events)
-            
-            /*the following is to extract the arrays (don't know why it is needed)*/
-            if (parsed_friends[0]!== null){ //check if friends are present
-                parsed_friends.map(f=>{
-                    setFriendsList(f)
-                    return null
-                })  
-            }  
-        })
-    }
+    
 
     const seeEventPage = code =>{
         props.history.push({
@@ -121,16 +135,17 @@ const UserProfilePage = props => {
             username2: props.location.state.username 
         }
         setLoggedUserIsFriend(true)
+        trackPromise(
+            addUserAsFriend(users).then(response => {
+                if(!response.error){
+                    setLoggedUserIsFriend(true)
+                    toast.success('You and ' + props.location.state.username + ' are now friends!')
+                }else{
+                    toast.error(response.message)
+                }
+            })
+        )
         
-        addUserAsFriend(users).then(response => {
-            if(!response.error){
-                setLoggedUserIsFriend(true)
-                toast.success('You and ' + props.location.state.username + ' are now friends!')
-            }else{
-                toast.error(response.message)
-            }
-            
-        })
     }
 
     const unfollow = () =>{
@@ -139,15 +154,18 @@ const UserProfilePage = props => {
             username2: props.location.state.username 
         }
         
-        deleteFriend(users).then(response => {
-            if(!response.error){
-                setLoggedUserIsFriend(false)
-                toast.warn('You and ' + props.location.state.username + ' are not friends anymore!')
-            }else{
-                toast.error(response.message)
-            }
-            
-        })
+        trackPromise(
+            deleteFriend(users).then(response => {
+                if(!response.error){
+                    setLoggedUserIsFriend(false)
+                    toast.warn('You and ' + props.location.state.username + ' are not friends anymore!')
+                }else{
+                    toast.error(response.message)
+                }
+                
+            })
+        )
+        
     }
 
     const viewUserProfile = f =>{
@@ -158,6 +176,46 @@ const UserProfilePage = props => {
             }
         })
     }
+
+    const accept = i =>{
+        const invitation={
+            sender:i.sender,
+            recipient:i.recipient,
+            event_code:i.event_code
+        }
+        trackPromise(
+            acceptInvitation(invitation).then(response => {
+                if(!response.error){
+                    toast.success('You accepted the invitation!')
+                    window.location.reload()
+                }else{
+                    toast.error(response.message)
+                } 
+                
+            })
+        )
+    }
+
+    const refuse = i =>{
+        const invitation={
+            sender:i.sender,
+            recipient:i.recipient,
+            event_code:i.event_code
+        }
+        trackPromise(
+            refuseInvitation(invitation).then(response => {
+                if(!response.error){
+                    toast.warn('You refuse the invitation!')
+                    window.location.reload()
+                }else{
+                    toast.error(response.message)
+                }   
+
+            })
+        )
+    }
+
+    
 
    //--------------------------------------------------Conditional render -------------------------------------
    function UserInfo(){
@@ -193,12 +251,12 @@ const UserProfilePage = props => {
            )
        }
     }
-
     function Tables(){
         if(loggeUserIsFriend || loggedUserProfile){
             return(
                 <div className="profile-row">
                     <table className="lists-table">
+                        
                         <tbody>
                             <tr>
                                 <td className = "friends-events-lists"> 
@@ -270,7 +328,43 @@ const UserProfilePage = props => {
         }
     }
 
-
+    function Invitations(){
+        if(Array.from(invitationsList).length>0){
+            return(
+                <table id='results-table' >
+                    <tbody>
+                    <tr>
+                        <th>SENDER</th>
+                        <th>EVENT</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                        {
+                            Array.from(invitationsList)
+                            .map(i=>{
+                                var key = i.sender+i.event_code+i.recipient
+                                var event_code=i.event_code
+                                return(
+                                    <tr key= {key} >
+                                        <td> {i.sender} </td>
+                                        <td onClick={() => seeEventPage(event_code)}> {i.event_name} </td>
+                                        <td>
+                                            <button onClick={()=>{accept(i)}}>Accept</button>
+                                            <button onClick={()=>{refuse(i)}}>Refuse</button>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+            )
+        }else{
+            return(
+                <h2 style={{color:'black'}}>You have no new invitations!</h2>
+            )
+        }
+    }
+    //--------------------------------------MAIN COMPONENT RENDER ---------------------------------------------
     return(
         <div>
             <div className="header">
@@ -291,9 +385,13 @@ const UserProfilePage = props => {
                                             <td><button className = "btn" onClick={unfollow} > Unfollow </button></td>
                                         }
                                         {loggedUserProfile &&
-                                            <td><button className = "btn" > Edit Profile </button></td>
+
+                                            <td>
+                                                <Popup modal style={{all:'unset'}}trigger={<button className = "btn"> Show invitations </button>} position="right center">
+                                                    <Invitations/>
+                                                </Popup>   
+                                            </td>
                                         }
-                                        
                                     </tr>
                                 </tbody>
                             </table>
@@ -306,6 +404,7 @@ const UserProfilePage = props => {
                 </table> 
             </div>
             <Tables/>
+            
         </div>
     )
 };

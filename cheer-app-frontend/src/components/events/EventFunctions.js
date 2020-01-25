@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+
 export const findEvents = async search => {
   try {
     const response = await axios
@@ -153,3 +154,32 @@ export const getEventDetails = async event => {
   }
 }
 
+export const suggestAnEvent = async struct => {
+  try {
+    const response = await axios
+      .post('/suggestEvent', {
+        logged_username: struct.logged_username,
+        today_date: struct.today_date
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
+export const inviteToEvent = async struct => {
+  try {
+    const response = await axios
+      .post('/events/' + struct.event_code + '/inviteFriend', {
+        sender: struct.sender,
+        recipient: struct.recipient,
+        event_code: struct.event_code,
+        event_name: struct.event_name
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}

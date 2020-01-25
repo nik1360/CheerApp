@@ -4,6 +4,7 @@ import{registerOrganizer, registerUser} from './UserFunctions'
 import { toast } from 'react-toastify';
 
 import '../../styles/LoginRegisterPage.css'
+import { trackPromise } from 'react-promise-tracker';
 
 const RegisterPage= props => {
 
@@ -85,15 +86,18 @@ const RegisterPage= props => {
             phonenumber:phoneNumber,
             errors:{}
         }
-
-        registerOrganizer(org).then(response => {
-            if (!response.error) {
-                toast.success('Organizer ' + org.usr +' registered correctly')
-                props.history.push('/loginpage');
-            }else{
-                toast.error(response.error);
-            }
-        })
+        
+        trackPromise(
+            registerOrganizer(org).then(response => {
+                if (!response.error) {
+                    toast.success('Organizer ' + org.usr +' registered correctly')
+                    props.history.push('/loginpage');
+                }else{
+                    toast.error(response.error);
+                }
+            })
+        )
+        
     }
 
     const regUser = () => {
@@ -114,15 +118,17 @@ const RegisterPage= props => {
             flagelectronic:flagElectronic,
             errors:{}
         }
-
-        registerUser(usr).then(response => {
-            if (!response.error) {
-                toast.success('User ' + usr.usr +' registered correctly')
-                props.history.push('/loginpage');
-            }else{
-                toast.error(response.message);
-            }
-        })
+        trackPromise(
+            registerUser(usr).then(response => {
+                if (!response.error) {
+                    toast.success('User ' + usr.usr +' registered correctly')
+                    props.history.push('/loginpage');
+                }else{
+                    toast.error(response.message);
+                }
+            })
+        )
+        
     }
     
     const updateUsername = e =>{

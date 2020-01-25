@@ -4,6 +4,7 @@ import {loginUser,loginOrganizer} from './UserFunctions'
 import { toast } from 'react-toastify';
 
 import '../../styles/LoginRegisterPage.css'
+import { trackPromise } from 'react-promise-tracker';
 
 const LoginPage = props => {
     
@@ -17,16 +18,18 @@ const LoginPage = props => {
             p: password,
             errors:{}
         }
-
-        loginUser(user).then(response => {
-            if (!response.error) {
-                props.loginUser(response.username);
-                toast.success('You are logged in as '+ response.username)
-                props.history.goBack();
-            }else{
-                toast.error(response.message)
-            }
-        })
+        trackPromise(
+            loginUser(user).then(response => {
+                if (!response.error) {
+                    props.loginUser(response.username);
+                    toast.success('You are logged in as '+ response.username)
+                    props.history.goBack();
+                }else{
+                    toast.error(response.message)
+                }
+            })
+        )
+        
     }
 
     const onSubmitOrganizer = e => {
@@ -37,14 +40,17 @@ const LoginPage = props => {
             errors:{}
         }
 
-        loginOrganizer(organizer).then(response => {
-            if (!response.error) {
-                props.loginOrganizer(organizer.u);
-                props.history.push('/');
-            }else{
-                alert(response.error);
-            }
-        })
+        trackPromise(
+            loginOrganizer(organizer).then(response => {
+                if (!response.error) {
+                    props.loginOrganizer(organizer.u);
+                    props.history.push('/');
+                }else{
+                    toast.error(response.error);
+                }
+            })
+        )
+        
     }
 
     const updateUsername = e =>{

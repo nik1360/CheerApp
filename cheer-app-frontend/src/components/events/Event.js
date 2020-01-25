@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 
-import {retrieveOrganizerDetails,insertRating, deleteRating, userAttendsEvent, userNotAttendsEvent, userEventStatus, getEventDetails} from './EventFunctions'
+import {retrieveOrganizerDetails,insertRating, deleteRating, userAttendsEvent, userNotAttendsEvent, userEventStatus, getEventDetails, inviteToEvent} from './EventFunctions'
 import TodayDate from '../TodayDate' 
 import { toast } from 'react-toastify';
 
 import '../../styles/EventProfilePage.css'
+import { trackPromise } from 'react-promise-tracker';
+import Popup from "reactjs-popup";
 
 
 const Event = props => {
@@ -32,7 +34,8 @@ const Event = props => {
     const [showAttend, setShowAttend] = useState(true)
     const [showRating, setShowRating] = useState(true)
     const [eventIsPassed, setEventIsPassed] = useState()
-    const [friendsList, setFriendsList] = useState([])
+    const [friendsAttendantList, setFriendsAttendantList] = useState([])
+    const [friendsNotAttendantList, setFriendsNotAttendantList] = useState([])
     const [showFriendsList, setShowFriendsList] = useState(true)
     
     const [todayDate, setTodayDate] = useState()
@@ -44,41 +47,45 @@ const Event = props => {
             event_code: props.location.state.code,
             user_username: props.user_username
         }
-        getEventDetails(event).then(response => {
-            var parsed_event = JSON.parse(response.event)
-            setName(parsed_event.name)
-            setDescription(parsed_event.description)
-            setDate(parsed_event.date)
-            setStartTime(parsed_event.start_time)
-            setEndTime(parsed_event.end_time)
-            setCity(parsed_event.venue.city)
-            setAddress(parsed_event.venue.address)
-            setVenue(parsed_event.venue.name)
-            setPrice(parsed_event.price)
-            setOrganizer(parsed_event.organizer)
-
-            setFlagRock(parsed_event.music_genres.rock)
-            setFlagHipHop(parsed_event.music_genres.hiphop)
-            setFlagReggae(parsed_event.music_genres.reggae)
-            setFlagReggaeton(parsed_event.music_genres.reggaeton)
-            setFlagTechno(parsed_event.music_genres.techno)
-            setFlagElectronic(parsed_event.music_genres.electronic) 
-
-            
-            if(props.userLoggedIn){
-                userEventStatus(event).then(response => {
-                    if(response.friends_attend_event.length !== 0){
-                        setShowFriendsList(true)
-                    }else{
-                        setShowFriendsList(false)
-                    }
-                    setFriendsList(response.friends_attend_event)
-                    setShowAttend(response.show_attend)
-                    setShowRating(response.show_rating)
-                    setRatingValue(response.rating)
-                })
-            }
-        })
+        trackPromise(
+            getEventDetails(event).then(response => {
+                var parsed_event = JSON.parse(response.event)
+                setName(parsed_event.name)
+                setDescription(parsed_event.description)
+                setDate(parsed_event.date)
+                setStartTime(parsed_event.start_time)
+                setEndTime(parsed_event.end_time)
+                setCity(parsed_event.venue.city)
+                setAddress(parsed_event.venue.address)
+                setVenue(parsed_event.venue.name)
+                setPrice(parsed_event.price)
+                setOrganizer(parsed_event.organizer)
+    
+                setFlagRock(parsed_event.music_genres.rock)
+                setFlagHipHop(parsed_event.music_genres.hiphop)
+                setFlagReggae(parsed_event.music_genres.reggae)
+                setFlagReggaeton(parsed_event.music_genres.reggaeton)
+                setFlagTechno(parsed_event.music_genres.techno)
+                setFlagElectronic(parsed_event.music_genres.electronic) 
+    
+                
+                if(props.userLoggedIn){
+                    userEventStatus(event).then(response => {
+                        if(response.friends_attend_event.length !== 0){
+                            setShowFriendsList(true)
+                        }else{
+                            setShowFriendsList(false)
+                        }
+                        setFriendsAttendantList(response.friends_attend_event)
+                        setFriendsNotAttendantList(response.friends_not_attend_event)
+                        setShowAttend(response.show_attend)
+                        setShowRating(response.show_rating)
+                        setRatingValue(response.rating)
+                    })
+                }
+            })
+        )
+        
     }, [props.location.state.code, props.userLoggedIn, props.user_username]);
 
     /* retrieve the current date and check if the event is passed */
@@ -94,14 +101,17 @@ const Event = props => {
             code:props.location.state.code,
             organizer_username:organizer
         }
-        retrieveOrganizerDetails(event).then(response => {
+        trackPromise(
+            retrieveOrganizerDetails(event).then(response => {
 
-            if (!response.error) {
-                window.location.href='mailto:'+response.email+'?subject=Questions about CheerApp event "'+name+'"'
-            }else{
-                console.log(response.msg)
-            }
-        })
+                if (!response.error) {
+                    window.location.href='mailto:'+response.email+'?subject=Questions about CheerApp event "'+name+'"'
+                }else{
+                    console.log(response.msg)
+                }
+            })
+        )
+        
     }
 
     /*Rate the event */
@@ -114,16 +124,19 @@ const Event = props => {
             organizer_username:organizer,
             rating_value: ratingValue
         }
-        insertRating(rating).then(response => {
+        trackPromise(
+            insertRating(rating).then(response => {
 
-            if (!response.error) {
-                //alert(response.message)
-                toast.success('Rating submitted successfully!')
-                setShowRating(false)
-            }else{
-                toast.error(response.message)
-            }
-        })  
+                if (!response.error) {
+                    //alert(response.message)
+                    toast.success('Rating submitted successfully!')
+                    setShowRating(false)
+                }else{
+                    toast.error(response.message)
+                }
+            })  
+        )
+        
     }
 
     /* Delete the previous rating of the event */
@@ -134,15 +147,18 @@ const Event = props => {
             organizer_username:organizer,
             user_username: props.user_username,
         }
-        deleteRating(rating).then(response => {
-            if (!response.error) {
-                //alert(response.message)
-                toast.success('Rating removed successfully!')
-                setShowRating(true)
-            }else{
-                toast.error(response.message)
-            }
-        })  
+        trackPromise(
+            deleteRating(rating).then(response => {
+                if (!response.error) {
+                    //alert(response.message)
+                    toast.success('Rating removed successfully!')
+                    setShowRating(true)
+                }else{
+                    toast.error(response.message)
+                }
+            }) 
+        )
+         
     }
 
     /*Attend the event */
@@ -152,16 +168,19 @@ const Event = props => {
             event_code:props.location.state.code,
             user_username: props.user_username ,
         }
-        userAttendsEvent(event).then(response => {
+        trackPromise(
+            userAttendsEvent(event).then(response => {
 
-            if (!response.error) {
-                //alert(response.message)
-                toast.success('You will now attend the event!')
-                setShowAttend(false)
-            }else{
-                toast.error(response.message)
-            }
-        })
+                if (!response.error) {
+                    //alert(response.message)
+                    toast.success('You will now attend the event!')
+                    setShowAttend(false)
+                }else{
+                    toast.error(response.message)
+                }
+            })
+        )
+        
         
     }
 
@@ -172,15 +191,18 @@ const Event = props => {
             event_code:props.location.state.code,
             user_username: props.user_username ,
         }
-        userNotAttendsEvent(event).then(response => {
+        trackPromise(
+            userNotAttendsEvent(event).then(response => {
 
-            if (!response.error) {
-                toast.warn('You will not attend the event anymore!')
-                setShowAttend(true)
-            }else{
-                toast.error(response.message)
-            }
-        })
+                if (!response.error) {
+                    toast.warn('You will not attend the event anymore!')
+                    setShowAttend(true)
+                }else{
+                    toast.error(response.message)
+                }
+            })
+        )
+        
     }
 
     /*Redirect to the login page */
@@ -197,6 +219,24 @@ const Event = props => {
         })
     }
 
+    const inviteFriend=f=>{
+        const struct ={
+            sender: props.user_username,
+            recipient: f,
+            event_code: props.location.state.code,
+            event_name: name
+        }
+
+        trackPromise(
+            inviteToEvent(struct).then(response => {
+                if (!response.error) {
+                    toast.success('Friend invited succesfully!')
+                }else{
+                    toast.error(response.message)
+                }
+            })
+        )
+    }
 
     /* --------------------------------------- CONDITIONAL RENDER ---------------------------------------------- */
     function Rating(){
@@ -248,9 +288,34 @@ const Event = props => {
         }else{
             return null
         }
-        
     }
 
+    function InviteFriends(){
+        if(friendsNotAttendantList.length>0){
+            return(
+                <table id='results-table'> 
+                    <tbody>
+                    <tr>
+                        <th>FRIEND</th>
+                        <th>ACTION</th>
+                    </tr>
+                    {
+                        (friendsNotAttendantList).map(f =>(
+                            <tr key={f} >
+                                <td onClick={()=>viewUserProfile(f)}>{f}</td>
+                                <td><button onClick={()=>{inviteFriend(f)}}>Invite</button></td>
+                            </tr>
+                        ))
+                    }
+                    </tbody>
+                </table>              
+            )
+        }else{
+            return(
+                <h2 style={{textAlign:'center',color:'black'}}>You have no friends that you can invite!</h2>
+            )
+        }
+    }
     function Friends(){
         if(props.organizerLoggedIn){
             return null
@@ -262,17 +327,23 @@ const Event = props => {
                         <br/>
                         <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
                         <div className='scrollable'>
-                                <table> 
-                                {
-                                    (friendsList).map(f =>(
-                                        <tr key={f} onClick={()=>viewUserProfile(f)}>
-                                            <td>{f}</td>
-                                        </tr>
-                                        
-                                    ))
-                                }
+                                <table style={{textAlign:'center'}}> 
+                                    <tbody>
+                                    {
+                                        (friendsAttendantList).map(f =>(
+                                            <tr key={f} onClick={()=>viewUserProfile(f)}>
+                                                <td>{f}</td>
+                                            </tr>
+                                            
+                                        ))
+                                    }
+                                    </tbody>
+                                
                                 </table>
                         </div>
+                        <Popup modal trigger={<button className="btn" >Invite Friends</button>} position="left center">
+                                <InviteFriends/>    
+                        </Popup>                      
                     </div>
                 )
             }else{
@@ -280,6 +351,26 @@ const Event = props => {
                     <div>
                         <br/>
                         <h5 style={{marginTop:'0px', marginBottom:'0px'}}>None of your friends is attending the event</h5>
+                        <Popup trigger={<button className="btn" >Invite Friends</button>} position="left center">
+                            
+                            <table id='results-table'> 
+                                <tbody>
+                                    <tr>
+                                        <th>FRIEND</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                {
+                                    (friendsNotAttendantList).map(f =>(
+                                        <tr key={f} >
+                                            <td onClick={()=>viewUserProfile(f)}>{f}</td>
+                                            <td><button onClick={()=>{inviteFriend(f)}}>Invite</button></td>
+                                        </tr>
+                                    ))
+                                }
+                                </tbody>
+                            </table>
+                            
+                        </Popup>
                     </div>
                 )
             }

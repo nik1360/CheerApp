@@ -1,6 +1,7 @@
 from database.db_manager import DatabaseManager
 from registered_user import RegisteredUser
 from organizer import Organizer
+from invitation import Invitation
 
 # class that manages interactions between users
 class DatabaseUsersHandler(DatabaseManager):
@@ -104,3 +105,12 @@ class DatabaseUsersHandler(DatabaseManager):
         else:
             msg = 'Showing friends of the user: ' + username
             return True, friends_list, msg
+
+    def get_invitations_list(self, username):
+        query= 'SELECT * FROM ' + self.table_invitations + ' WHERE recipient=%s'
+        self.cursor.execute(query, (username,))
+        result= self.cursor.fetchall()
+        invitations=[]
+        for r in result:
+            invitations.append(Invitation(sender=r[0], recipient=r[1], event_code=r[2], event_name=r[3]))
+        return invitations

@@ -162,3 +162,33 @@ export const deleteFriend = async friends => {
     console.log(err)
   }
 }
+
+export const acceptInvitation = async invitation => {
+  try {
+    const response = await axios
+      .post('/users/'+invitation.recipient+'/acceptInvitation', {
+         sender: invitation.sender,
+         recipient:invitation.recipient,
+         event_code: invitation.event_code
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
+export const refuseInvitation = async invitation => {
+  try {
+    const response = await axios
+      .post('/users/'+invitation.recipient+'/refuseInvitation', {
+         sender: invitation.sender,
+         recipient:invitation.recipient,
+         event_code: invitation.event_code
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}

@@ -3,6 +3,7 @@ import {createEvent} from './EventFunctions'
 import TodayDate from '../TodayDate'
 
 import '../../styles/CreateEventPage.css'
+import { trackPromise } from 'react-promise-tracker';
 
 const CreateEventPage = props => {
 
@@ -140,18 +141,21 @@ const CreateEventPage = props => {
             organizer: props.organizer_username,
             errors:{}
         }
-        createEvent(event).then(response => {
-            if (!response.error) {
-                props.history.push({
-                    pathname: '/events/'+response.event_code,
-                    state:{
-                        code:response.event_code,
-                    }
-                })
-            }else{
-                alert(response.message) 
-            }
-        })
+        trackPromise(
+            createEvent(event).then(response => {
+                if (!response.error) {
+                    props.history.push({
+                        pathname: '/events/'+response.event_code,
+                        state:{
+                            code:response.event_code,
+                        }
+                    })
+                }else{
+                    alert(response.message) 
+                }
+            })
+        )
+        
     }
 
 

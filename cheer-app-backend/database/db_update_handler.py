@@ -20,7 +20,6 @@ class DatabaseUpdateHandler(DatabaseManager):
         query = 'SELECT rating FROM '+self.table_ratings+' WHERE user_username=%s AND event_code=%s'
         self.cursor.execute(query, (user,event,))
         result = self.cursor.fetchone()
-        #print(result)
         rating = result[0]
 
         query = 'SELECT rating_count, sum_rating FROM ' + self.table_organizers + ' WHERE username=%s'

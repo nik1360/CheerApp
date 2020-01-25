@@ -13,9 +13,12 @@ from registered_user import RegisteredUser
 from venue import Venue
 from event import Event
 from organizer import Organizer
+from suggestion_maker import SuggestionMaker
 
 import stripe
-import os
+
+
+
 
 def retrieve_genre_flags():
     flag_rock = request.get_json()['flagrock']
@@ -119,6 +122,7 @@ def register(type_of_user):
 def retrieve_user_info(username):
     try:
         status, user, msg = DatabaseUsersHandler().find_user_username(username=username)
+        invitations_list = DatabaseUsersHandler().get_invitations_list(username=username)
         if status:
 
             DatabaseEventHandler().retrieve_joined_events(user=user)
@@ -127,9 +131,10 @@ def retrieve_user_info(username):
             json_user = json.dumps(user, default=lambda o: o.__dict__, indent=4)
             json_friends = json.dumps(user.friends_list, default=lambda o: o.__dict__, indent=4)
             json_events = json.dumps(user.joined_events, default=lambda o: o.__dict__, indent=4)
+            json_invitations = json.dumps(invitations_list, default=lambda o: o.__dict__, indent=4)
             result = jsonify(
-                {'user': json_user, 'joined_events': json_events, 'friends': json_friends, 'error': not status,
-                 'message': msg})
+                {'user': json_user, 'joined_events': json_events, 'friends': json_friends, 'invitations': json_invitations,
+                 'error': not status, 'message': msg})
         else:
             result = jsonify({'user': None, 'error': True, 'message': msg})
         return result
@@ -215,6 +220,34 @@ def delete_friend(username):
         msg = 'OPS! There is an error in our servers!'
         return jsonify({'error': True, 'message': msg})
 
+@app.route('/users/<username>/acceptInvitation', methods=['POST'])
+def accept_invitation(username):
+    sender = request.get_json()['sender']
+    event_code = request.get_json()['event_code']
+    try:
+        status, msg = DatabaseInsertHandler().insert_users_events(user_username=username, event_code=event_code)
+        DatabaseDeleteHandler().delete_invitation(sender=sender, recipient=username, event_code=event_code)
+        result = jsonify({'error': not status, 'message': msg})
+        return result
+
+    except Exception as e:
+        print(str(e))
+        msg = 'OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
+
+@app.route('/users/<username>/refuseInvitation', methods=['POST'])
+def refuse_invitation(username):
+    sender = request.get_json()['sender']
+    event_code = request.get_json()['event_code']
+    try:
+        DatabaseDeleteHandler().delete_invitation(sender=sender, recipient=username, event_code=event_code)
+        result = jsonify({'error': False, 'message': 'ok'})
+        return result
+
+    except Exception as e:
+        print(str(e))
+        msg = 'OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
 
 #-----------------------------------------FUNCTIONS RELATED TO THE EVENTS----------------------------------------
 @app.route('/events/search', methods=['POST'])
@@ -378,15 +411,18 @@ def check_user_event_status(event_code):
         rating_status, rating=DatabaseChecker().check_rating_existence(user=user_username,event_code=event_code)
         attend_status = DatabaseChecker().check_event_attendance(user_username=user_username, event_code=event_code)
         f2 = []
+        f3 = []
         if user_username != '':  # a user is logged in
             _, friends, msg = DatabaseUsersHandler().get_friends_list(user_username)
             if friends is not None:
                 for f in friends:  # the friend f attend the event
                     if not DatabaseChecker().check_event_attendance(user_username=f, event_code=event_code):
                         f2.append(f)
+                    else:
+                        f3.append(f)
 
         result = jsonify({'show_rating': rating_status, 'show_attend': attend_status, 'rating': rating,
-                          'friends_attend_event': f2})
+                          'friends_attend_event': f2, 'friends_not_attend_event': f3})
         return result
     except Exception as e:
         print(str(e))
@@ -409,7 +445,7 @@ def retrieve_event_info(event_code):
 
             json_event = json.dumps(event, default=lambda o: o.__dict__, indent=4)
             result = jsonify(
-                {'event': json_event, 'stripe_pub_key': os.getenv('STRIPE_PUBLISHABLE_KEY'), 'error': False,
+                {'event': json_event, 'stripe_pub_key': 'pk_test_vmJlznHnNFRVjoz1ed3PWCaZ00urrW39vK', 'error': False,
                  'message': msg})
         else:
             result = jsonify({'event': None, 'error': True, 'message': msg})
@@ -420,23 +456,34 @@ def retrieve_event_info(event_code):
         msg = 'OPS! There is an error in our servers!'
         return jsonify({'error': True, 'message': msg})
 
+@app.route('/events/<event_code>/inviteFriend', methods=['POST'])
+def invite_friend(event_code):
+    sender = request.get_json()['sender']
+    recipient = request.get_json()['recipient']
+    event_name = request.get_json()['event_name']
+    try:
+        status = DatabaseInsertHandler().insert_invitation(sender=sender, recipient=recipient, event_code=event_code,
+                                                           event_name=event_name)
+        if status:
+            result = jsonify({'error': False, 'message': 'Invitation sent correctly'})
+        else:
+            result = jsonify({'error': True, 'message': 'You have already invited your friend to the event'})
+        return result
+
+    except Exception as e:
+        print(str(e))
+        msg = 'OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
+
+
 # --------------------------------FUNCTION THAT MANAGE THE EVENT SUGGESTION ------------------------------------------
 @app.route('/suggestEvent', methods=['POST'])
 def suggest():
-    current_date = '2020-01-24'
-    db_event = DatabaseEventHandler()
-    event_list = db_event.search(False, False, False)
-    future_events = []
-    for e in event_list:
-        if e.date > current_date:
-            future_events.append(e)
-            print(e.name)
-    _, user, _ = DatabaseUsersHandler().find_user_username('nik')
-
-
-    #retrieve logged user details
-    # for each event, compute the score
-    return None
+    logged_username = request.get_json()['logged_username']
+    today_date = request.get_json()['today_date']
+    winner = SuggestionMaker(logged_username=logged_username, today_date=today_date).suggest_event()
+    json_winner = json.dumps(winner, default=lambda o: o.__dict__, indent=4)
+    return jsonify({'winner': json_winner, 'error': False})
 
 
 # ---------------------------------FUNCTION THAT MANAGE THE COMMUNICATION WITH THE STRIPE PLATFORM -------------------

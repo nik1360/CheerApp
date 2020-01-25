@@ -4,8 +4,9 @@ import UserRow from './UserRow'
 
 
 import '../../styles/FindEventUserPage.css'
+import { trackPromise } from 'react-promise-tracker';
 
-const FindUserPage = () => {
+const FindUserPage = props => {
     
     const selected='#801336'
     const unselected='#002a4d'
@@ -116,17 +117,20 @@ const FindUserPage = () => {
         }
 
         if((search.criteriacity || search.criteriagenres || search.criteriausername)){
-            findUsers(search).then(response => {
-                setShowSearch(false)
-                setHeight('auto')
-                setShowResults(true)
-                if (!response.error) {
-                    setResultPresent(true)
-                    setUsers(JSON.parse(response.users)) 
-                }else{
-                    setResultPresent(false)
-                }
-            })
+            trackPromise(
+                findUsers(search).then(response => {
+                    setShowSearch(false)
+                    setHeight('auto')
+                    setShowResults(true)
+                    if (!response.error) {
+                        setResultPresent(true)
+                        setUsers(JSON.parse(response.users)) 
+                    }else{
+                        setResultPresent(false)
+                    }
+                })
+            )
+            
         }
         else{
             alert('Please choose at least one criteria!')
@@ -151,6 +155,7 @@ const FindUserPage = () => {
                                 </tr>
                                 {   
                                     Array.from(users)
+                                    .filter(u => u.username !== props.loggedInUsername )
                                     .map(u=>(
                                         <UserRow
                                         key ={u.username} 
@@ -212,7 +217,7 @@ const FindUserPage = () => {
                 </div>
                 
             }
-            <Results/>    
+            <Results />    
         </div>
     );  
 }
