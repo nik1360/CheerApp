@@ -348,8 +348,8 @@ const UserProfilePage = props => {
                                         <td> {i.sender} </td>
                                         <td onClick={() => seeEventPage(event_code)}> {i.event_name} </td>
                                         <td>
-                                            <button onClick={()=>{accept(i)}}>Accept</button>
-                                            <button onClick={()=>{refuse(i)}}>Refuse</button>
+                                            <button class="accept" onClick={()=>{accept(i)}}>Accept</button>
+                                            <button class="refuse" onClick={()=>{refuse(i)}}>Refuse</button>
                                         </td>
                                     </tr>
                                 )

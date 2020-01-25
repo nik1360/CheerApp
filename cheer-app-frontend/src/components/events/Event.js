@@ -356,14 +356,13 @@ const Event = props => {
                             <table id='results-table'> 
                                 <tbody>
                                     <tr>
-                                        <th>FRIEND</th>
-                                        <th>ACTION</th>
+                                        <th colspan="2">FRIENDS</th>
                                     </tr>
                                 {
                                     (friendsNotAttendantList).map(f =>(
                                         <tr key={f} >
                                             <td onClick={()=>viewUserProfile(f)}>{f}</td>
-                                            <td><button onClick={()=>{inviteFriend(f)}}>Invite</button></td>
+                                            <td><button class="invite" onClick={()=>{inviteFriend(f)}}>Invite</button></td>
                                         </tr>
                                     ))
                                 }

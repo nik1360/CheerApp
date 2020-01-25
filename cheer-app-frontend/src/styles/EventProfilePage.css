@@ -281,3 +281,69 @@ form.amp-form-submit-error [submit-error] {
   flex-wrap: wrap;
   background-color: white;
 }
+
+/*accept and refuse invitations buttons*/
+.accept {
+  background-color: white;
+  border: 2px solid #4CAF50;
+  color: black;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.accept:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.refuse {
+  background-color: white; 
+  border: 2px solid #f44336;
+  color: black;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.refuse:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+/*invite button*/
+.invite {
+	box-shadow: 3px 4px 0px 0px #bbdaf7;
+	background:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+	background-color:#79bbff;
+	border-radius:22px;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	padding:5px 15px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #528ecc;
+}
+.invite:hover {
+	background:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
+	background-color:#378de5;
+}
+.invite:active {
+	position:relative;
+  top:1px;
+}
