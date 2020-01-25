@@ -35,7 +35,7 @@ const LoginPage = props => {
     const onSubmitOrganizer = e => {
         e.preventDefault()
         const organizer = {
-            u: username,
+            u: username.trim(),
             p: password,
             errors:{}
         }
@@ -44,9 +44,10 @@ const LoginPage = props => {
             loginOrganizer(organizer).then(response => {
                 if (!response.error) {
                     props.loginOrganizer(organizer.u);
-                    props.history.push('/');
+                    toast.success('You are logged in as '+ organizer.u)
+                    props.history.goBack();
                 }else{
-                    toast.error(response.error);
+                    toast.error(response.message);
                 }
             })
         )
@@ -72,7 +73,7 @@ const LoginPage = props => {
                 <form  onSubmit={onSubmitOrganizer} >
                     <button className="form-button" type="submit" >login as organizer</button>
                 </form>
-                <p className="message">Not registered? <a href="/register">Create an account</a></p>
+                <p className="message">Not registered? <a href="/registerpage">Create an account</a></p>
             </div>
         </div>
         
