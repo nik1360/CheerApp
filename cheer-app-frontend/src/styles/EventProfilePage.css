@@ -284,7 +284,7 @@ form.amp-form-submit-error [submit-error] {
 
 /*accept and refuse invitations buttons*/
 .accept {
-  background-color: white;
+  background-color: #dcefde;
   border: 2px solid #4CAF50;
   color: black;
   padding: 8px 16px;
@@ -304,7 +304,7 @@ form.amp-form-submit-error [submit-error] {
 }
 
 .refuse {
-  background-color: white; 
+  background-color: #fcd2cf; 
   border: 2px solid #f44336;
   color: black;
   padding: 8px 16px;
