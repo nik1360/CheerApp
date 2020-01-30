@@ -11,9 +11,9 @@ def encode_password(password):
 
 # Class that handles the insertions in the database
 class DatabaseInsertHandler(DatabaseManager):
-    def __init__(self):
-        DatabaseManager.__init__(self)
-        self.checker = DatabaseChecker()
+    def __init__(self, db_name='cheerapp'):
+        DatabaseManager.__init__(self, database_name=db_name)
+        self.checker = DatabaseChecker(db_name=db_name)
 
     # Register a new user in the database
     def insert_user(self, user):
