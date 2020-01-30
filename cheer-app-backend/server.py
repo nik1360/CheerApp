@@ -9,10 +9,10 @@ from database.db_delete_handler import DatabaseDeleteHandler
 from database.db_users_handler import DatabaseUsersHandler
 from database.db_update_handler import DatabaseUpdateHandler
 
-from registered_user import RegisteredUser
-from venue import Venue
-from event import Event
-from organizer import Organizer
+from main_entities.registered_user import RegisteredUser
+from main_entities.venue import Venue
+from main_entities.event import Event
+from main_entities.organizer import Organizer
 from suggestion_maker import SuggestionMaker
 
 import stripe

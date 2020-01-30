@@ -51,12 +51,12 @@ class DatabaseManager:
             login_status = True
             msg = username + ' logged in!'
             if not login_organizer:
-                from registered_user import RegisteredUser
+                from main_entities.registered_user import RegisteredUser
                 return login_status, RegisteredUser(res[0], res[1], res[2], res[3], res[4], res[5],
                                                     res[6], res[7], res[8], res[9], res[10], res[11],
                                                     res[12], res[13]), msg
             else:
-                from organizer import Organizer
+                from main_entities.organizer import Organizer
                 return login_status, Organizer(res[0], res[1], res[2], res[3], res[4], res[5],
                                                res[6]), msg
         else:

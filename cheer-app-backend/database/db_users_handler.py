@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
-from registered_user import RegisteredUser
-from organizer import Organizer
-from invitation import Invitation
+from main_entities.registered_user import RegisteredUser
+from main_entities.organizer import Organizer
+from main_entities.invitation import Invitation
 
 # class that manages interactions between users
 class DatabaseUsersHandler(DatabaseManager):

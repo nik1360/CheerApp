@@ -1,5 +1,5 @@
 from .db_manager import DatabaseManager
-from venue import Venue
+from main_entities.venue import Venue
 
 
 # Class that checks if the record can be created into the mySQL database

@@ -1,8 +1,8 @@
 from .db_manager import DatabaseManager
 from .db_checker import DatabaseChecker
 
-from event import Event
-from organizer import Organizer
+from main_entities.event import Event
+from main_entities.organizer import Organizer
 
 # create a list of events with the information retrieved from the query
 def return_events(query_result):

@@ -1,7 +1,7 @@
 
 class RegisteredUser:
-    def __init__(self, username, password=None, email=None,  name=None, surname=None,
-                 date_of_birth=None,  city=None, nationality=None, flag_rock=False, flag_hiphop=False,
+    def __init__(self, username, password='', email='',  name='', surname='',
+                 date_of_birth='1996-11-19',  city='', nationality='', flag_rock=False, flag_hiphop=False,
                  flag_reggaeton=False, flag_reggae=False, flag_techno=False, flag_electronic=False):
         self.username = username
         self.email = email
