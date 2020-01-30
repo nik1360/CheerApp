@@ -1,10 +1,10 @@
 from database.db_insert_handler import DatabaseInsertHandler
 from database.db_checker import DatabaseChecker
 
-from registered_user import RegisteredUser
-from organizer import Organizer
-from venue import Venue
-from event import Event
+from main_entities.registered_user import RegisteredUser
+from main_entities.organizer import Organizer
+from main_entities.venue import Venue
+from main_entities.event import Event
 
 
 db_insert = DatabaseInsertHandler()
