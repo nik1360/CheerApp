@@ -324,23 +324,21 @@ const Event = props => {
                 return(
                     <div>
                         <br/>
-                        <h5 style={{marginTop:'0px', marginBottom:'0px'}}>Friends who are going</h5>
                         <div className='scrollable'>
-                                <table style={{textAlign:'center'}}> 
-                                    <tbody>
-                                    {
-                                        (friendsAttendantList).map(f =>(
-                                            <tr key={f} onClick={()=>viewUserProfile(f)}>
-                                                <td>{f}</td>
-                                            </tr>
-                                            
-                                        ))
-                                    }
-                                    </tbody>
-                                
-                                </table>
+                        <table class="attending-table">
+                            <tr>
+                                <th>Friends who are going</th>
+                            </tr>
+                                {
+                                    (friendsAttendantList).map(f =>(
+                                        <tr key={f} onClick={()=>viewUserProfile(f)}>
+                                            <td>{f}</td>
+                                        </tr>                            
+                                     ))
+                                }
+                        </table>    
                         </div>
-                        <Popup modal trigger={<button className="btn" >Invite Friends</button>} position="left center">
+                        <Popup modal trigger={<button className="invitefriends" >Invite Friends</button>} position="left center">
                                 <InviteFriends/>    
                         </Popup>                      
                     </div>
@@ -349,8 +347,9 @@ const Event = props => {
                 return(
                     <div>
                         <br/>
-                        <h5 style={{marginTop:'0px', marginBottom:'0px'}}>None of your friends is attending the event</h5>
-                        <Popup trigger={<button className="btn" >Invite Friends</button>} position="left center">
+                        <h4 style={{marginTop:'0px', marginBottom:'0px'}}>None of your friends is attending the event</h4>
+                        <br/>
+                        <Popup trigger={<button className="invitefriends" >Invite Friends</button>} position="left center">
                             
                             <table id='results-table'> 
                                 <tbody>
@@ -384,12 +383,12 @@ const Event = props => {
         if(props.userLoggedIn){
             if(showAttend && !eventIsPassed){
                 return(
-                    <button className="btn" onClick={attendEvent}>I WILL ATTEND</button>
+                    <button className="attend" onClick={attendEvent}>I WILL ATTEND</button>
                 )
             }
             if(!showAttend && !eventIsPassed){
                 return(
-                    <button className="btn" onClick={notAttendEvent}>I WON'T ATTEND ANYMORE</button>
+                    <button className="noattend" onClick={notAttendEvent}>I WON'T ATTEND ANYMORE</button>
                 )
             }
             if(eventIsPassed){
@@ -402,6 +401,7 @@ const Event = props => {
             return(
                 <div>
                     <p><b>You have to be logged in to attend an event and buy tickets!</b></p>
+                    <br/>
                     <button className="btn " style={{backgroundColor:'#ee4540'}} onClick={onClickLogin}>Login</button>
                     <br/>
                     <br/>
@@ -496,8 +496,9 @@ const Event = props => {
             
                 <div className="main"> 
                     <Attendance/>
-                    <BuyTickets/>
                     <Friends/>
+                    <br/>
+                    <BuyTickets/>
                     <Rating/>
                     <br/>
                     <ContactOrganizer/>

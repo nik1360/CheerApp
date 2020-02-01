@@ -124,7 +124,7 @@ body {
 .scrollable {
   height:150px;
   width:300px;
-  overflow-y:scroll;
+  overflow-y: hidden;
 }
 
 .rating {
@@ -323,6 +323,28 @@ form.amp-form-submit-error [submit-error] {
   color: white;
 }
 
+/* invite friends button */
+.invitefriends {
+	background-color:#33bdef;
+	border-radius:21px;
+	border:1px solid #057fd0;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:12px 70px;
+	text-decoration:none;
+}
+.invitefriends:hover {
+	background-color:#019ad2;
+}
+.invitefriends:active {
+	position:relative;
+	top:1px;
+}
+
 /*invite button*/
 .invite {
 	box-shadow: 3px 4px 0px 0px #bbdaf7;
@@ -346,4 +368,69 @@ form.amp-form-submit-error [submit-error] {
 .invite:active {
 	position:relative;
   top:1px;
+}
+/* table that shows the friends coming to the event */
+.attending-table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.attending-table td, .attending-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.attending-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.attending-table tr:hover {background-color: #ddd;}
+
+.attending-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4db8ff;
+  color: white;
+  text-align: center;
+}
+
+/*attend buttons*/
+.attend {
+  background-color: #62b76a;
+  border: 2px solid #3e8e41;
+  color: #ffffff;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.attend:hover {
+  background-color: #3e8e41;
+  color: white;
+}
+
+.noattend {
+  background-color: #f13527; 
+  border: 2px solid #c2160a;
+  color: #ffffff;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.noattend:hover {
+  background-color: #c2160a;
+  color: white;
 }

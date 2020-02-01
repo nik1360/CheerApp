@@ -126,9 +126,9 @@ const Home = props => {
                         <div className="home-column">
                             <div className="home-card">
                             <img src={require('../images/staff_avatars/jesus.png')} alt="Jésus" style={{width:'100%'}}/>
-                            <h1>Jésus</h1>
-                            <p class="home-titlestudy">Computer engineering</p>
-                            <p>Name University</p>
+                            <h1>Jesús</h1>
+                            <p class="home-titlestudy">Software engineering</p>
+                            <p>Universidad de Sevilla</p>
                             <div style={{margin: '24px 0'}}> </div>
                             
                             <p><a href="mailto: jesus@cheerapp.com" ><button class="btn">Contact</button></a></p>
