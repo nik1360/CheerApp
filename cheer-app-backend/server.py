@@ -99,7 +99,6 @@ def register(type_of_user):
                 Organizer(username, password, email, phone_number, first_name, last_name,
                           date_of_birth))
 
-
         else:
             city = request.get_json()['city']
             nationality = request.get_json()['nationality']

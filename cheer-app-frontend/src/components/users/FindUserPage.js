@@ -142,6 +142,10 @@ const FindUserPage = props => {
     /*--------------------------------Conditional rendering ------------------------------------ */
 
     function Results(){
+        if((Array.from(users).filter(u => u.username !== props.loggedInUsername )).length === 0){
+            setResultPresent(false)
+        }
+
         if(showResults){
             if(resultPresent){
                 return(

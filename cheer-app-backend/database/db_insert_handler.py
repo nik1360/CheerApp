@@ -8,7 +8,6 @@ def encode_password(password):
     salt = bcrypt.gensalt()
     hashed = (bcrypt.hashpw(password, salt)).decode('UTF-8')
     return hashed
-
 # Class that handles the insertions in the database
 class DatabaseInsertHandler(DatabaseManager):
     def __init__(self, db_name='cheerapp'):

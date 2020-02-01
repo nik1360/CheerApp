@@ -55,15 +55,15 @@ const Home = props => {
                             <p>Getting started</p>
                         </div>
                     </div>
-                    <div className="navbar">
+                    <div className="home-navbar">
                         <button onClick={handleHome}>Home</button>
                         <button onClick={handleHowItWorks}>How it works</button>
                         <button onClick={handleAboutUs}>Our team</button>
                     </div>
-                    <div className="main">
+                    <div className="home-main">
 
-                        <div className="columns">
-                            <h2 className="title"><i>Finding an event</i> </h2>
+                        <div className="home-columns">
+                            <h2 className="home-title"><i>Finding an event</i> </h2>
                             <p>
                                 <i>When you click on the menu, you find a button "find events". Clicking on it will direct you to a new tab. In this tab 
                                 you are able to type in your city of preference, choose the date on which you want to go out and click on one or more music genres </i>
@@ -72,7 +72,7 @@ const Home = props => {
                             </p>
                             <br/><br/><br/><br/><br/><br/>
                             <p>
-                                <h2 className="title"><i>Finding a friend</i> </h2>
+                                <h2 className="home-title"><i>Finding a friend</i> </h2>
                                 <br/>
                                 <i>When you are a registered user, you'll find a "Find Friends" option in the menu. <br/>
                                    Clicking on it will allow you to search on <b>username, city</b>, or you can find 
@@ -104,18 +104,18 @@ const Home = props => {
                             <p>Get to know us!</p>
                         </div>
                     </div>
-                    <div className="navbar">
+                    <div className="home-navbar">
                     <button onClick={handleHome}>Home</button>
                         <button onClick={handleHowItWorks}>How it works</button>
                         <button onClick={handleAboutUs}>Our team</button>
                     </div>
 
                     <div style={{height:'100%', width:'100%', backgroundColor:'white', overflow:'auto'}}>
-                        <div className="column">
-                            <div className="card">
+                        <div className="home-column">
+                            <div className="home-card">
                             <img src={require('../images/staff_avatars/evi.png')} alt="evi" style={{width:'100%'}}/>
                             <h1>Evi</h1>
-                            <p className="titlestudy">Business engineering</p>
+                            <p className="home-titlestudy">Business engineering</p>
                             <p>Name University</p>
                             <div style={{margin: '24px 0'}}> </div>
                             
@@ -123,43 +123,43 @@ const Home = props => {
                             </div>
                         </div>
 
-                        <div className="column">
-                            <div className="card">
+                        <div className="home-column">
+                            <div className="home-card">
                             <img src={require('../images/staff_avatars/jesus.png')} alt="Jésus" style={{width:'100%'}}/>
                             <h1>Jésus</h1>
-                            <p class="titlestudy">Computer engineering</p>
+                            <p class="home-titlestudy">Computer engineering</p>
                             <p>Name University</p>
                             <div style={{margin: '24px 0'}}> </div>
                             
                             <p><a href="mailto: jesus@cheerapp.com" ><button class="btn">Contact</button></a></p>
                             </div>
                         </div>
-                        <div className="column">
-                            <div className="card">
+                        <div className="home-column">
+                            <div className="home-card">
                             <img src={require('../images/staff_avatars/julie.png')} alt="julie" style={{width:'100%'}}/>
                             <h1>Julie</h1>
-                            <p className="titlestudy">Business engineering</p>
+                            <p className="home-titlestudy">Business engineering</p>
                             <p>KULeuven</p>
                             <div style={{margin: '24px 0'}}> </div>
                             <p><a href="mailto: julie@cheerapp.com" ><button className="btn">Contact</button></a></p>
                             </div>
                         </div>
-                        <div className="column">
-                            <div className="card">
+                        <div className="home-column">
+                            <div className="home-card">
                             <img src={require('../images/staff_avatars/nikolas.png')} alt="Nikolas" style={{width:'100%'}}/>
                             <h1>Nikolas</h1>
-                            <p className="titlestudy">Computer engineering</p>
+                            <p className="home-titlestudy">Computer engineering</p>
                             <p>UNIPV</p>
                             <div style={{margin: '24px 0'}}> </div>
                             <p><a href="mailto: nikolas@cheerapp.com" ><button className="btn">Contact</button></a></p>
                             </div>
                         </div>
 
-                        <div className="column">
-                            <div className="card">
+                        <div className="home-column">
+                            <div className="home-card">
                             <img src={require('../images/staff_avatars/pierre.png')} alt="Pierre" style={{width:'100%'}}/>
                             <h1>Pierre</h1>
-                            <p className="titlestudy">Computer engineering</p>
+                            <p className="home-titlestudy">Computer engineering</p>
                             <p>Name University</p>
                             <div style={{margin: '24px 0'}}> </div>
                             <p><a href="mailto: pierre@cheerapp.com"><button className="btn">Contact</button></a></p>

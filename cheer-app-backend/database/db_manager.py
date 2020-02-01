@@ -44,8 +44,8 @@ class DatabaseManager:
             return login_status, None, msg
         # retrieve hashed password from the database
         hashed = res[1]
-        hashed = bytes(hashed, 'UTF-8')  # convert in bytes the string of the hashed password
-        password = bytes(password, 'UTF-8')  # convert in bytes the string the password
+        hashed = bytes(hashed, 'UTF-8') # convert in bytes the string of the hashed password
+        password = bytes(password,'UTF-8')  # convert in bytes the string the password
 
         if bcrypt.checkpw(password, hashed):  # check if the password is correct
             login_status = True

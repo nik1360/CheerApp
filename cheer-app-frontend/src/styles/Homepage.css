@@ -31,17 +31,11 @@
     background-color: #555;
     color: white;
 }
-.footer {
-    padding: 20px;
-    text-align: center;
-    background: #f2f3f4;
-}
-
-.navbar {
+.home-navbar {
     overflow: hidden;
     background-color: #333;
    }
-    .navbar button {
+    .home-navbar button {
         border:none;
     float: left;
     display: block;
@@ -51,33 +45,33 @@
     padding: 14px 20px;
     text-decoration: none;
   }
-  .navbar button:hover {
+  .home-navbar button:hover {
     background-color: #ddd;
     color: black;}
 
-  .title{
+  .home-title{
     
     color: #5dc9c1;
   }
   /* Column container */
-  .row {  
+  .home- row {  
     display: flex;
     flex-wrap: wrap;
   }
-  .main {   
+  .home-main {   
     flex: 60%;
     background-color: white;
     padding: 20px;
   }
   
     /*class for columns*/
-.columns {column-count: 2;
+ .home-columns {column-count: 2;
   padding-left: 50px;
   padding-right: 50px;
     
   }
 
-  .card {
+  .home-card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     max-width: 300px;
     margin: auto;
@@ -85,27 +79,14 @@
     font-family: arial;
   }
   
-  .titlestudy {
+  .home-titlestudy {
     color: grey;
     font-size: 18px;
   }
   
-  .btn {
-    border: none;
-    color: white;
-    padding: 8px;
-    font-size: 18px;
-    width: 100%;
-    height:50px;
-    cursor: pointer;
-    background-color:#86b1da;
-    opacity: 1;
-    transition: 0.3s;
-    display: inline-block;
+ 
   
-  }
-  
-  .column {
+  .home-column {
     float: left;
     width: 25%;
     margin-bottom: 16px;
