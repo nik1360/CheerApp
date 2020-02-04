@@ -245,14 +245,15 @@ form.amp-form-submit-error [submit-error] {
 	background-color: whitesmoke;
   padding: 20px;
   color:black;
+  position: relative;
+  vertical-align: top;
 }
 
 
 .my-custom-scrollbar {
 	position: relative;
-	width: 200px;
-	height: 150px;
-	overflow: auto;
+  width: 100%;
+  overflow: auto;
 }
 
 .table-wrapper-scroll-y {
@@ -436,4 +437,29 @@ form.amp-form-submit-error [submit-error] {
 .noattend:hover {
   background-color: #c2160a;
   color: white;
+}
+
+
+.table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table td, .table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table tr:nth-child(even){background-color: #f2f2f2;}
+
+.table tr:hover {background-color: #ddd;}
+
+.table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #15609e;
+  color: white;
+  text-align: center;
 }

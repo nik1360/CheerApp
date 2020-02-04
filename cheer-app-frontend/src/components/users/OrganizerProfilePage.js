@@ -125,15 +125,16 @@ const OrganizerProfilePage = props => {
         
         return(
             <div className="profile-row">
-                <table className="lists-table">
-                    
+                <table className="lists-table">   
                     <tbody>
                         <tr>
                             <td className = "friends-events-lists">
-                                <h3> Upcoming events </h3>	
-                                <div className="table-wrapper-scroll-y my-custom-scrollbar" >
-                                    <table>
+                                <div className="table-wrapper-scrolll-y my-custom-scrollbar" >
+                                    <table className="table">   
                                         <tbody>
+                                            <tr>
+                                                <th>Upcoming events</th>
+                                            </tr>
                                             {
                                                 Array.from(eventsList)
                                                 .filter(e => Date.parse(e.date) >= Date.parse(todayDate))
@@ -148,13 +149,13 @@ const OrganizerProfilePage = props => {
                                     </table>
                                 </div>              
                             </td>
-                            <td className = "friends-events-lists">
-                            
-                                <h3> Past events </h3>	
-                                
-                                <div className="table-wrapper-scroll-y my-custom-scrollbar" >
-                                    <table>
+                            <td className = "friends-events-lists">                                
+                                <div className="table-wrapper-scrolll-y my-custom-scrollbar" >
+                                    <table className="table">
                                         <tbody>
+                                             <tr>
+                                                <th>Past events</th>
+                                            </tr>
                                             {
                                                 Array.from(eventsList)
                                                 .filter(e => Date.parse(e.date) < Date.parse(todayDate))
