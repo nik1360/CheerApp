@@ -10,13 +10,13 @@ def encode_password(password):
     return hashed
 # Class that handles the insertions in the database
 class DatabaseInsertHandler(DatabaseManager):
-    def __init__(self, db_name='cheerapp'):
-        DatabaseManager.__init__(self, database_name=db_name)
-        self.checker = DatabaseChecker(db_name=db_name)
+    def __init__(self):
+        DatabaseManager.__init__(self)
+        self.checker = DatabaseChecker()
 
     # Register a new user in the database
     def insert_user(self, user):
-        if self.checker.check_username_email(user.username, user.email, 'USERS'):
+        if self.checker.check_username_email(user.username, user.email, 'users'):
             query = 'INSERT INTO ' + self.table_users + ' VALUES(%s,%s,%s,%s,%s,%s, %s, %s, %s, %s ,%s ,%s, %s, %s) '
             self.cursor.execute(query, (user.username, encode_password(user.password), user.email, user.name,
                                         user.surname,user.date_of_birth, user.city, user.nationality,
@@ -30,7 +30,7 @@ class DatabaseInsertHandler(DatabaseManager):
 
     # Register a new organizer in the database
     def insert_organizer(self, organizer):
-        if self.checker.check_username_email(organizer.username, organizer.email, 'ORGANIZERS'):
+        if self.checker.check_username_email(organizer.username, organizer.email, 'organizers'):
             query = 'INSERT INTO ' + self.table_organizers + ' VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
             self.cursor.execute(query, (organizer.username, encode_password(organizer.password), organizer.email,
                                         organizer.phone, organizer.name, organizer.surname, organizer.date_of_birth,'0','0','0'))

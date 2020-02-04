@@ -9,12 +9,14 @@ def logout():
 
 # Base class that allow the interaction with the mySQL database
 class DatabaseManager:
-    def __init__(self, database_name='cheerapp'):
+    def __init__(self):
         self.db = mysql.connector.connect(
-            host='localhost',
+            #host='localhost',
+            host='cheerappdb.csboqaisplag.eu-west-2.rds.amazonaws.com',
+            port='3306',
             user='CheerApp',
             passwd='Cheer4pp',
-            database=database_name,
+            database='cheerapp',
             auth_plugin='mysql_native_password'
         )
         self.cursor = self.db.cursor()

@@ -31,8 +31,8 @@ class DatabaseUsersHandler(DatabaseManager):
             msg = 'Organizer does not exist!'
             return False, None, msg
         else:
-            org = Organizer(username=r[0], email=r[2], phone=r[3], name=r[4], surname=r[5], date_of_birth=r[6],
-                            avg_rating=r[9])
+            org = Organizer(username=r[0], email=r[2], phone=r[3], name=r[4], surname=r[5], date_of_birth=str(r[6]),
+                            num_ratings=r[7], avg_rating=r[9])
             msg = 'Organizer ' + username + ' exists!'
             return True, org, msg
 

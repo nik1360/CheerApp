@@ -15,10 +15,10 @@ from main_entities.event import Event
 from main_entities.organizer import Organizer
 from suggestion_maker import SuggestionMaker
 
+from dotenv import load_dotenv
+import os
 import stripe
-
-
-
+import boto3
 
 def retrieve_genre_flags():
     flag_rock = request.get_json()['flagrock']
@@ -40,6 +40,10 @@ login_status = False
 amount = 0
 name = 0
 
+load_dotenv()
+
+s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 # ------------------------------------------------FUNCTIONS RELATED TO THE USERS --------------------------------
 @app.route('/login/<type_of_user>', methods=['POST'])
 def login(type_of_user):
@@ -141,6 +145,27 @@ def retrieve_user_info(username):
     except Exception as e:
         print (str(e))
         msg='OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
+
+@app.route('/organizers/<username>/getDetails', methods=['POST'])
+def retrieve_organizer_info(username):
+    try:
+        status, organizer, msg = DatabaseUsersHandler().find_organizer_username(username=username)
+        if status:
+
+            DatabaseEventHandler().retrieve_organized_events(organizer=organizer)
+            json_organizer = json.dumps(organizer, default=lambda o: o.__dict__, indent=4)
+            #json_events = json.dumps(user.joined_events, default=lambda o: o.__dict__, indent=4)
+
+            result = jsonify(
+                {'organizer': json_organizer, 'error': not status, 'message': msg})
+        else:
+            result = jsonify({'user': None, 'error': True, 'message': msg})
+        return result
+
+    except Exception as e:
+        print (str(e))
+        msg = 'OPS! There is an error in our servers!'
         return jsonify({'error': True, 'message': msg})
 
 
@@ -444,7 +469,7 @@ def retrieve_event_info(event_code):
 
             json_event = json.dumps(event, default=lambda o: o.__dict__, indent=4)
             result = jsonify(
-                {'event': json_event, 'stripe_pub_key': 'pk_test_vmJlznHnNFRVjoz1ed3PWCaZ00urrW39vK', 'error': False,
+                {'event': json_event, 'stripe_pub_key': os.getenv('STRIPE_PUB_KEY'), 'error': False,
                  'message': msg})
         else:
             result = jsonify({'event': None, 'error': True, 'message': msg})
@@ -492,12 +517,13 @@ def charge():
     global amount #the value is defined when the event page is loaded
     global name
 
+
     description="Payment for CheerApp event " + str(name)
     stripe_keys = {
         # 'secret_key': os.getenv('STRIPE_SECRET_KEY'),
         # 'publishable_key': os.getenv('STRIPE_PUBLISHABLE_KEY')
-        'publishable_key': 'pk_test_vmJlznHnNFRVjoz1ed3PWCaZ00urrW39vK',
-        'secret_key': 'sk_test_kFA90HNMGaHdvNt27R5Yx44q00k864ydbO'
+        'publishable_key': os.getenv('STRIPE_PUB_KEY'),
+        'secret_key': os.getenv('STRIPE_PVT_KEY')
     }
 
     try:
@@ -513,12 +539,38 @@ def charge():
             currency='eur',
             description=description
         )
-        return redirect("http://localhost:3000/", code=302)
+        return redirect("/", code=302)
 
     except Exception as e:
         print(str(e))
         msg = 'OPS! There is an error in our servers!'
         return jsonify({'error': True, 'message': msg})
+
+#----------------------------------FILE UPLOAD --------------------------------------------
+@app.route('/<category>/<username>/uploadAvatar', methods=['POST'])
+def upload_avatar(category, username):
+    global s3
+
+    try:
+        s3.Bucket('cheerapp').put_object(Key=category + '/'+request.form['filename'], Body=request.files['avatar'])
+        return jsonify({'error': False, 'message': 'ok'})
+    except Exception as e:
+        print(str(e))
+        msg = 'OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
+
+#----------------------------------FILE UPLOAD --------------------------------------------
+@app.route('/events/<event_code>/uploadFlyer', methods=['POST'])
+def upload_flyer(event_code):
+    global s3
+    try:
+        s3.Bucket('cheerapp').put_object(Key='events/'+request.form['filename'], Body=request.files['flyer'])
+        return jsonify({'error': False, 'message': 'ok'})
+    except Exception as e:
+        print(str(e))
+        msg = 'OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
+
 
 
 

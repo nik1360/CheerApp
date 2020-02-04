@@ -5,8 +5,8 @@ from main_entities.venue import Venue
 # Class that checks if the record can be created into the mySQL database
 class DatabaseChecker(DatabaseManager):
 
-    def __init__(self,db_name='cheerapp'):
-        DatabaseManager.__init__(self,database_name=db_name)
+    def __init__(self):
+        DatabaseManager.__init__(self)
         pass
 
     # check if the username or the email are already registered
