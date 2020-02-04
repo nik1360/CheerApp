@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 import { getUserDetails, checkIfFriend, addUserAsFriend, deleteFriend, acceptInvitation, refuseInvitation } from './UserFunctions';
 import { trackPromise } from 'react-promise-tracker';
 import Popup from "reactjs-popup";
+import {post} from 'axios'
 
+import TodayDate from '../TodayDate'
 
 import '../../styles/EventProfilePage.css'
 
@@ -35,20 +37,11 @@ const UserProfilePage = props => {
 
 
     const [todayDate, setTodayDate] = useState()
+
+    const profilePicURL='https://cheerapp.s3.eu-west-2.amazonaws.com/users/'+props.location.state.username+'.png'
     
     useEffect(() => {
-        var today = new Date()
-        var yyyy=today.getFullYear()
-        var mm = today.getMonth()+1
-        var dd = today.getDate()
-        if(dd<10){
-            dd='0'+dd
-        }
-        if(mm<10){
-            mm='0'+mm
-        }
-        setTodayDate(`${yyyy}-${mm}-${dd}`)
-
+        setTodayDate(TodayDate())
     }, []);
 
     const retrieveDetails = useCallback(
@@ -215,7 +208,38 @@ const UserProfilePage = props => {
         )
     }
 
+    //-------------------------------------------AVATAR UPLOAD----------------------------------------------
+    const [file, setFile] = useState(null)
+
+    const changeFile = e =>{
+        setFile(e.target.files[0])
+    }
     
+    const onFileSubmit = e =>{
+        e.preventDefault() // Stop form submit
+        fileUpload(file).then((response)=>{
+            if(!response.data.error){
+                toast.success('File successfully uploaded!')
+                window.location.reload()
+            }else{
+                toast.error('File not uploaded!')
+            }
+        console.log(response.data);
+        })
+    }
+
+    const fileUpload= file =>{
+        const url = username+'/uploadAvatar';
+        const formData = new FormData();
+        formData.append('avatar',file)
+        formData.append('filename', username+'.png')
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        return  post(url, formData,config)
+    }
 
    //--------------------------------------------------Conditional render -------------------------------------
    function UserInfo(){
@@ -225,8 +249,8 @@ const UserProfilePage = props => {
                     <tbody className="header-profile-info-table">
                         <tr><td><h1 className="profile-info" style={{textTransform:"uppercase"}}>{username}</h1></td></tr>
                         
-                        <tr><td><p className="profile-info"><i> {firstName} {lastName} </i></p></td></tr>
-                        <tr><td><p className="profile-info">Date of Birth:<b></b> <i>{dateOfBirth} </i></p></td></tr>
+                        <tr><td><p className="profile-info" style={{fontSize:"25px"}}><i> {firstName} {lastName} </i></p></td></tr>
+                        <tr><td><p className="profile-info"><b>Date of Birth:</b> <i>{dateOfBirth} </i></p></td></tr>
                         <tr><td><p className="profile-info"><b>Email:</b> <i> {email} </i> </p></td></tr>
                         <tr><td><p className="profile-info"><b>City:</b> <i> {city} </i> </p></td></tr>
                         <tr><td><p className="profile-info"><b>Nationality:</b> <i> {nationality} </i> </p></td></tr>
@@ -375,7 +399,7 @@ const UserProfilePage = props => {
                             <table >
                                 <tbody className="header-profile-image-table">
                                     <tr>
-                                        <td><img src={require('../../images/user.png')} alt="Profile" width="200" height="200"/></td>
+                                        <td><img src={profilePicURL} alt="Profile" style={{width:"210px", height:"210px", borderRadius:'105px'}} onError={(e)=>{e.target.src='https://cheerapp.s3.eu-west-2.amazonaws.com/default/user.png'}}/></td>
                                     </tr>
                                     <tr>
                                         {!loggedUserProfile && !loggeUserIsFriend &&
@@ -387,9 +411,30 @@ const UserProfilePage = props => {
                                         {loggedUserProfile &&
 
                                             <td>
-                                                <Popup modal style={{all:'unset'}}trigger={<button className = "btn"> Show invitations </button>} position="right center">
-                                                    <Invitations/>
-                                                </Popup>   
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <Popup modal style={{all:'unset'}}trigger={<button className = "btn" style={{height:'30px', backgroundColor:'#ee4540'}}> Change avatar </button>} position="right center">
+                                                                    <div>
+                                                                        <input  type='file' accept="image/png" onChange={changeFile}/> <br/>
+                                                                        <button className='btn' type='submit' onClick={onFileSubmit}> Upload avatar </button>
+                                                                    </div>
+                                                                </Popup> 
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <Popup modal style={{all:'unset'}}trigger={<button className = "btn"> Show invitations </button>} position="right center">
+                                                                    <Invitations/>
+                                                                </Popup>
+                                                            </td>
+                                                        
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
                                             </td>
                                         }
                                     </tr>

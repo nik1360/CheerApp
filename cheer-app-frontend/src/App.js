@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { usePromiseTracker } from "react-promise-tracker";
+import Loader from 'react-loader-spinner';
 
 import Toolbar from './components/drawer/Toolbar';
 import SideDrawer from './components/drawer/SideDrawer';
@@ -12,15 +15,14 @@ import Event from './components/events/Event'
 import CreateEventPage from './components/events/CreateEventPage'
 import UserProfilePage from './components/users/UserProfilePage'
 import FinduserPage from './components/users/FindUserPage'
+import OrganizerProfilePage from './components/users/OrganizerProfilePage'
+import SuggestEvent from './components/events/SuggestEvent';
 
 import Home from './components/Home'
-import { toast } from 'react-toastify';
-import { usePromiseTracker } from "react-promise-tracker";
-import Loader from 'react-loader-spinner';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/General.css'
-import SuggestEvent from './components/events/SuggestEvent';
+
 
 toast.configure()
 
@@ -36,7 +38,7 @@ const App = () =>{
 
 	const { promiseInProgress } = usePromiseTracker();
 
-	const LoadingIndicator = props => {
+	const LoadingIndicator = () => {
 		return (
 			promiseInProgress && 
 			<div
@@ -65,7 +67,7 @@ const App = () =>{
 	const loginOrganizer=(u) => {
 		
 		sessionStorage.setItem(organizerLoginSessionKey, true);
-		//sessionStorage.setItem(userLoginSessionKey, false);
+		sessionStorage.setItem(userLoginSessionKey, false);
 		sessionStorage.setItem(usernameSessionKey, u);	
 
 		setOrganizerLoggedIn(true)
@@ -96,7 +98,6 @@ const App = () =>{
 		
 		<Router>
 				<div className='page'>
-				
 					<div className='toolbar'>
 						<Toolbar drawerClickHandler={drawerToggleClickHandler}/>
 					</div>
@@ -108,7 +109,6 @@ const App = () =>{
 						/>
 						{sideDrawerOpen &&
 							<Backdrop click={backdropClickHandler}/>
-
 						}
 						<Switch>
 							<Route path="/" exact component={Home }/>
@@ -121,6 +121,7 @@ const App = () =>{
 								} 
 							/>
 							<Route path="/registerpage" exact component={RegisterPage}/>
+
 							<Route path="/findeventpage" exact component={FindEventPage}/>
 							<Route path="/finduserpage" exact 
 								render={(props)=>
@@ -150,6 +151,11 @@ const App = () =>{
 							<Route path="/users/" 
 								render={(props) =>
 									<UserProfilePage {...props} loggedInUsername={loggedInUsername}/>
+								}
+							/>
+							<Route path="/organizers/" 
+								render={(props) =>
+									<OrganizerProfilePage {...props} loggedInUsername={loggedInUsername}/>
 								}
 							/>
 						</Switch>

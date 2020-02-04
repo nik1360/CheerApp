@@ -7,15 +7,13 @@ const UserRow = props => {
     
     const genres = []
 
-    const seeEventDetails = () =>{
-        
+    const seeUserDetails = () =>{
         props.history.push({
             pathname: '/users/'+props.username,
             state:{
                 username:props.username,
             }
-        })
-        
+        })   
     }
 
     if(props.music_genres.rock===1){
@@ -38,7 +36,7 @@ const UserRow = props => {
     }
 
     return(
-        <tr onClick={seeEventDetails} style ={{maxHeight:"50px"}} >
+        <tr onClick={seeUserDetails} style ={{maxHeight:"50px"}} >
             <td>{props.username}</td>
             <td>{props.city}</td>
             <td>

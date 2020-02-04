@@ -30,7 +30,7 @@ def retrieve_genre_flags():
     return flag_rock, flag_hiphop, flag_reggae, flag_reggaeton, flag_techno, flag_electronic
 
 
-app = Flask(__name__)
+application = app = Flask(__name__)
 db_insert = DatabaseInsertHandler()
 db_delete = DatabaseDeleteHandler()
 

@@ -4,6 +4,8 @@ import TodayDate from '../TodayDate'
 
 import '../../styles/CreateEventPage.css'
 import { trackPromise } from 'react-promise-tracker';
+import {post} from 'axios'
+import { toast } from 'react-toastify';
 
 const CreateEventPage = props => {
 
@@ -36,6 +38,8 @@ const CreateEventPage = props => {
 
     
     const [todayDate, setTodayDate] = useState()
+    const [file, setFile] = useState(null)
+    
 
     useEffect(() => {
         setTodayDate(TodayDate())
@@ -144,6 +148,20 @@ const CreateEventPage = props => {
         trackPromise(
             createEvent(event).then(response => {
                 if (!response.error) {
+
+                    toast.success('Event created correctly!')
+                    const fileStruct ={
+                        name: response.event_code,
+                        body: file,
+                        extension:'.jpg'
+                    }
+                    fileUpload(fileStruct).then((response1)=>{
+                        if(!response1.data.error){
+                            toast.success('File successfully uploaded!')
+                        }else{
+                            toast.error(response1.message)
+                        }
+                    })
                     props.history.push({
                         pathname: '/events/'+response.event_code,
                         state:{
@@ -151,13 +169,34 @@ const CreateEventPage = props => {
                         }
                     })
                 }else{
-                    alert(response.message) 
+                    toast.error(response.message)
                 }
+
+
             })
         )
         
     }
 
+    
+
+    const changeFile = e =>{
+        setFile(e.target.files[0])
+    }
+    
+
+    const fileUpload= fileStruct =>{
+        const url = fileStruct.name+'/uploadFlyer';
+        const formData = new FormData();
+        formData.append('avatar',file)
+        formData.append('filename', fileStruct.name+fileStruct.extension)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        return  post(url, formData,config)
+    }
 
 
     return(
@@ -173,6 +212,7 @@ const CreateEventPage = props => {
                     <input className="form-text" type="text" required placeholder="Address" value={address} onChange={updateAddress}/>
                     <input className="form-text" type="text" required placeholder="Venue" value={venue} onChange={updateVenue}/>
                     <input className="form-text" type="number" min="0" required placeholder="Entrance Price (€)" value={price} onChange={updatePrice}/>
+                    <input className="form-text" type="file" accept="image/jpg" onChange={changeFile}/>
 
                     <div>
                         <p className="message">What is the music that it will be played at the event?</p>

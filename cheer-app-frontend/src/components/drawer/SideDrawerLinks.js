@@ -33,9 +33,6 @@ const SideDrawerLinks = props => {
                     <Link to="/createeventpage">
                         <li>Create Event</li>
                     </Link>
-                    <Link to="/">
-                        <li>Edit Event</li>
-                    </Link>
                 </ul>
             );  
         }

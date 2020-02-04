@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import '../../styles/EventProfilePage.css'
 import { trackPromise } from 'react-promise-tracker';
 import Popup from "reactjs-popup";
+import {post} from "axios"
 
 
 const Event = props => {
@@ -39,6 +40,7 @@ const Event = props => {
     const [showFriendsList, setShowFriendsList] = useState(true)
     
     const [todayDate, setTodayDate] = useState()
+    const flyerURL = 'https://cheerapp.s3.eu-west-2.amazonaws.com/events/'+props.location.state.code+'.jpg'
     
     /* When the component is loaded, the client asks the server the details of the event
     and the info related to the user (attendance, friends list and review)  */
@@ -238,6 +240,39 @@ const Event = props => {
         )
     }
 
+    const [file, setFile] = useState(null)
+
+    const changeFile = e =>{
+        setFile(e.target.files[0])
+    }
+    
+    const onFileSubmit = () =>{
+        trackPromise(
+            fileUpload(file).then((response)=>{
+                console.log(response.data.error)
+                if(!response.data.error){
+                    window.location.reload()
+                    toast.success('File successfully uploaded!')
+                }else{
+                    toast.error(response.message)
+                }
+            })
+        )     
+        
+    }
+
+    const fileUpload= file =>{
+        const url = props.location.state.code+'/uploadFlyer';
+        const formData = new FormData();
+        formData.append('flyer',file)
+        formData.append('filename', props.location.state.code+'.jpg')
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        return  post(url, formData,config)
+    }
     /* --------------------------------------- CONDITIONAL RENDER ---------------------------------------------- */
     function Rating(){
         if(props.organizerLoggedIn){
@@ -325,17 +360,19 @@ const Event = props => {
                     <div>
                         <br/>
                         <div className='scrollable'>
-                        <table class="attending-table">
-                            <tr>
-                                <th>Friends who are going</th>
-                            </tr>
+                        <table className="attending-table">
+                            <tbody>
+                                <tr>
+                                    <th>Friends who are going</th>
+                                </tr>
                                 {
                                     (friendsAttendantList).map(f =>(
                                         <tr key={f} onClick={()=>viewUserProfile(f)}>
                                             <td>{f}</td>
                                         </tr>                            
-                                     ))
+                                        ))
                                 }
+                            </tbody>
                         </table>    
                         </div>
                         <Popup modal trigger={<button className="invitefriends" >Invite Friends</button>} position="left center">
@@ -453,6 +490,7 @@ const Event = props => {
             )
         }
     }
+
     
     /*------------------------------ Main render of the component    ---------------------------------*/
     return(
@@ -491,10 +529,22 @@ const Event = props => {
                     <h4><b>Event description:</b></h4>
                     <p> {description} </p>
                     <h4><b>Event flyer:</b></h4>
-                    <img src="https://pic.pikbest.com/01/56/02/48dpIkbEsTMpR.jpg-1.jpg!bw700" alt="eventflyer" width="400" height="600"/> 
+                    <img src={flyerURL} alt="eventflyer" width="500" height="600" onError={(e)=>{e.target.src='https://cheerapp.s3.eu-west-2.amazonaws.com/default/event_flyer.jpg'}}/> 
                 </div>
             
                 <div className="main"> 
+                    {props.organizerLoggedIn &&
+                        <div>
+                            <button className="noattend" style={{width:'250px'}} >CANCEL EVENT</button><br/>
+                            <Popup modal trigger={<button className = "btn"> UPDATE FLYER </button>} position="left center">
+                                <div>
+                                    <input  type='file' onChange={changeFile}/> <br/>
+                                    <button className='btn' onClick={onFileSubmit}> Upload flyer </button>
+                                </div>
+                            </Popup> 
+                        </div>
+                        
+                    }
                     <Attendance/>
                     <Friends/>
                     <br/>

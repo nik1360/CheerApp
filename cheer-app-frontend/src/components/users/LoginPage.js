@@ -23,7 +23,13 @@ const LoginPage = props => {
                 if (!response.error) {
                     props.loginUser(response.username);
                     toast.success('You are logged in as '+ response.username)
-                    props.history.goBack();
+                    
+                    props.history.push({
+                        pathname: '/users/'+response.username,
+                        state:{
+                            username:response.username,
+                        }
+                    })
                 }else{
                     toast.error(response.message)
                 }

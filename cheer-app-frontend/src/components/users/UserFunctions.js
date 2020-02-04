@@ -85,6 +85,19 @@ export const registerUser = async usr => {
   }
 }
 
+export const getOrganizerDetails = async org => {
+  try {
+    const response = await axios
+      .post('/organizers/'+org.username+'/getDetails', {
+         username: org.username,
+      })
+    return response.data
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
 export const getUserDetails = async user => {
   try {
     const response = await axios

@@ -6,7 +6,10 @@ import {logout} from '../users/UserFunctions'
 
 const SideDrawerProfile = props => {
     
-    const viewProfile=()=>{
+    const organizerPic = 'https://cheerapp.s3.eu-west-2.amazonaws.com/organizers/'+props.username+'.png'
+    const userPic = 'https://cheerapp.s3.eu-west-2.amazonaws.com/users/'+props.username+'.png'
+    
+    const viewUserProfile=()=>{
         props.history.push({
             pathname: '/users/'+props.username,
             state:{
@@ -14,6 +17,16 @@ const SideDrawerProfile = props => {
             }
         })
     }
+
+    const viewOrganizerProfile=()=>{
+        props.history.push({
+            pathname: '/organizers/'+props.username,
+            state:{
+                username:props.username,
+            }
+        })
+    }
+
     const logOut=()=>{
         logout().then(response=>{
             
@@ -32,22 +45,22 @@ const SideDrawerProfile = props => {
                 
                     props.organizerLoggedIn &&
                     <div className='side-drawer-profile-image'>
-                        <img src={require('../../images/organizer.png')} alt='account img' />
+                        <img style={{width:'150px', height:'150px', borderRadius:'75px'}} src={organizerPic} onError={(e)=>{e.target.src='https://cheerapp.s3.eu-west-2.amazonaws.com/default/organizer.png'}} alt='account img'/>
                     </div>
                 }
                 {props.userLoggedIn &&
                     <div className='side-drawer-profile-image'>
-                        <img src={require('../../images/user.png')} alt='account img' />
+                        <img style={{width:'150px', height:'150px', borderRadius:'75px'}} src={userPic} onError={(e)=>{e.target.src='https://cheerapp.s3.eu-west-2.amazonaws.com/default/user.png'}} alt='account img'/>
                     </div>
                 }
                 
                 <div className='side-drawer-profile-info'>
                     <h3>Hello, {props.username}</h3>
                     {props.userLoggedIn &&
-                        <button className='side-drawer-profile-view-button' onClick={viewProfile}> View Profile</button> 
+                        <button className='side-drawer-profile-view-button' onClick={viewUserProfile}> View Profile</button> 
                     }
                     {props.organizerLoggedIn &&
-                        <button className='side-drawer-profile-view-button' > View Profile</button> 
+                        <button className='side-drawer-profile-view-button' onClick={viewOrganizerProfile} > View Profile</button> 
                     }                    
                     <button className='side-drawer-profile-logout-button' onClick={logOut}> Log Out</button>
                 </div>   
