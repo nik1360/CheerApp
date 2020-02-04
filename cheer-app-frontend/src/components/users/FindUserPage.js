@@ -184,7 +184,7 @@ const FindUserPage = props => {
                         <div className='results'>
                             <h1>No user found!</h1>
                         </div> 
-                        <div className='results'>
+                        <div className='no-results-goback'>
                             <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true); setHeight('50%')}} type='submit'>Go back</button>  
                         </div> 
                     </div>
