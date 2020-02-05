@@ -189,7 +189,7 @@ const FindEventPage = () => {
                         <div className='results'>
                             <h1>No event satisfies the selected criteria!</h1>
                         </div> 
-                        <div className='results'>
+                        <div className='no-results-goback'> 
                             <button className='search-btn' onClick={()=>{setShowResults(false); setShowSearch(true); setHeight('50%')}} type='submit'>Go back</button>  
                         </div> 
                     </div>
