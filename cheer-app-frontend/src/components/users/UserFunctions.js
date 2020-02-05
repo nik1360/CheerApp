@@ -1,10 +1,11 @@
 
 import axios from 'axios'
+import api from '../Config'
 
 export const loginUser = async user => {
   try {
     const response = await axios
-      .post('login/user', {
+      .post(api+'/login/user', {
         username: user.u,
         password: user.p
       })
@@ -18,7 +19,7 @@ export const loginUser = async user => {
 export const loginOrganizer = async organizer => {
   try {
     const response = await axios
-      .post('/login/organizer', {
+      .post(api+'/login/organizer', {
         username: organizer.u,
         password: organizer.p
       })
@@ -32,7 +33,7 @@ export const loginOrganizer = async organizer => {
 export const logout = async () => {
   try {
     const response = await axios
-      .post('/logout', {})
+      .post(api+'/logout', {})
     return response.data
   }
   catch (err) {
@@ -43,7 +44,7 @@ export const logout = async () => {
 export const registerOrganizer = async org => {
   try {
     const response = await axios
-      .post('/register/organizer', {
+      .post(api+'/register/organizer', {
         username: org.usr,
         email: org.email,
         password: org.pwd,
@@ -62,7 +63,7 @@ export const registerOrganizer = async org => {
 export const registerUser = async usr => {
   try {
     const response = await axios
-      .post('/register/user', {
+      .post(api+'/register/user', {
         username: usr.usr,
         email: usr.email,
         password: usr.pwd,
@@ -88,7 +89,7 @@ export const registerUser = async usr => {
 export const getOrganizerDetails = async org => {
   try {
     const response = await axios
-      .post('/organizers/'+org.username+'/getDetails', {
+      .post(api+'/organizers/'+org.username+'/getDetails', {
          username: org.username,
       })
     return response.data
@@ -101,7 +102,7 @@ export const getOrganizerDetails = async org => {
 export const getUserDetails = async user => {
   try {
     const response = await axios
-      .post('/users/'+user.username+'/getDetails', {
+      .post(api+'/users/'+user.username+'/getDetails', {
         username: user.username,
       })
     return response.data
@@ -114,7 +115,7 @@ export const getUserDetails = async user => {
 export const findUsers = async search => {
   try {
     const response = await axios
-      .post('/users/search', {
+      .post(api+'/users/search', {
         username: search.username,
         city: search.city,
         flagrock: search.flagrock,
@@ -137,7 +138,7 @@ export const findUsers = async search => {
 export const addUserAsFriend = async friends => {
   try {
     const response = await axios
-      .post('/users/'+friends.username2+'/addFriend', {
+      .post(api+'/users/'+friends.username2+'/addFriend', {
         loggedusername: friends.loggedusername,
         username2: friends.username2
       })
@@ -151,7 +152,7 @@ export const addUserAsFriend = async friends => {
 export const checkIfFriend = async friends => {
   try {
     const response = await axios
-      .post('/users/'+friends.username2+'/checkFriend', {
+      .post(api+'/users/'+friends.username2+'/checkFriend', {
         loggedusername: friends.loggedusername,
         username2: friends.username2
       })
@@ -165,7 +166,7 @@ export const checkIfFriend = async friends => {
 export const deleteFriend = async friends => {
   try {
     const response = await axios
-      .post('/users/'+friends.username2+'/deleteFriend', {
+      .post(api+'/users/'+friends.username2+'/deleteFriend', {
         loggedusername: friends.loggedusername,
         username2: friends.username2
       })
@@ -179,7 +180,7 @@ export const deleteFriend = async friends => {
 export const acceptInvitation = async invitation => {
   try {
     const response = await axios
-      .post('/users/'+invitation.recipient+'/acceptInvitation', {
+      .post(api+'/users/'+invitation.recipient+'/acceptInvitation', {
          sender: invitation.sender,
          recipient:invitation.recipient,
          event_code: invitation.event_code
@@ -194,7 +195,7 @@ export const acceptInvitation = async invitation => {
 export const refuseInvitation = async invitation => {
   try {
     const response = await axios
-      .post('/users/'+invitation.recipient+'/refuseInvitation', {
+      .post(api+'/users/'+invitation.recipient+'/refuseInvitation', {
          sender: invitation.sender,
          recipient:invitation.recipient,
          event_code: invitation.event_code

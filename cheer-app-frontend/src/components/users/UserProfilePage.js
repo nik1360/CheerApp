@@ -1,12 +1,14 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import { toast } from 'react-toastify';
-
-import { getUserDetails, checkIfFriend, addUserAsFriend, deleteFriend, acceptInvitation, refuseInvitation } from './UserFunctions';
 import { trackPromise } from 'react-promise-tracker';
 import Popup from "reactjs-popup";
 import {post} from 'axios'
 
+import { getUserDetails, checkIfFriend, addUserAsFriend, deleteFriend, acceptInvitation, refuseInvitation } from './UserFunctions';
+
+
 import TodayDate from '../TodayDate'
+import api from '../Config'
 
 import '../../styles/EventProfilePage.css'
 
@@ -229,7 +231,7 @@ const UserProfilePage = props => {
     }
 
     const fileUpload= file =>{
-        const url = username+'/uploadAvatar';
+        const url = api+'/users/'+username+'/uploadAvatar';
         const formData = new FormData();
         formData.append('avatar',file)
         formData.append('filename', username+'.png')

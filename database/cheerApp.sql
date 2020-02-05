@@ -1,6 +1,5 @@
-drop database if exists cheerApp;
-create database cheerApp;
-use cheerApp;
+
+use cheerapp;
 
 create table users (
 		username varchar(20) primary key,

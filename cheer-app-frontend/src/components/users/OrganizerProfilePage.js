@@ -8,7 +8,7 @@ import Popup from "reactjs-popup";
 
 import TodayDate from '../TodayDate'
 
-
+import api from '../Config'
 import '../../styles/EventProfilePage.css'
 
 
@@ -62,7 +62,7 @@ const OrganizerProfilePage = props => {
 
     const seeEventPage = code =>{
         props.history.push({
-            pathname: '/events/'+code,
+            pathname: api+'/events/'+code,
             state:{
                 code:code,
             }
@@ -90,7 +90,7 @@ const OrganizerProfilePage = props => {
     }
 
     const fileUpload= file =>{
-        const url = username+'/uploadAvatar';
+        const url = api+'/organizers/'+username+'/uploadAvatar';
         const formData = new FormData();
         formData.append('avatar',file)
         formData.append('filename', username+'.png')

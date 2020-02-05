@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request, json, redirect
+from flask_cors import CORS, cross_origin
+
 import datetime
 
 from database.db_manager import DatabaseManager, logout
@@ -34,18 +36,20 @@ application = app = Flask(__name__)
 db_insert = DatabaseInsertHandler()
 db_delete = DatabaseDeleteHandler()
 
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 logged_user = None
 login_status = False
 
 amount = 0
 name = 0
 
-load_dotenv()
-
 s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
                         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 # ------------------------------------------------FUNCTIONS RELATED TO THE USERS --------------------------------
 @app.route('/login/<type_of_user>', methods=['POST'])
+@cross_origin()
 def login(type_of_user):
     username = request.get_json()['username']
     password = request.get_json()['password']
@@ -71,6 +75,7 @@ def login(type_of_user):
         return jsonify({'error': True, 'message': msg})
 
 @app.route('/logout', methods=['POST'])
+@cross_origin()
 def logout_user_organizer():
     global login_status
     global logged_user
@@ -88,6 +93,7 @@ def logout_user_organizer():
 
 
 @app.route('/register/<type_of_user>', methods=['POST'])
+@cross_origin()
 def register(type_of_user):
     username = request.get_json()['username']
     email = request.get_json()['email']
@@ -122,6 +128,7 @@ def register(type_of_user):
 
 
 @app.route('/users/<username>/getDetails', methods=['POST'])
+@cross_origin()
 def retrieve_user_info(username):
     try:
         status, user, msg = DatabaseUsersHandler().find_user_username(username=username)
@@ -148,6 +155,7 @@ def retrieve_user_info(username):
         return jsonify({'error': True, 'message': msg})
 
 @app.route('/organizers/<username>/getDetails', methods=['POST'])
+@cross_origin()
 def retrieve_organizer_info(username):
     try:
         status, organizer, msg = DatabaseUsersHandler().find_organizer_username(username=username)
@@ -170,6 +178,7 @@ def retrieve_organizer_info(username):
 
 
 @app.route('/users/search', methods=['POST'])
+@cross_origin()
 def search_users():
     # retrieve information from the client
     username = request.get_json()['username']
@@ -206,6 +215,7 @@ def search_users():
         return jsonify({'error': True, 'message': msg})
 
 @app.route('/users/<username>/addFriend', methods=['POST'])
+@cross_origin()
 def add_friend(username):
     logged_user = request.get_json()['loggedusername']
     try:
@@ -221,6 +231,7 @@ def add_friend(username):
 
 
 @app.route('/users/<username>/checkFriend', methods=['POST'])
+@cross_origin()
 def check_friends(username):
     logged_user = request.get_json()['loggedusername']
     try:
@@ -233,6 +244,7 @@ def check_friends(username):
         return jsonify({'error': True, 'message': msg})
 
 @app.route('/users/<username>/deleteFriend', methods=['POST'])
+@cross_origin()
 def delete_friend(username):
     logged_user = request.get_json()['loggedusername']
     try:
@@ -245,6 +257,7 @@ def delete_friend(username):
         return jsonify({'error': True, 'message': msg})
 
 @app.route('/users/<username>/acceptInvitation', methods=['POST'])
+@cross_origin()
 def accept_invitation(username):
     sender = request.get_json()['sender']
     event_code = request.get_json()['event_code']
@@ -260,6 +273,7 @@ def accept_invitation(username):
         return jsonify({'error': True, 'message': msg})
 
 @app.route('/users/<username>/refuseInvitation', methods=['POST'])
+@cross_origin()
 def refuse_invitation(username):
     sender = request.get_json()['sender']
     event_code = request.get_json()['event_code']
@@ -275,6 +289,7 @@ def refuse_invitation(username):
 
 #-----------------------------------------FUNCTIONS RELATED TO THE EVENTS----------------------------------------
 @app.route('/events/search', methods=['POST'])
+@cross_origin()
 def find_events():
     # retrieve information from the client
     date = request.get_json()['date']
@@ -305,6 +320,7 @@ def find_events():
 
 
 @app.route('/events/<event_code>/ask', methods=['POST'])
+@cross_origin()
 def ask(event_code):
     org_username = request.get_json()['username']
     try:
@@ -322,6 +338,7 @@ def ask(event_code):
 
 
 @app.route('/register/event', methods=['POST'])
+@cross_origin()
 def register_event():
     name = request.get_json()['name']
     description = request.get_json()['description']
@@ -363,6 +380,7 @@ def register_event():
 
 
 @app.route('/events/<event_code>/rate', methods=['POST'])
+@cross_origin()
 def rate(event_code):
     user_username = request.get_json()['user_username']
     organizer_username = request.get_json()['organizer_username']
@@ -383,6 +401,7 @@ def rate(event_code):
 
 
 @app.route('/events/<event_code>/deleteRating', methods=['POST'])
+@cross_origin()
 def delete_rate(event_code):
     user_username = request.get_json()['user_username']
     organizer_username = request.get_json()['organizer_username']
@@ -400,6 +419,7 @@ def delete_rate(event_code):
 
 
 @app.route('/events/<event_code>/attend', methods=['POST'])
+@cross_origin()
 def attend(event_code):
     user_username = request.get_json()['user_username']
     try:
@@ -414,6 +434,7 @@ def attend(event_code):
 
 
 @app.route('/events/<event_code>/notAttend', methods=['POST'])
+@cross_origin()
 def not_attend(event_code):
     user_username = request.get_json()['user_username']
     try:
@@ -428,6 +449,7 @@ def not_attend(event_code):
 
 
 @app.route('/events/<event_code>/userstatus', methods=['POST'])
+@cross_origin()
 def check_user_event_status(event_code):
     user_username = request.get_json()['user_username']
 
@@ -456,6 +478,7 @@ def check_user_event_status(event_code):
 
 
 @app.route('/events/<event_code>/getDetails', methods=['POST'])
+@cross_origin()
 def retrieve_event_info(event_code):
     global amount  # used by charge function
     global name
@@ -481,6 +504,7 @@ def retrieve_event_info(event_code):
         return jsonify({'error': True, 'message': msg})
 
 @app.route('/events/<event_code>/inviteFriend', methods=['POST'])
+@cross_origin()
 def invite_friend(event_code):
     sender = request.get_json()['sender']
     recipient = request.get_json()['recipient']
@@ -502,6 +526,7 @@ def invite_friend(event_code):
 
 # --------------------------------FUNCTION THAT MANAGE THE EVENT SUGGESTION ------------------------------------------
 @app.route('/suggestEvent', methods=['POST'])
+@cross_origin()
 def suggest():
     logged_username = request.get_json()['logged_username']
     today_date = request.get_json()['today_date']
@@ -512,6 +537,7 @@ def suggest():
 
 # ---------------------------------FUNCTION THAT MANAGE THE COMMUNICATION WITH THE STRIPE PLATFORM -------------------
 @app.route('/charge', methods=['POST'])
+@cross_origin()
 def charge():
 
     global amount #the value is defined when the event page is loaded
@@ -548,6 +574,7 @@ def charge():
 
 #----------------------------------FILE UPLOAD --------------------------------------------
 @app.route('/<category>/<username>/uploadAvatar', methods=['POST'])
+@cross_origin()
 def upload_avatar(category, username):
     global s3
 
@@ -561,6 +588,7 @@ def upload_avatar(category, username):
 
 #----------------------------------FILE UPLOAD --------------------------------------------
 @app.route('/events/<event_code>/uploadFlyer', methods=['POST'])
+@cross_origin()
 def upload_flyer(event_code):
     global s3
     try:

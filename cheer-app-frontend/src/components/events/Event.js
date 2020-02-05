@@ -9,6 +9,7 @@ import { trackPromise } from 'react-promise-tracker';
 import Popup from "reactjs-popup";
 import {post} from "axios"
 
+import api from '../Config'
 
 const Event = props => {
 
@@ -262,7 +263,7 @@ const Event = props => {
     }
 
     const fileUpload= file =>{
-        const url = props.location.state.code+'/uploadFlyer';
+        const url = api+'/events/'+props.location.state.code+'/uploadFlyer';
         const formData = new FormData();
         formData.append('flyer',file)
         formData.append('filename', props.location.state.code+'.jpg')

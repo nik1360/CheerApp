@@ -1,10 +1,11 @@
 import axios from 'axios'
+import api from '../Config'
 
 
 export const findEvents = async search => {
   try {
     const response = await axios
-      .post('/events/search', {
+      .post(api+'/events/search', {
         date: search.date,
         city: search.city,
         flagrock: search.flagrock,
@@ -28,7 +29,7 @@ export const retrieveOrganizerDetails = async event => {
   try {
     const response = await axios
     
-      .post('/events/'+event.code+'/ask', {
+      .post(api+'/events/'+event.code+'/ask', {
         username: event.organizer_username,
         code: event.code 
         
@@ -43,7 +44,7 @@ export const retrieveOrganizerDetails = async event => {
 export const createEvent = async event => {
   try {
     const response = await axios
-      .post('/register/event', {
+      .post(api+'/register/event', {
         name:event.name,
         description: event.description,
         date:event.date,
@@ -71,7 +72,7 @@ export const createEvent = async event => {
 export const insertRating = async rating => {
   try {
     const response = await axios
-      .post('/events/' + rating.event_code + '/rate', {
+      .post(api+'/events/' + rating.event_code + '/rate', {
         event_code: rating.event_code,
         user_username: rating.user_username,
         organizer_username:rating.organizer_username,
@@ -87,7 +88,7 @@ export const insertRating = async rating => {
 export const deleteRating = async rating => {
   try {
     const response = await axios
-      .post('/events/' + rating.event_code + '/deleteRating', {
+      .post(api+'/events/' + rating.event_code + '/deleteRating', {
         event_code: rating.event_code,
         organizer_username: rating.organizer_username,
         user_username: rating.user_username,
@@ -102,7 +103,7 @@ export const deleteRating = async rating => {
 export const userAttendsEvent = async event => {
   try {
     const response = await axios
-      .post('/events/' + event.event_code + '/attend', {
+      .post(api+'/events/' + event.event_code + '/attend', {
         event_code: event.event_code,
         user_username: event.user_username,
       })
@@ -116,7 +117,7 @@ export const userAttendsEvent = async event => {
 export const userNotAttendsEvent = async event => {
   try {
     const response = await axios
-      .post('/events/' + event.event_code + '/notAttend', {
+      .post(api+'/events/' + event.event_code + '/notAttend', {
         event_code: event.event_code,
         user_username: event.user_username,
       })
@@ -130,7 +131,7 @@ export const userNotAttendsEvent = async event => {
 export const userEventStatus = async event => {
   try {
     const response = await axios
-      .post('/events/' + event.event_code + '/userstatus', {
+      .post(api+'/events/' + event.event_code + '/userstatus', {
         event_code: event.event_code,
         user_username: event.user_username,
       })
@@ -144,7 +145,7 @@ export const userEventStatus = async event => {
 export const getEventDetails = async event => {
   try {
     const response = await axios
-      .post('/events/' + event.event_code + '/getDetails', {
+      .post(api+'/events/' + event.event_code + '/getDetails', {
         event_code: event.event_code,
       })
     return response.data
@@ -157,7 +158,7 @@ export const getEventDetails = async event => {
 export const suggestAnEvent = async struct => {
   try {
     const response = await axios
-      .post('/suggestEvent', {
+      .post(api+'/suggestEvent', {
         logged_username: struct.logged_username,
         today_date: struct.today_date
       })
@@ -171,7 +172,7 @@ export const suggestAnEvent = async struct => {
 export const inviteToEvent = async struct => {
   try {
     const response = await axios
-      .post('/events/' + struct.event_code + '/inviteFriend', {
+      .post(api+'/events/' + struct.event_code + '/inviteFriend', {
         sender: struct.sender,
         recipient: struct.recipient,
         event_code: struct.event_code,

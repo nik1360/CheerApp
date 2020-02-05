@@ -1,6 +1,7 @@
 import React from 'react'
 import {withRouter} from 'react-router-dom';
 
+
 import '../../styles/FindEventUserPage.css'
 
 const EventRow = props => {
