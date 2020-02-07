@@ -123,7 +123,7 @@ body {
 }
 
 .scrollable {
-  height:150px;
+  max-height:150px;
   width:300px;
   overflow-y: hidden;
 }
@@ -141,6 +141,7 @@ body {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   -webkit-tap-highlight-color: transparent;
   margin-bottom: 0px;
+  padding:0px
 }
 /* the stars */
 .rating > label {

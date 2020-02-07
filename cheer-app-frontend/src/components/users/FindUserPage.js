@@ -5,6 +5,7 @@ import UserRow from './UserRow'
 
 import '../../styles/FindEventUserPage.css'
 import { trackPromise } from 'react-promise-tracker';
+import { toast } from 'react-toastify';
 
 const FindUserPage = props => {
     
@@ -133,7 +134,7 @@ const FindUserPage = props => {
             
         }
         else{
-            alert('Please choose at least one criteria!')
+            toast.error('Please choose at least one criteria!')
         }
         
         

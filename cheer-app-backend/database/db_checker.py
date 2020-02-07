@@ -117,13 +117,13 @@ class DatabaseChecker(DatabaseManager):
             return True, None  # the user hasn't rated the event yet
         else:
             return False, query_result[3]
-
+# check if userA already invited userB to a particular event
     def check_invitation(self, sender, recipient, event_code):
         query ='SELECT * FROM ' + self.table_invitations + ' WHERE (sender = %s AND recipient=%s AND event_code=%s)'
         self.cursor.execute(query, (sender, recipient, event_code,))
         query_result = self.cursor.fetchone()
         if not query_result:
-            return True  # the user hasn't invited the other user yet
+            return True  # the userA hasn't invited userB yet
         else:
             return False
 

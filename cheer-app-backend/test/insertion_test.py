@@ -12,7 +12,9 @@ from main_entities.venue import Venue
 
 import unittest
 
-# Start with an empty db test
+# Before testing please ensure that:
+# - The class DatabaseManager is pointing to the database in the localhost
+# - The Database is empty
 
 class Test (unittest.TestCase):
     # insert user

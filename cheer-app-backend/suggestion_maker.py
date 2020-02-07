@@ -4,6 +4,7 @@ from database.db_users_handler import DatabaseUsersHandler
 from opencage.geocoder import OpenCageGeocode
 from geopy.distance import geodesic
 
+import os
 
 def assign_distance_score(event_city, user_city):
     distance = geodesic(user_city, event_city).km  # compute the distance between the cities
@@ -30,18 +31,21 @@ class SuggestionMaker:
     def __init__(self, logged_username, today_date):
         self.logged_username= logged_username
         self.today_date = today_date
-        self.geocoder = OpenCageGeocode('5ecf85c019a64e1283c5c1f24dffb2a1')  # api https://opencagedata.com
+        self.geocoder = OpenCageGeocode(os.getenv('GEOCODE_ACCESS_ID'))  # api https://opencagedata.com
 
     def suggest_event(self):
-
-        event_list = DatabaseEventHandler().search(False, False, False)  # retrieve all the events
+        # retrieve all the events
+        event_list = DatabaseEventHandler().search(False, False, False)
         future_events = []
-        for e in event_list:  # select only the upcoming ones
-            if e.date > self.today_date:  # select only the upcoming ones
+        # select only the upcoming ones
+        for e in event_list:
+            if e.date > self.today_date:
                 future_events.append(e)
-        _, user, _ = DatabaseUsersHandler().find_user_username(self.logged_username)  # get the details of the logged user
+        # get the details of the logged user
+        _, user, _ = DatabaseUsersHandler().find_user_username(self.logged_username)
 
-        lat_long = self.geocoder.geocode(user.city + ', Italy')  # retrieve latitude and longitude of the user city
+        # retrieve latitude and longitude of the user city
+        lat_long = self.geocoder.geocode(user.city + ', Italy')
         user_city = (lat_long[0]['geometry']['lat'], lat_long[0]['geometry']['lng'])
 
         # initializations of the scores
@@ -52,7 +56,8 @@ class SuggestionMaker:
 
         for e in future_events:
             _, org, _ = DatabaseUsersHandler().find_organizer_username(e.organizer)
-            lat_long = self.geocoder.geocode(e.venue.city + ', Italy')  # retrieve latitude and longitude of the event city
+            # retrieve latitude and longitude of the event city
+            lat_long = self.geocoder.geocode(e.venue.city + ', Italy')
             event_city = (lat_long[0]['geometry']['lat'], lat_long[0]['geometry']['lng'])
 
             dist_points = assign_distance_score(event_city=event_city, user_city=user_city)
@@ -66,10 +71,11 @@ class SuggestionMaker:
                 if user.music_tastes[g] + v > 1:
                     genre_points = genre_points + 10
 
-
+            # Bonus score if the event entrance price costs less than 15 euros
             if e.price < 15:
                 price_points=10
 
+            # Bonus score if the event entrance price costs less than 15 euros
             tot_pts = dist_points + rat_points + genre_points + price_points
             if tot_pts >= max_pts:
                 max_pts = tot_pts

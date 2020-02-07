@@ -1,5 +1,6 @@
 import mysql.connector
 import bcrypt
+import os
 
 # function that logs out a user or an organizer, setting logged_user to None
 def logout():
@@ -11,11 +12,11 @@ def logout():
 class DatabaseManager:
     def __init__(self):
         self.db = mysql.connector.connect(
-            #host='localhost',
-            host='cheerappdb.csboqaisplag.eu-west-2.rds.amazonaws.com',
+            #host='localhost',    # needed to run the test
+            host=os.getenv('DB_HOST'),   # comment this if you are doing testing
             port='3306',
-            user='CheerApp',
-            passwd='Cheer4pp',
+            user=os.getenv('DB_USER'),
+            passwd=os.getenv('DB_PWD'),
             database='cheerapp',
             auth_plugin='mysql_native_password'
         )

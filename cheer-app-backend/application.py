@@ -17,7 +17,6 @@ from main_entities.event import Event
 from main_entities.organizer import Organizer
 from suggestion_maker import SuggestionMaker
 
-from dotenv import load_dotenv
 import os
 import stripe
 import boto3
@@ -405,16 +404,16 @@ def rate(event_code):
 def delete_rate(event_code):
     user_username = request.get_json()['user_username']
     organizer_username = request.get_json()['organizer_username']
-    #try:
-    DatabaseUpdateHandler().update_avg_rating_rem(organizer=organizer_username, event=event_code, user=user_username)
-    status,msg = db_delete.delete_rating(username=user_username, event_code=event_code)
+    try:
+        DatabaseUpdateHandler().update_avg_rating_rem(organizer=organizer_username, event=event_code, user=user_username)
+        status,msg = db_delete.delete_rating(username=user_username, event_code=event_code)
 
-    result = jsonify({'error': not status, 'message': msg})
-    return result
-    #except Exception as e:
-     #   print(str(e))
-      #  msg = 'OPS! There is an error in our servers!'
-       # return jsonify({'error': True, 'message': msg})
+        result = jsonify({'error': not status, 'message': msg})
+        return result
+    except Exception as e:
+        print(str(e))
+        msg = 'OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
 
 
 
@@ -528,11 +527,18 @@ def invite_friend(event_code):
 @app.route('/suggestEvent', methods=['POST'])
 @cross_origin()
 def suggest():
-    logged_username = request.get_json()['logged_username']
-    today_date = request.get_json()['today_date']
-    winner = SuggestionMaker(logged_username=logged_username, today_date=today_date).suggest_event()
-    json_winner = json.dumps(winner, default=lambda o: o.__dict__, indent=4)
-    return jsonify({'winner': json_winner, 'error': False})
+    try:
+        logged_username = request.get_json()['logged_username']
+        today_date = request.get_json()['today_date']
+        winner = SuggestionMaker(logged_username=logged_username, today_date=today_date).suggest_event()
+        json_winner = json.dumps(winner, default=lambda o: o.__dict__, indent=4)
+        return jsonify({'winner': json_winner, 'error': False})
+    except Exception as e:
+        print(str(e))
+        msg = 'OPS! There is an error in our servers!'
+        return jsonify({'error': True, 'message': msg})
+
+
 
 
 # ---------------------------------FUNCTION THAT MANAGE THE COMMUNICATION WITH THE STRIPE PLATFORM -------------------
@@ -543,11 +549,8 @@ def charge():
     global amount #the value is defined when the event page is loaded
     global name
 
-
     description="Payment for CheerApp event " + str(name)
     stripe_keys = {
-        # 'secret_key': os.getenv('STRIPE_SECRET_KEY'),
-        # 'publishable_key': os.getenv('STRIPE_PUBLISHABLE_KEY')
         'publishable_key': os.getenv('STRIPE_PUB_KEY'),
         'secret_key': os.getenv('STRIPE_PVT_KEY')
     }
@@ -565,7 +568,7 @@ def charge():
             currency='eur',
             description=description
         )
-        return redirect("/", code=302)
+        return redirect(os.getenv('S3_WEBHOST_LINK'), code=302)
 
     except Exception as e:
         print(str(e))
@@ -598,9 +601,6 @@ def upload_flyer(event_code):
         print(str(e))
         msg = 'OPS! There is an error in our servers!'
         return jsonify({'error': True, 'message': msg})
-
-
-
 
 
 if __name__ == '__main__':

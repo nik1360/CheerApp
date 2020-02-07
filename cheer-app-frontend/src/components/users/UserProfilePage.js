@@ -33,7 +33,7 @@ const UserProfilePage = props => {
     const [friendsList, setFriendsList] = useState([])
     const [eventsList, setEventsList] = useState([])
     const [invitationsList, setInvitationsList] = useState([])
-    const [loggedUserProfile, setLoggedUserProfile] = useState(true)
+    const [loggedUserProfile, setLoggedUserProfile] = useState(false)
     const [loggeUserIsFriend, setLoggedUserIsFriend] = useState(false)
     
 

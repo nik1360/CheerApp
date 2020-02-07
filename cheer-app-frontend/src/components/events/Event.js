@@ -213,6 +213,15 @@ const Event = props => {
         props.history.push('/loginpage')
     }
 
+    const viewOrganizerProfile = () =>{
+        props.history.push({
+            pathname: '/organizers/'+organizer,
+            state:{
+                username:organizer,
+            }
+        })
+    }
+
     const viewUserProfile = f =>{
         props.history.push({
             pathname: '/users/'+f,
@@ -285,7 +294,7 @@ const Event = props => {
                     <div>
                         <h5 style={{marginTop:'15px', marginBottom:'0px'}}>Rate this event!</h5>
                         <form id="rating" method="post" onSubmit={submitRating}>
-                            <fieldset className="rating">
+                            <fieldset className="rating" style={{width:'190px'}}>
                                 <input name="rating" type="radio" id="rating5" value="5" onClick={() => {setRatingValue(5)}}/>
                                 <label htmlFor="rating5" title="5 stars">☆</label>
     
@@ -376,6 +385,7 @@ const Event = props => {
                             </tbody>
                         </table>    
                         </div>
+                        <br/>
                         <Popup modal trigger={<button className="invitefriends" >Invite Friends</button>} position="left center">
                                 <InviteFriends/>    
                         </Popup>                      
@@ -462,7 +472,7 @@ const Event = props => {
             return(
                 <div>
                     <br/>
-                    <form style={{marginLeft:'65px'}}action="/charge" method="post">
+                    <form style={{marginLeft:'65px'}}action={api+"/charge"} method="post">
                     <script
                         src="https://checkout.stripe.com/checkout.js"
                         className="stripe-button"
@@ -507,7 +517,7 @@ const Event = props => {
                 <p><b>Where: </b>{venue} - {address} - {city}</p>
                 <p><b>When: </b>{date} <b>from </b> {startTime}<b> to </b> {endTime}</p>
                 {!props.organizerLoggedIn &&
-                    <p><b>Organised by: </b><i>{organizer}</i> &nbsp; <button className='profile-view-button'>VIEW PROFILE</button></p>
+                    <p><b>Organised by: </b><i>{organizer}</i> &nbsp; <button className='profile-view-button' onClick={viewOrganizerProfile}>VIEW PROFILE</button></p>
                 }
                 
             </div>
@@ -548,7 +558,6 @@ const Event = props => {
                     }
                     <Attendance/>
                     <Friends/>
-                    <br/>
                     <BuyTickets/>
                     <Rating/>
                     <br/>

@@ -36,24 +36,6 @@ class DatabaseUsersHandler(DatabaseManager):
             msg = 'Organizer ' + username + ' exists!'
             return True, org, msg
 
-    # find the users in a particular city
-    def find_user_city(self, city):
-
-        query = 'SELECT username, name FROM ' + self.table_users + ' WHERE city=%s'
-        self.cursor.execute(query, (city,))
-
-        result = self.cursor.fetchall()
-        if not result:
-            msg = 'No user in ' + city + '!'
-            return False, None, msg
-        else:
-            user_list = []
-            for r in result:
-                user_list.append({r[0], r[1]})  # create a tuple with username and name
-
-            msg = 'There are users in  ' + city + '!'
-            return True, user_list, msg
-
     def search(self, username, city, criteria_username, criteria_city, criteria_genres, music_tastes):
         base_query = 'SELECT * FROM ' + self.table_users +' WHERE true'
         query = base_query

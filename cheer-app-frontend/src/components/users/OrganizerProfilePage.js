@@ -62,7 +62,7 @@ const OrganizerProfilePage = props => {
 
     const seeEventPage = code =>{
         props.history.push({
-            pathname: api+'/events/'+code,
+            pathname: '/events/'+code,
             state:{
                 code:code,
             }
