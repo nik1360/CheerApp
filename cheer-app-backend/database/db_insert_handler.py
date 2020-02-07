@@ -46,9 +46,9 @@ class DatabaseInsertHandler(DatabaseManager):
             query = 'INSERT INTO ' + self.table_venues + ' VALUES(%s,%s,%s,%s)'
             self.cursor.execute(query, (venue.code, venue.name, venue.city, venue.address,))
             self.db.commit()
-            return True
+            return True, 'Venue created correctly!'
         else:
-            return False
+            return False, 'Venue already exists'
 
     # Register a new event in the database
     def insert_event(self, event):
@@ -87,16 +87,21 @@ class DatabaseInsertHandler(DatabaseManager):
 
     # insert a new row in the table that correlates users and events
     def insert_users_events(self, user_username, event_code,):
-        query = 'INSERT INTO ' + self.table_users_events + ' VALUES (%s, %s)'
-        self.cursor.execute(query, (user_username, event_code))
-        self.db.commit()
+        try:
+            query = 'INSERT INTO ' + self.table_users_events + ' VALUES (%s, %s)'
+            self.cursor.execute(query, (user_username, event_code))
+            self.db.commit()
+        except:
+            return False, 'user already joined this event'
         return True, user_username + ' joined ' + event_code
 
     def insert_rating(self, user, organizer, event_code, rating):
-        query = 'INSERT INTO ' + self.table_ratings + ' VALUES (%s, %s, %s, %s)'
-        self.cursor.execute(query, (user, organizer, event_code, rating))
-        self.db.commit()
-
+        try:
+            query = 'INSERT INTO ' + self.table_ratings + ' VALUES (%s, %s, %s, %s)'
+            self.cursor.execute(query, (user, organizer, event_code, rating))
+            self.db.commit()
+        except:
+            return False, 'User already rated this event'
         return True, 'The rating was inserted correctly'
 
     def insert_invitation(self, sender, recipient, event_code, event_name):
@@ -104,6 +109,6 @@ class DatabaseInsertHandler(DatabaseManager):
             query = 'INSERT INTO ' + self.table_invitations + ' VALUES (%s, %s, %s, %s)'
             self.cursor.execute(query, (sender, recipient, event_code, event_name))
             self.db.commit()
-            return True
+            return True, 'User invited correctly'
         else:
-            return False
+            return False, 'You already invited this user'

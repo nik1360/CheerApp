@@ -60,7 +60,7 @@ class DatabaseChecker(DatabaseManager):
         query = 'SELECT * FROM ' + self.table_venues + ' WHERE code=%s'
         self.cursor.execute(query, (venue.code,))
         result2 = self.cursor.fetchall()
-        if not (result1 and result2):
+        if not result1 and not result2:
             return True
         else:
             return False
@@ -123,7 +123,7 @@ class DatabaseChecker(DatabaseManager):
         self.cursor.execute(query, (sender, recipient, event_code,))
         query_result = self.cursor.fetchone()
         if not query_result:
-            return True  # the user hasn't rated the event yet
+            return True  # the user hasn't invited the other user yet
         else:
             return False
 

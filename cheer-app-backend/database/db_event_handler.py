@@ -121,4 +121,11 @@ class DatabaseEventHandler(DatabaseManager):
 
             return True, org, 'Details of organizer ' + username + 'retrieved correctly!'
 
-
+    def retrieve_event_code(self, event_name):
+        query='SELECT code FROM '+ self.table_events + ' WHERE name=%s'
+        self.cursor.execute(query, (event_name,))
+        res = self.cursor.fetchone()
+        if not res:
+            return False, 'No event with name ' + event_name
+        else:
+            return res[0]

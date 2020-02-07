@@ -1,4 +1,5 @@
-
+drop database if exists cheerapp;
+create database cheerapp;
 use cheerapp;
 
 create table users (
