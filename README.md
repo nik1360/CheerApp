@@ -1,4 +1,7 @@
 # CheerApp
+University project for the Software Engineering course (University of Pavia).
+
+INSTALLATION:
 - Install MySQL Server, MySQL Workbench and the Python connector. 
   - During the configuation of the server create an account (usr: CheerApp pwd:Cheer4pp).
 - Open MySQL Workbench, create a connection and (call it CheerApp) using the user created before.
@@ -16,4 +19,3 @@
 - Open the terminal in 'cheer-app-frontend' and type 'npm install' to install the dependencies for the frontend.
 - Start the frontend with 'npm start'.
 
-Enjoy
